@@ -1,8 +1,10 @@
-﻿namespace TaaS.Core.Domain.Query.GetSignedGratitudeRandom
+﻿using MediatR;
+
+namespace TaaS.Core.Domain.Query.GetSignedGratitudeRandom
 {
-    public class GetRandomGratitudeSignedQuery
+    public class GetSignedGratitudeRandomQuery : IRequest<(int, string)>
     {
-        public GetRandomGratitudeSignedQuery(string signature = "Bob")
+        public GetSignedGratitudeRandomQuery(string signature = "Bob")
         {
             Signature = signature;
         }
