@@ -4,15 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using TaaS.Core.Domain.Query.GetGratitudeById;
+using TaaS.Persistence.Context;
 
 namespace TaaS.Api.WebApi
 {
@@ -29,6 +34,23 @@ namespace TaaS.Api.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<TaaSDbContext>(builder =>
+            { 
+                var connectionString = Configuration["DB_CONNECTION_STRING"];
+                builder.UseNpgsql(connectionString);
+            });
+            
+            services.AddMediatR(typeof(GetGratitudeByIdQuery).Assembly);
+            
+            services.AddHttpContextAccessor();
+            
+            services.AddMemoryCache();
+            
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             
             services.AddApiVersioning(o =>
             {
@@ -71,6 +93,8 @@ namespace TaaS.Api.WebApi
             }); 
             
             app.UseRouting();
+
+            app.UseIpRateLimiting();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
