@@ -25,9 +25,14 @@ namespace TaaS.Core.Domain.Query.GetGratitudeRandom
         {
             Logger.LogDebug("Requested random gratitude.");
             
-            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.CountAsync(cancellationToken));
+            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes
+                .Where(g => g.Language == request.Language)
+                .CountAsync(cancellationToken));
 
-            var gratitude = await Context.Gratitudes.Skip(offset).FirstAsync(cancellationToken);
+            var gratitude = await Context.Gratitudes
+                .Where(g => g.Language == request.Language)
+                .Skip(offset)
+                .FirstAsync(cancellationToken);
 
             var response = gratitude.Type switch
             {

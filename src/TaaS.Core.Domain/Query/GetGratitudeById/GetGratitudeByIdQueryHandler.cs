@@ -23,7 +23,9 @@ namespace TaaS.Core.Domain.Query.GetGratitudeById
         {
             Logger.LogDebug("Requested gratitude by id.");
             
-            var gratitude = await Context.Gratitudes.Where(g => g.Id == request.Id).FirstAsync(cancellationToken);
+            var gratitude = await Context.Gratitudes
+                .Where(g => g.Id == request.Id)
+                .FirstAsync(cancellationToken);
 
             var response = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
 
