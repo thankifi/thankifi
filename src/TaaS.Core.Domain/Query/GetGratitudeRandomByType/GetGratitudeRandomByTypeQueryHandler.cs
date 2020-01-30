@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -8,26 +9,26 @@ using TaaS.Common.Helper;
 using TaaS.Core.Entity;
 using TaaS.Persistence.Context;
 
-namespace TaaS.Core.Domain.Query.GetGratitudeRandom
+namespace TaaS.Core.Domain.Query.GetGratitudeRandomByType
 {
-    public class GetGratitudeRandomQueryHandler : IRequestHandler<GetGratitudeRandomQuery, (int, string)>
+    public class GetGratitudeRandomByTypeQueryHandler : IRequestHandler<GetGratitudeRandomByTypeQuery, (int, string)>
     {
-        protected readonly ILogger<GetGratitudeRandomQueryHandler> Logger;
+        protected readonly ILogger<GetGratitudeRandomByTypeQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
 
-        public GetGratitudeRandomQueryHandler(ILogger<GetGratitudeRandomQueryHandler> logger, TaaSDbContext context)
+        public GetGratitudeRandomByTypeQueryHandler(ILogger<GetGratitudeRandomByTypeQueryHandler> logger, TaaSDbContext context)
         {
             Logger = logger;
             Context = context;
         }
 
-        public async Task<(int, string)> Handle(GetGratitudeRandomQuery request, CancellationToken cancellationToken)
+        public async Task<(int, string)> Handle(GetGratitudeRandomByTypeQuery request, CancellationToken cancellationToken)
         {
-            Logger.LogDebug("Requested random gratitude.");
+            Logger.LogDebug("Requested random basic gratitude.");
             
-            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.CountAsync(cancellationToken));
+            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.Where(g => g.Type == request.Type).CountAsync(cancellationToken));
 
-            var gratitude = await Context.Gratitudes.Skip(offset).FirstAsync(cancellationToken);
+            var gratitude = await Context.Gratitudes.Where(g => g.Type == request.Type).Skip(offset).FirstAsync(cancellationToken);
 
             var response = gratitude.Type switch
             {
