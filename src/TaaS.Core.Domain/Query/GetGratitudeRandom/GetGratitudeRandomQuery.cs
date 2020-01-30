@@ -1,8 +1,8 @@
 ﻿using MediatR;
 
-namespace TaaS.Core.Domain.Query.GetRandomGratitude
+namespace TaaS.Core.Domain.Query.GetGratitudeRandom
 {
-    public class GetRandomGratitudeQuery : IRequest<string>
+    public class GetRandomGratitudeQuery : IRequest<(int, string)>
     {
         public GetRandomGratitudeQuery(string name = "Alice", string signature = "Bob")
         {

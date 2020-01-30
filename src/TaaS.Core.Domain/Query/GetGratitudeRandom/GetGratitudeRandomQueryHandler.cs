@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 using TaaS.Common.Helper;
 using TaaS.Persistence.Context;
 
-namespace TaaS.Core.Domain.Query.GetRandomGratitude
+namespace TaaS.Core.Domain.Query.GetGratitudeRandom
 {
-    public class GetRandomGratitudeQueryHandler : IRequestHandler<GetRandomGratitudeQuery, string>
+    public class GetRandomGratitudeQueryHandler : IRequestHandler<GetRandomGratitudeQuery, (int, string)>
     {
         protected readonly ILogger<GetRandomGratitudeQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -20,7 +20,7 @@ namespace TaaS.Core.Domain.Query.GetRandomGratitude
             Context = context;
         }
 
-        public async Task<string> Handle(GetRandomGratitudeQuery request, CancellationToken cancellationToken)
+        public async Task<(int, string)> Handle(GetRandomGratitudeQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested random gratitude.");
             
@@ -30,7 +30,7 @@ namespace TaaS.Core.Domain.Query.GetRandomGratitude
 
             var response = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
 
-            return response;
+            return (gratitude.Id, response);
         }
     }
 }
