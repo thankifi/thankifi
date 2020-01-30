@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaaS.Core.Entity;
 
-namespace TaaS.Persistence
+namespace TaaS.Persistence.Context
 {
     public class TaaSDbContext : DbContext
     {
@@ -9,6 +9,7 @@ namespace TaaS.Persistence
 
         protected TaaSDbContext()
         {
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public TaaSDbContext(DbContextOptions options) : base(options)
