@@ -26,7 +26,7 @@ namespace TaaS.Core.Domain.Query.GetGratitudeRandom
             
             var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.CountAsync(cancellationToken));
 
-            var gratitude = await Context.Gratitudes.Skip(offset).FirstAsync(cancellationToken: cancellationToken);
+            var gratitude = await Context.Gratitudes.Skip(offset).FirstAsync(cancellationToken);
 
             var response = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
 
