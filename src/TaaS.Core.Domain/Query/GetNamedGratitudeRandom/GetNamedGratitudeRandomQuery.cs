@@ -2,9 +2,9 @@
 
 namespace TaaS.Core.Domain.Query.GetNamedGratitudeRandom
 {
-    public class GetRandomGratitudeNamedQuery : IRequest<(int, string)>
+    public class GetNamedGratitudeRandomQuery : IRequest<(int, string)>
     {
-        public GetRandomGratitudeNamedQuery(string name = "Alice")
+        public GetNamedGratitudeRandomQuery(string name = "Alice")
         {
             Name = name;
         }

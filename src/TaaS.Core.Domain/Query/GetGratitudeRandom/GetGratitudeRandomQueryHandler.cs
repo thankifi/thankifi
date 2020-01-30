@@ -9,18 +9,18 @@ using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Query.GetGratitudeRandom
 {
-    public class GetRandomGratitudeQueryHandler : IRequestHandler<GetRandomGratitudeQuery, (int, string)>
+    public class GetGratitudeRandomQueryHandler : IRequestHandler<GetGratitudeRandomQuery, (int, string)>
     {
-        protected readonly ILogger<GetRandomGratitudeQueryHandler> Logger;
+        protected readonly ILogger<GetGratitudeRandomQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
 
-        public GetRandomGratitudeQueryHandler(ILogger<GetRandomGratitudeQueryHandler> logger, TaaSDbContext context)
+        public GetGratitudeRandomQueryHandler(ILogger<GetGratitudeRandomQueryHandler> logger, TaaSDbContext context)
         {
             Logger = logger;
             Context = context;
         }
 
-        public async Task<(int, string)> Handle(GetRandomGratitudeQuery request, CancellationToken cancellationToken)
+        public async Task<(int, string)> Handle(GetGratitudeRandomQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested random gratitude.");
             

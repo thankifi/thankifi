@@ -10,18 +10,18 @@ using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Query.GetNamedGratitudeRandom
 {
-    public class GetRandomGratitudeNamedQueryHandler : IRequestHandler<GetRandomGratitudeNamedQuery, (int, string)>
+    public class GetNamedGratitudeRandomQueryHandler : IRequestHandler<GetNamedGratitudeRandomQuery, (int, string)>
     {
-        protected readonly ILogger<GetRandomGratitudeNamedQueryHandler> Logger;
+        protected readonly ILogger<GetNamedGratitudeRandomQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
 
-        public GetRandomGratitudeNamedQueryHandler(ILogger<GetRandomGratitudeNamedQueryHandler> logger, TaaSDbContext context)
+        public GetNamedGratitudeRandomQueryHandler(ILogger<GetNamedGratitudeRandomQueryHandler> logger, TaaSDbContext context)
         {
             Logger = logger;
             Context = context;
         }
 
-        public async Task<(int, string)> Handle(GetRandomGratitudeNamedQuery request, CancellationToken cancellationToken)
+        public async Task<(int, string)> Handle(GetNamedGratitudeRandomQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested random basic gratitude.");
             

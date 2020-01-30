@@ -51,7 +51,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery, DefaultValue("Bob")] string signature,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetRandomGratitudeQuery(name, signature), cancellationToken);
+            var (id, text) = await Mediator.Send(new GetGratitudeRandomQuery(name, signature), cancellationToken);
 
             return Ok(new GratitudeResponse(id, text));
         }
@@ -60,7 +60,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         public async Task<IActionResult> GetRandomNamed(
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetRandomGratitudeQuery(), cancellationToken);
+            var (id, text) = await Mediator.Send(new GetGratitudeRandomQuery(), cancellationToken);
 
             return Ok(new GratitudeResponse(id, text));
         }
@@ -70,7 +70,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery, DefaultValue("Alice")] string name,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetRandomGratitudeQuery(name, ""), cancellationToken);
+            var (id, text) = await Mediator.Send(new GetGratitudeRandomQuery(name, ""), cancellationToken);
 
             return Ok(new GratitudeResponse(id, text));
         }
@@ -80,7 +80,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery, DefaultValue("Bob")] string signature,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetRandomGratitudeQuery("", signature), cancellationToken);
+            var (id, text) = await Mediator.Send(new GetGratitudeRandomQuery("", signature), cancellationToken);
 
             return Ok(new GratitudeResponse(id, text));
         }
