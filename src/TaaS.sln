@@ -1,8 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{5AEA96E2-127A-45C5-9075-10CFAF879260}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaaS.Api.WebApi", "TaaS.Api.WebApi\TaaS.Api.WebApi.csproj", "{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{21483509-6AB9-4714-AA9B-EFB68FAB95F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaaS.Application.Contract", "TaaS.Application.Contract\TaaS.Application.Contract.csproj", "{71838E92-5FE8-4DBB-9EF2-152A70FACCD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE} = {5AEA96E2-127A-45C5-9075-10CFAF879260}
+		{71838E92-5FE8-4DBB-9EF2-152A70FACCD4} = {21483509-6AB9-4714-AA9B-EFB68FAB95F6}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71838E92-5FE8-4DBB-9EF2-152A70FACCD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71838E92-5FE8-4DBB-9EF2-152A70FACCD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71838E92-5FE8-4DBB-9EF2-152A70FACCD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71838E92-5FE8-4DBB-9EF2-152A70FACCD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
