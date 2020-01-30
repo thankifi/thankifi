@@ -1,14 +1,36 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using TaaS.Common.Helper;
+using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Query.GetRandomGratitude
 {
     public class GetRandomGratitudeQueryHandler : IRequestHandler<GetRandomGratitudeQuery, string>
     {
-        public Task<string> Handle(GetRandomGratitudeQuery request, CancellationToken cancellationToken)
+        protected readonly ILogger<GetRandomGratitudeQueryHandler> Logger;
+        protected readonly TaaSDbContext Context;
+
+        public GetRandomGratitudeQueryHandler(ILogger<GetRandomGratitudeQueryHandler> logger, TaaSDbContext context)
         {
-            throw new System.NotImplementedException();
+            Logger = logger;
+            Context = context;
+        }
+
+        public async Task<string> Handle(GetRandomGratitudeQuery request, CancellationToken cancellationToken)
+        {
+            Logger.LogDebug("Requested random gratitude.");
+            
+            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.CountAsync(cancellationToken));
+
+            var gratitude = await Context.Gratitudes.Skip(offset).FirstAsync(cancellationToken: cancellationToken);
+
+            var response = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
+
+            return response;
         }
     }
 }
