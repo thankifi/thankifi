@@ -8,4 +8,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TaaS.Core.Entity\TaaS.Core.Entity.csproj" />
+    </ItemGroup>
+
 </Project>
