@@ -6,14 +6,21 @@ namespace TaaS.Persistence.Context
     public class TaaSDbContext : DbContext
     {
         public DbSet<Gratitude> Gratitudes { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected TaaSDbContext()
         {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public TaaSDbContext(DbContextOptions options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaaSDbContext).Assembly);
+            
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
