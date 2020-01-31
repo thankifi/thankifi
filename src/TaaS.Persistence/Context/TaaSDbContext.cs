@@ -7,6 +7,7 @@ namespace TaaS.Persistence.Context
     {
         public DbSet<Gratitude> Gratitudes { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<GratitudeCategory> GratitudeCategories { get; set; }
 
         protected TaaSDbContext()
         {

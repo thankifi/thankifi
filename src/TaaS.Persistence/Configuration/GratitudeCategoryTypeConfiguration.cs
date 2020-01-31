@@ -10,11 +10,13 @@ namespace TaaS.Persistence.Configuration
         {
             builder.HasOne(e => e.Category)
                 .WithMany(e => e.Gratitudes)
-                .HasForeignKey(e => e.CategoryId);
+                .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Gratitude)
                 .WithMany(e => e.Categories)
-                .HasForeignKey(e => e.GratitudeId);
+                .HasForeignKey(e => e.GratitudeId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
