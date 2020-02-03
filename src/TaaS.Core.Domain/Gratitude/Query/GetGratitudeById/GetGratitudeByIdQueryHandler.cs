@@ -23,7 +23,7 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
         {
             Logger.LogDebug("Requested gratitude by id.");
             
-            var gratitude = await Context.Gratitudes
+            var gratitude = await Context.Gratitudes.AsNoTracking()
                 .Include(g => g.Categories)
                     .ThenInclude(c => c.Category)
                 .Where(g => g.Id == request.Id)

@@ -25,11 +25,11 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom
         {
             Logger.LogDebug("Requested random gratitude.");
             
-            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes
+            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.AsNoTracking()
                 .Where(g => g.Language == request.Language)
                 .CountAsync(cancellationToken));
 
-            var gratitude = await Context.Gratitudes
+            var gratitude = await Context.Gratitudes.AsNoTracking()
                 .Include(g => g.Categories)
                     .ThenInclude(c => c.Category)
                 .Where(g => g.Language == request.Language)
