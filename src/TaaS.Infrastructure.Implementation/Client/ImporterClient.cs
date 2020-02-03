@@ -8,13 +8,13 @@ using TaaS.Infrastructure.Contract.Model;
 
 namespace TaaS.Infrastructure.Implementation.Client
 {
-    public class ImportClient : IImporterClient
+    public class ImporterClient : IImporterClient
     {
-        protected readonly ILogger<ImportClient> Logger;
+        protected readonly ILogger<ImporterClient> Logger;
         protected readonly HttpClient Client;
         protected readonly string? Version;
 
-        public ImportClient(ILogger<ImportClient> logger, HttpClient client, IConfiguration configuration)
+        public ImporterClient(ILogger<ImporterClient> logger, HttpClient client, IConfiguration configuration)
         {
             client.BaseAddress = new Uri(configuration["IMPORTER_SOURCE_URL"]);
             Version = configuration["IMPORTER_DB_VERSION"];
