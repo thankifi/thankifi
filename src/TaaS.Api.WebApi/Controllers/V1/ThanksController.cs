@@ -37,15 +37,16 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("{id}")]
-        [ProducesResponseType(typeof(GratitudeResponse), 200)]
+        [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetById(
             [FromRoute, Required] int id,
             [FromQuery, DefaultValue("Alice")] string name = "Alice",
             [FromQuery, DefaultValue("Bob")] string signature = "Bob",
             CancellationToken cancellationToken = default)
         {
-            var (_, text) = await Mediator.Send(new GetGratitudeByIdQuery(id, name, signature), cancellationToken);
-            return Ok(new GratitudeResponse(id, text));
+            var result = await Mediator.Send(new GetGratitudeByIdQuery(id, name, signature), cancellationToken);
+            
+            return Ok(GratitudeViewModel.Parse(result));
         }
 
         /// <summary>
@@ -57,16 +58,16 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random")]
-        [ProducesResponseType(typeof(GratitudeResponse), 200)]
+        [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandom(
             [FromQuery, DefaultValue("Alice")] string? name,
             [FromQuery, DefaultValue("Bob")] string? signature,
             [FromQuery, DefaultValue("en")] string? language,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetGratitudeRandomQuery(language, name, signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomQuery(language, name, signature), cancellationToken);
 
-            return Ok(new GratitudeResponse(id, text));
+            return Ok(GratitudeViewModel.Parse(result));
         }
 
         /// <summary>
@@ -77,14 +78,14 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <returns></returns>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/basic")]
-        [ProducesResponseType(typeof(GratitudeResponse), 200)]
+        [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandomBasic(
             [FromQuery, DefaultValue("en")] string? language,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Basic), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Basic), cancellationToken);
 
-            return Ok(new GratitudeResponse(id, text));
+            return Ok(GratitudeViewModel.Parse(result));
         }
 
         /// <summary>
@@ -95,15 +96,15 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/named")]
-        [ProducesResponseType(typeof(GratitudeResponse), 200)]
+        [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandomNamed(
             [FromQuery, Required] string name,
             [FromQuery, DefaultValue("en")] string? language,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Named, name), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Named, name), cancellationToken);
 
-            return Ok(new GratitudeResponse(id, text));
+            return Ok(GratitudeViewModel.Parse(result));
         }
 
         /// <summary>
@@ -114,15 +115,15 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/signed")]
-        [ProducesResponseType(typeof(GratitudeResponse), 200)]
+        [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandomSigned(
             [FromQuery, Required] string signature,
             [FromQuery, DefaultValue("en")] string? language,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, signature: signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, signature: signature), cancellationToken);
 
-            return Ok(new GratitudeResponse(id, text));
+            return Ok(GratitudeViewModel.Parse(result));
         }
 
         /// <summary>
@@ -134,16 +135,16 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/namedAndSigned")]
-        [ProducesResponseType(typeof(GratitudeResponse), 200)]
+        [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandomNamedAndSigned(
             [FromQuery, Required] string name,
             [FromQuery, Required] string signature,
             [FromQuery, DefaultValue("en")] string? language,
             CancellationToken cancellationToken)
         {
-            var (id, text) = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, name, signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, name, signature), cancellationToken);
 
-            return Ok(new GratitudeResponse(id, text));
+            return Ok(GratitudeViewModel.Parse(result));
         }
     }
 }
