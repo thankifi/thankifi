@@ -1,7 +1,7 @@
 ﻿using System;
 using MediatR;
 
-namespace TaaS.Core.Domain.Gratitude.Notification
+namespace TaaS.Core.Domain.Import.Notification
 {
     public class ImportSuccessNotification : INotification
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TaaS.Core.Domain.Gratitude.Notification;
+using TaaS.Core.Domain.Import.Notification;
 using TaaS.Core.Entity;
 using TaaS.Infrastructure.Contract.Service;
 using TaaS.Persistence.Context;
