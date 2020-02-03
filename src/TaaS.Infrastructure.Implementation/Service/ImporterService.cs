@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OperationResult;
@@ -21,11 +22,11 @@ namespace TaaS.Infrastructure.Implementation.Service
             Client = client;
         }
 
-        public async Task<Result<(List<Gratitude>, List<Category>), string>> Fetch()
+        public async Task<Result<(List<Gratitude>, List<Category>), string>> Fetch(CancellationToken cancellationToken = default)
         {
             try
             {
-                var rawData = await Client.GetData();
+                var rawData = await Client.GetData(cancellationToken);
 
                 return Ok((rawData.Gratitudes, rawData.Categories));
             }
