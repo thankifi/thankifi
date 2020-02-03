@@ -54,7 +54,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "en", "es".</param>
+        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random")]
@@ -62,7 +62,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         public async Task<IActionResult> GetRandom(
             [FromQuery, DefaultValue("Alice")] string? name,
             [FromQuery, DefaultValue("Bob")] string? signature,
-            [FromQuery, DefaultValue("en")] string? language,
+            [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetGratitudeRandomQuery(language, name, signature), cancellationToken);
@@ -73,14 +73,14 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <summary>
         /// Get a random gratitude basic sentence. No names, no signatures. Thanks!
         /// </summary>
-        /// <param name="language">Language of the gratitude. Currently supported: "en", "es".</param>
+        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/basic")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandomBasic(
-            [FromQuery, DefaultValue("en")] string? language,
+            [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Basic), cancellationToken);
@@ -92,14 +92,14 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// Get a random gratitude named sentence. Required name, no signatures. Thanks!
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "en", "es".</param>
+        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/named")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandomNamed(
             [FromQuery, Required] string name,
-            [FromQuery, DefaultValue("en")] string? language,
+            [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Named, name), cancellationToken);
@@ -111,14 +111,14 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// Get a random gratitude signed sentence. No name, required signature. Thanks!
         /// </summary>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "en", "es".</param>
+        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/signed")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         public async Task<IActionResult> GetRandomSigned(
             [FromQuery, Required] string signature,
-            [FromQuery, DefaultValue("en")] string? language,
+            [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, signature: signature), cancellationToken);
@@ -131,7 +131,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "en", "es".</param>
+        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/namedAndSigned")]
@@ -139,7 +139,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         public async Task<IActionResult> GetRandomNamedAndSigned(
             [FromQuery, Required] string name,
             [FromQuery, Required] string signature,
-            [FromQuery, DefaultValue("en")] string? language,
+            [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, name, signature), cancellationToken);
