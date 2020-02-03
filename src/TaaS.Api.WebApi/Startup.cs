@@ -112,6 +112,15 @@ namespace TaaS.Api.WebApi
             {
                 app.UseHttpsRedirection();
             }
+
+            #region Migration
+            
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<TaaSDbContext>().Database.Migrate();
+            }
+            
+            #endregion
             
             app.UseStaticFiles();
             
