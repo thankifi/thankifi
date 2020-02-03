@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TaaS.Core.Domain.Gratitude.Command.ImportGratitudes;
+using TaaS.Core.Domain.Import.Command.ImportGratitudes;
 
 namespace TaaS.Api.WebApi.Hosted
 {

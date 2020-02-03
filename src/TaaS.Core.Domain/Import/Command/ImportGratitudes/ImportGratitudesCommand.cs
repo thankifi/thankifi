@@ -1,7 +1,6 @@
 ﻿using MediatR;
-using OperationResult;
 
-namespace TaaS.Core.Domain.Gratitude.Command.ImportGratitudes
+namespace TaaS.Core.Domain.Import.Command.ImportGratitudes
 {
     public class ImportGratitudesCommand : IRequest<Unit>
     {

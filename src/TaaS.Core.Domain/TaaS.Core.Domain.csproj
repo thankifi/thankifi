@@ -18,4 +18,8 @@
       <ProjectReference Include="..\TaaS.Persistence\TaaS.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Import" />
+    </ItemGroup>
+
 </Project>
