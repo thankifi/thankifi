@@ -48,7 +48,7 @@ namespace TaaS.Api.WebApi
             services.AddDbContext<TaaSDbContext>(builder =>
             { 
                 var connectionString = Configuration["DB_CONNECTION_STRING"];
-                builder.UseNpgsql(connectionString);
+                builder.UseNpgsql(connectionString, optionsBuilder => { optionsBuilder.MigrationsAssembly("TaaS.Persistence.Migration"); });
             });
 
             #endregion

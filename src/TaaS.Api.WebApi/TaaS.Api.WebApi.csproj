@@ -29,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\TaaS.Core.Domain\TaaS.Core.Domain.csproj" />
       <ProjectReference Include="..\TaaS.Infrastructure.Implementation\TaaS.Infrastructure.Implementation.csproj" />
+      <ProjectReference Include="..\TaaS.Persistence.Migration\TaaS.Persistence.Migration.csproj" />
     </ItemGroup>
 
 
