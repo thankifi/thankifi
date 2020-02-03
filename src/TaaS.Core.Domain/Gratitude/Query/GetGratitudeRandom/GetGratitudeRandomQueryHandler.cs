@@ -8,7 +8,7 @@ using TaaS.Common.Helper;
 using TaaS.Core.Entity;
 using TaaS.Persistence.Context;
 
-namespace TaaS.Core.Domain.Query.GetGratitudeRandom
+namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom
 {
     public class GetGratitudeRandomQueryHandler : IRequestHandler<GetGratitudeRandomQuery, Entity.Gratitude>
     {

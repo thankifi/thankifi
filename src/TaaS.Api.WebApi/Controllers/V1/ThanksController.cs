@@ -6,9 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TaaS.Api.WebApi.Model.V1;
-using TaaS.Core.Domain.Query.GetGratitudeById;
-using TaaS.Core.Domain.Query.GetGratitudeRandom;
-using TaaS.Core.Domain.Query.GetGratitudeRandomByType;
+using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
+using TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom;
+using TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType;
 using TaaS.Core.Entity;
 
 namespace TaaS.Api.WebApi.Controllers.V1

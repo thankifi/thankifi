@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace TaaS.Core.Domain.Query.GetGratitudeById
+namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
 {
     public class GetGratitudeByIdQuery : IRequest<Entity.Gratitude>
     {

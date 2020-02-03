@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TaaS.Persistence.Context;
 
-namespace TaaS.Core.Domain.Query.GetGratitudeById
+namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
 {
     public class GetGratitudeByIdQueryHandler : IRequestHandler<GetGratitudeByIdQuery, Entity.Gratitude>
     {

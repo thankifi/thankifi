@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -9,7 +8,7 @@ using TaaS.Common.Helper;
 using TaaS.Core.Entity;
 using TaaS.Persistence.Context;
 
-namespace TaaS.Core.Domain.Query.GetGratitudeRandomByType
+namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType
 {
     public class GetGratitudeRandomByTypeQueryHandler : IRequestHandler<GetGratitudeRandomByTypeQuery, Entity.Gratitude>
     {

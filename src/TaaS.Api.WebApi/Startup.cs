@@ -14,7 +14,7 @@ using Microsoft.OpenApi.Models;
 using Polly;
 using TaaS.Api.WebApi.Configuration.Swagger;
 using TaaS.Api.WebApi.Hosted;
-using TaaS.Core.Domain.Query.GetGratitudeById;
+using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
 using TaaS.Infrastructure.Contract.Client;
 using TaaS.Infrastructure.Contract.Service;
 using TaaS.Infrastructure.Implementation.Client;
