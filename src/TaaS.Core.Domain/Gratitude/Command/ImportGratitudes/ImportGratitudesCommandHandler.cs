@@ -50,7 +50,7 @@ namespace TaaS.Core.Domain.Gratitude.Command.ImportGratitudes
                     var tableName = Context.Model.FindEntityType(typeof(GratitudeCategory)).GetTableName();
                     await Context.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", cancellationToken);
                     
-                    tableName = Context.Model.FindEntityType(typeof(Category)).GetTableName();
+                    tableName = Context.Model.FindEntityType(typeof(Entity.Category)).GetTableName();
                     await Context.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", cancellationToken);
                     
                     tableName = Context.Model.FindEntityType(typeof(Entity.Gratitude)).GetTableName();
@@ -58,7 +58,7 @@ namespace TaaS.Core.Domain.Gratitude.Command.ImportGratitudes
 
                     foreach (var category in categories)
                     {
-                        await Context.Categories.AddAsync(new Category
+                        await Context.Categories.AddAsync(new Entity.Category
                         {
                             Id = category.Id,
                             Title = category.Title
