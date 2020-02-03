@@ -23,9 +23,8 @@ namespace TaaS.Api.WebApi.Hosted
         {
             Logger = logger;
             ServiceScopeFactory = serviceScopeFactory;
-            Expression = CronExpression.Parse(configuration["IMPORTER_CRON_CONFIGURATION"] ?? "* * * * *");
+            Expression = CronExpression.Parse(configuration["IMPORTER_CRON_CONFIGURATION"] ?? "0 0 1 * *");
             TimeZoneInfo = TimeZoneInfo.Utc;
-
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -43,7 +42,7 @@ namespace TaaS.Api.WebApi.Hosted
             {
                 var delay = next.Value - DateTimeOffset.Now;
                 
-                Logger.LogDebug("Next MASTER run in {Delay}", delay);
+                Logger.LogDebug("Next import run in {Delay}", delay);
                 
                 Timer = new System.Timers.Timer(delay.TotalMilliseconds);
                 Timer.Elapsed += async (sender, args) =>
