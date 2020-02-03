@@ -17,7 +17,7 @@ namespace TaaS.Api.WebApi.Model.V1
             {
                 Id = gratitude.Id,
                 Text = gratitude.Text,
-                Categories = gratitude.Categories.Select(c => c.Category.Title)
+                Categories = gratitude.Categories.Select(c => c.Category.Title.ToLower())
             };
         }
     }
