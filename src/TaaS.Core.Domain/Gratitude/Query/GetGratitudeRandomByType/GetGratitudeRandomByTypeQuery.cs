@@ -3,7 +3,7 @@ using TaaS.Core.Entity;
 
 namespace TaaS.Core.Domain.Query.GetGratitudeRandomByType
 {
-    public class GetGratitudeRandomByTypeQuery : IRequest<(int, string)>
+    public class GetGratitudeRandomByTypeQuery : IRequest<Entity.Gratitude>
     {
         public GetGratitudeRandomByTypeQuery(GratitudeType type, string language = "en", string name = "Alice", string signature = "Bob")
         {

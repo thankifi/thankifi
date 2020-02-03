@@ -8,6 +8,9 @@ namespace TaaS.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<GratitudeCategory> builder)
         {
+            builder.HasKey(e =>
+            new {e.CategoryId, e.GratitudeId });
+            
             builder.HasOne(e => e.Category)
                 .WithMany(e => e.Gratitudes)
                 .HasForeignKey(e => e.CategoryId)

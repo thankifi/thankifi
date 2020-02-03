@@ -11,7 +11,7 @@ using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Query.GetGratitudeRandomByType
 {
-    public class GetGratitudeRandomByTypeQueryHandler : IRequestHandler<GetGratitudeRandomByTypeQuery, (int, string)>
+    public class GetGratitudeRandomByTypeQueryHandler : IRequestHandler<GetGratitudeRandomByTypeQuery, Entity.Gratitude>
     {
         protected readonly ILogger<GetGratitudeRandomByTypeQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -22,7 +22,7 @@ namespace TaaS.Core.Domain.Query.GetGratitudeRandomByType
             Context = context;
         }
 
-        public async Task<(int, string)> Handle(GetGratitudeRandomByTypeQuery request, CancellationToken cancellationToken)
+        public async Task<Entity.Gratitude> Handle(GetGratitudeRandomByTypeQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested random basic gratitude.");
             
@@ -32,12 +32,14 @@ namespace TaaS.Core.Domain.Query.GetGratitudeRandomByType
                 .CountAsync(cancellationToken));
 
             var gratitude = await Context.Gratitudes
+                .Include(g => g.Categories)
+                    .ThenInclude(c => c.Category)
                 .Where(g => g.Language == request.Language)
                 .Where(g => g.Type == request.Type)
                 .Skip(offset)
                 .FirstAsync(cancellationToken);
 
-            var response = gratitude.Type switch
+            gratitude.Text = gratitude.Type switch
             {
                 GratitudeType.Basic => gratitude.Text,
                 GratitudeType.Named => gratitude.Text.Replace("{{NAME}}", request.Name),
@@ -46,7 +48,7 @@ namespace TaaS.Core.Domain.Query.GetGratitudeRandomByType
                 _ => gratitude.Text
             };
 
-            return (gratitude.Id, response);
+            return gratitude;
         }
     }
 }

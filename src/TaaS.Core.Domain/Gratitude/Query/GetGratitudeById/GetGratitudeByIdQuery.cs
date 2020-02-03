@@ -2,7 +2,7 @@
 
 namespace TaaS.Core.Domain.Query.GetGratitudeById
 {
-    public class GetGratitudeByIdQuery : IRequest<(int, string)>
+    public class GetGratitudeByIdQuery : IRequest<Entity.Gratitude>
     {
         public GetGratitudeByIdQuery(int id, string name = "Alice", string signature = "Bob")
         {

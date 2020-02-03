@@ -2,7 +2,7 @@
 
 namespace TaaS.Core.Domain.Query.GetGratitudeRandom
 {
-    public class GetGratitudeRandomQuery : IRequest<(int, string)>
+    public class GetGratitudeRandomQuery : IRequest<Entity.Gratitude>
     {
         public GetGratitudeRandomQuery(string language = "en", string name = "Alice", string signature = "Bob")
         {

@@ -8,7 +8,7 @@ using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Query.GetGratitudeById
 {
-    public class GetGratitudeByIdQueryHandler : IRequestHandler<GetGratitudeByIdQuery, (int, string)>
+    public class GetGratitudeByIdQueryHandler : IRequestHandler<GetGratitudeByIdQuery, Entity.Gratitude>
     {
         protected readonly ILogger<GetGratitudeByIdQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -19,17 +19,19 @@ namespace TaaS.Core.Domain.Query.GetGratitudeById
             Context = context;
         }
 
-        public async Task<(int, string)> Handle(GetGratitudeByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Entity.Gratitude> Handle(GetGratitudeByIdQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested gratitude by id.");
             
             var gratitude = await Context.Gratitudes
+                .Include(g => g.Categories)
+                    .ThenInclude(c => c.Category)
                 .Where(g => g.Id == request.Id)
                 .FirstAsync(cancellationToken);
 
-            var response = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
+            gratitude.Text = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
 
-            return (gratitude.Id, response);
+            return gratitude;
         }
     }
 }
