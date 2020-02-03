@@ -32,11 +32,13 @@ namespace TaaS.Core.Domain.Gratitude.Command.ImportGratitudes
         {
             var startTime = DateTime.UtcNow;
 
-            var fetchResult = await ImporterService.Fetch();
+            var fetchResult = await ImporterService.Fetch(cancellationToken);
             
             if (fetchResult.IsError)
             {
                 await Mediator.Publish(new ImportErrorNotification(startTime, fetchResult.Error), cancellationToken);
+                
+                return Unit.Value;
             }
 
             var (gratitudes, categories) = fetchResult.Value;
@@ -46,13 +48,13 @@ namespace TaaS.Core.Domain.Gratitude.Command.ImportGratitudes
                 try
                 {
                     var tableName = Context.Model.FindEntityType(typeof(GratitudeCategory)).GetTableName();
-                    await Context.Database.ExecuteSqlRawAsync($"DELETE FROM {tableName}", cancellationToken);
+                    await Context.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", cancellationToken);
                     
                     tableName = Context.Model.FindEntityType(typeof(Category)).GetTableName();
-                    await Context.Database.ExecuteSqlRawAsync($"DELETE FROM {tableName}", cancellationToken);
+                    await Context.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", cancellationToken);
                     
                     tableName = Context.Model.FindEntityType(typeof(Entity.Gratitude)).GetTableName();
-                    await Context.Database.ExecuteSqlRawAsync($"DELETE FROM {tableName}", cancellationToken);
+                    await Context.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", cancellationToken);
 
                     foreach (var category in categories)
                     {
