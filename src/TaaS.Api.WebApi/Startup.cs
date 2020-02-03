@@ -1,23 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using AspNetCoreRateLimit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Polly;
 using TaaS.Api.WebApi.Configuration.Swagger;
+using TaaS.Api.WebApi.Hosted;
 using TaaS.Core.Domain.Query.GetGratitudeById;
 using TaaS.Infrastructure.Contract.Client;
 using TaaS.Infrastructure.Contract.Service;
@@ -43,13 +39,19 @@ namespace TaaS.Api.WebApi
             services.AddControllers();
             services.AddMemoryCache();
 
+            services.AddHostedService<ImportHostedService>();
+            
+            services.AddMediatR(typeof(GetGratitudeByIdQuery).Assembly);
+            
+            #region Persistence
+
             services.AddDbContext<TaaSDbContext>(builder =>
             { 
                 var connectionString = Configuration["DB_CONNECTION_STRING"];
                 builder.UseNpgsql(connectionString);
             });
-            
-            services.AddMediatR(typeof(GetGratitudeByIdQuery).Assembly);
+
+            #endregion
 
             #region Infrastructure
 
