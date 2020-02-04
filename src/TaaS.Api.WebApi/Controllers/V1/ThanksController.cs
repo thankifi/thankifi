@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,10 +69,10 @@ namespace TaaS.Api.WebApi.Controllers.V1
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandom(
-            [FromQuery, DefaultValue("Alice")] string? name,
-            [FromQuery, DefaultValue("Bob")] string? signature,
-            [FromQuery, DefaultValue("eng")] string? language,
-            CancellationToken cancellationToken)
+            [FromQuery, DefaultValue("Alice")] string? name = "Alice",
+            [FromQuery, DefaultValue("Bob")] string? signature = "Bob",
+            [FromQuery, DefaultValue("eng")] string? language = "eng",
+            CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetGratitudeRandomQuery(language, name, signature), cancellationToken);
 
@@ -96,8 +96,8 @@ namespace TaaS.Api.WebApi.Controllers.V1
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandomBasic(
-            [FromQuery, DefaultValue("eng")] string? language,
-            CancellationToken cancellationToken)
+            [FromQuery, DefaultValue("eng")] string? language = "eng",
+            CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Basic, language), cancellationToken);
 
@@ -122,8 +122,8 @@ namespace TaaS.Api.WebApi.Controllers.V1
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandomNamed(
             [FromQuery, Required] string name,
-            [FromQuery, DefaultValue("eng")] string? language,
-            CancellationToken cancellationToken)
+            [FromQuery, DefaultValue("eng")] string? language = "eng",
+            CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Named, name), cancellationToken);
 
@@ -148,8 +148,8 @@ namespace TaaS.Api.WebApi.Controllers.V1
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandomSigned(
             [FromQuery, Required] string signature,
-            [FromQuery, DefaultValue("eng")] string? language,
-            CancellationToken cancellationToken)
+            [FromQuery, DefaultValue("eng")] string? language = "eng",
+            CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, language, signature: signature),
                 cancellationToken);
@@ -177,8 +177,8 @@ namespace TaaS.Api.WebApi.Controllers.V1
         public async Task<IActionResult> GetRandomNamedAndSigned(
             [FromQuery, Required] string name,
             [FromQuery, Required] string signature,
-            [FromQuery, DefaultValue("eng")] string? language,
-            CancellationToken cancellationToken)
+            [FromQuery, DefaultValue("eng")] string? language = "eng",
+            CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, language, name, signature),
                 cancellationToken);
