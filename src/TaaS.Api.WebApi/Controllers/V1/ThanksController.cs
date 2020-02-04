@@ -36,8 +36,10 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
+        /// <response code="404">Gratitude not found! Thanks!</response>
         [HttpGet, Route("{id}")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetById(
             [FromRoute, Required] int id,
             [FromQuery, DefaultValue("Alice")] string name = "Alice",
@@ -45,8 +47,13 @@ namespace TaaS.Api.WebApi.Controllers.V1
             CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetGratitudeByIdQuery(id, name, signature), cancellationToken);
+
+            if (result != null)
+            {
+                return Ok(GratitudeViewModel.Parse(result));
+            }
             
-            return Ok(GratitudeViewModel.Parse(result));
+            return NotFound("Gratitude Not Found.");
         }
 
         /// <summary>
@@ -57,8 +64,10 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
+        /// <response code="404">Gratitude not found! Thanks!</response>
         [HttpGet, Route("random")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandom(
             [FromQuery, DefaultValue("Alice")] string? name,
             [FromQuery, DefaultValue("Bob")] string? signature,
@@ -67,7 +76,12 @@ namespace TaaS.Api.WebApi.Controllers.V1
         {
             var result = await Mediator.Send(new GetGratitudeRandomQuery(language, name, signature), cancellationToken);
 
-            return Ok(GratitudeViewModel.Parse(result));
+            if (result != null)
+            {
+                return Ok(GratitudeViewModel.Parse(result));
+            }
+            
+            return NotFound("Gratitude Not Found.");
         }
 
         /// <summary>
@@ -77,15 +91,22 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <response code="200">Gratitude sentence. Thanks!</response>
+        /// <response code="404">Gratitude not found! Thanks!</response>
         [HttpGet, Route("random/basic")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandomBasic(
             [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Basic, language), cancellationToken);
 
-            return Ok(GratitudeViewModel.Parse(result));
+            if (result != null)
+            {
+                return Ok(GratitudeViewModel.Parse(result));
+            }
+            
+            return NotFound("Gratitude Not Found.");
         }
 
         /// <summary>
@@ -95,8 +116,10 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
+        /// <response code="404">Gratitude not found! Thanks!</response>
         [HttpGet, Route("random/named")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandomNamed(
             [FromQuery, Required] string name,
             [FromQuery, DefaultValue("eng")] string? language,
@@ -104,7 +127,12 @@ namespace TaaS.Api.WebApi.Controllers.V1
         {
             var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Named, name), cancellationToken);
 
-            return Ok(GratitudeViewModel.Parse(result));
+            if (result != null)
+            {
+                return Ok(GratitudeViewModel.Parse(result));
+            }
+            
+            return NotFound("Gratitude Not Found.");
         }
 
         /// <summary>
@@ -114,16 +142,24 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
+        /// <response code="404">Gratitude not found! Thanks!</response>
         [HttpGet, Route("random/signed")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandomSigned(
             [FromQuery, Required] string signature,
             [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, language, signature: signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, language, signature: signature),
+                cancellationToken);
 
-            return Ok(GratitudeViewModel.Parse(result));
+            if (result != null)
+            {
+                return Ok(GratitudeViewModel.Parse(result));
+            }
+
+            return NotFound("Gratitude Not Found.");
         }
 
         /// <summary>
@@ -134,17 +170,25 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
+        /// <response code="404">Gratitude not found! Thanks!</response>
         [HttpGet, Route("random/namedAndSigned")]
         [ProducesResponseType(typeof(GratitudeViewModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetRandomNamedAndSigned(
             [FromQuery, Required] string name,
             [FromQuery, Required] string signature,
             [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, language, name, signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, language, name, signature),
+                cancellationToken);
 
-            return Ok(GratitudeViewModel.Parse(result));
+            if (result != null)
+            {
+                return Ok(GratitudeViewModel.Parse(result));
+            }
+
+            return NotFound("Gratitude Not Found.");
         }
     }
 }

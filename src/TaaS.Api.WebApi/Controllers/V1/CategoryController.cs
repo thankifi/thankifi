@@ -32,7 +32,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Get a list of all the categories available.
+        /// Get a list of all the categories available. Thanks!
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Categories list. Thanks!</response>
@@ -53,7 +53,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Get detailed category. Includes number of items.
+        /// Get detailed category. Includes number of items. Thanks!
         /// </summary>
         /// <param name="id">Id of the category.</param>
         /// <param name="cancellationToken"></param>
