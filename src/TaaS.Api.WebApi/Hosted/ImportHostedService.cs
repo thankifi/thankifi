@@ -25,6 +25,7 @@ namespace TaaS.Api.WebApi.Hosted
             ServiceScopeFactory = serviceScopeFactory;
             Expression = CronExpression.Parse(configuration["IMPORTER_CRON_CONFIGURATION"] ?? "0 0 1 * *");
             TimeZoneInfo = TimeZoneInfo.Utc;
+            Timer = new System.Timers.Timer();
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -44,7 +45,8 @@ namespace TaaS.Api.WebApi.Hosted
                 
                 Logger.LogDebug("Next import run in {Delay}", delay);
                 
-                Timer = new System.Timers.Timer(delay.TotalMilliseconds);
+                Timer.Interval = delay.TotalMilliseconds;
+                
                 Timer.Elapsed += async (sender, args) =>
                 {
                     Timer.Stop(); // Resetting
