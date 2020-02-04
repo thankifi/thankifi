@@ -54,8 +54,6 @@ namespace TaaS.Infrastructure.Implementation.Client
 
             var importData = await JsonSerializer.DeserializeAsync<VersionResponse>(importDataStream, cancellationToken: cancellationToken);
 
-            requestResponse.Dispose();
-            
             return importData;
         }
     }

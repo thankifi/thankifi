@@ -54,8 +54,6 @@ namespace TaaS.Api.WebApi.Hosted
                         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
                         await mediator.Send(new ImportGratitudesCommand(), cancellationToken);
-                        
-                        scope.Dispose();
                     }
                     
                     await ScheduleImport(cancellationToken);
