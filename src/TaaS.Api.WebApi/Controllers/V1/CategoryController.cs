@@ -58,7 +58,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="id">Id of the category.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Detailed view of the category. Thanks!</response>
-        /// <response code="404">Category not found! Thanks! Thanks!</response>
+        /// <response code="404">Category not found! Thanks!</response>
         [HttpGet, Route("{id}")]
         [ProducesResponseType(typeof(CategoryDetailViewModel), 200)]
         [ProducesResponseType(typeof(string), 400)]
