@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using TaaS.Core.Domain.Category.Dto;
 using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Category.Query.GetCategoryById
 {
-    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, (int, Entity.Category?)>
+    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDetailDto?>
     {
         protected readonly ILogger<GetCategoryByIdQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -19,21 +20,19 @@ namespace TaaS.Core.Domain.Category.Query.GetCategoryById
             Context = context;
         }
 
-        public async Task<(int, Entity.Category?)> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
+        public async Task<CategoryDetailDto?> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
+            Logger.LogDebug("Requested detailed category.");
+
             var category = await Context.Categories.AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+                .Select(c => new CategoryDetailDto
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    TotalGratitudes = c.Gratitudes.Count
+                }).FirstOrDefaultAsync(cancellationToken);
 
-            if (category == null)
-            {
-                return (1, null);
-            }
-
-            var count = await Context.GratitudeCategories.AsNoTracking()
-                .Where(gc => gc.CategoryId == request.Id)
-                .CountAsync(cancellationToken);
-
-            return (count, category);
+            return category;
         }
     }
 }
