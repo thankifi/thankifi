@@ -9,5 +9,6 @@ namespace TaaS.Infrastructure.Contract.Service
     public interface IImporterService
     {
         Task<Result<(List<Gratitude>, List<Category>), string>> Fetch(CancellationToken cancellationToken = default);
+        Task<Result<string, string>> FindCurrentVersion(CancellationToken cancellationToken = default);
     }
 }
