@@ -10,7 +10,7 @@ using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom
 {
-    public class GetGratitudeRandomQueryHandler : IRequestHandler<GetGratitudeRandomQuery, Entity.Gratitude>
+    public class GetGratitudeRandomQueryHandler : IRequestHandler<GetGratitudeRandomQuery, Entity.Gratitude?>
     {
         protected readonly ILogger<GetGratitudeRandomQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -21,11 +21,11 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom
             Context = context;
         }
 
-        public async Task<Entity.Gratitude> Handle(GetGratitudeRandomQuery request, CancellationToken cancellationToken)
+        public async Task<Entity.Gratitude?> Handle(GetGratitudeRandomQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested random gratitude.");
             
-            var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.AsNoTracking()
+            var offset = RandomProvider.GetThreadRandom()?.Next(0, await Context.Gratitudes.AsNoTracking()
                 .Where(g => g.Language == request.Language)
                 .CountAsync(cancellationToken));
 
@@ -33,7 +33,7 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom
                 .Include(g => g.Categories)
                     .ThenInclude(c => c.Category)
                 .Where(g => g.Language == request.Language)
-                .Skip(offset)
+                .Skip(offset ?? 0)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (gratitude != null)

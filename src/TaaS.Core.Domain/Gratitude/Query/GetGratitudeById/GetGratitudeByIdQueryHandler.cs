@@ -8,7 +8,7 @@ using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
 {
-    public class GetGratitudeByIdQueryHandler : IRequestHandler<GetGratitudeByIdQuery, Entity.Gratitude>
+    public class GetGratitudeByIdQueryHandler : IRequestHandler<GetGratitudeByIdQuery, Entity.Gratitude?>
     {
         protected readonly ILogger<GetGratitudeByIdQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -19,7 +19,7 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
             Context = context;
         }
 
-        public async Task<Entity.Gratitude> Handle(GetGratitudeByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Entity.Gratitude?> Handle(GetGratitudeByIdQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested gratitude by id.");
             

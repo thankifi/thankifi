@@ -85,7 +85,7 @@ namespace TaaS.Core.Domain.Import.Command.ImportGratitudes
             return Unit.Value;
         }
 
-        private async Task AddOrUpdateVersionAsync(ImportVersion version, string versionFetchResult, CancellationToken cancellationToken)
+        private async Task AddOrUpdateVersionAsync(ImportVersion? version, string versionFetchResult, CancellationToken cancellationToken)
         {
             if (version != null)
             {
