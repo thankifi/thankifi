@@ -54,7 +54,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
+        /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random")]
@@ -71,9 +71,9 @@ namespace TaaS.Api.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Get a random gratitude basic sentence. No names, no signatures. Thanks!
+        /// Get a random gratitude basic sentence. No names, no signature. Thanks!
         /// </summary>
-        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
+        /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <response code="200">Gratitude sentence. Thanks!</response>
@@ -89,10 +89,10 @@ namespace TaaS.Api.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Get a random gratitude named sentence. Required name, no signatures. Thanks!
+        /// Get a random gratitude named sentence. Required name, no signature. Thanks!
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
+        /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/named")]
@@ -111,7 +111,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// Get a random gratitude signed sentence. No name, required signature. Thanks!
         /// </summary>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
+        /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/signed")]
@@ -131,7 +131,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="language">Language of the gratitude. Currently supported: "eng", "esp".</param>
+        /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         [HttpGet, Route("random/namedAndSigned")]
