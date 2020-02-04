@@ -5,12 +5,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TaaS.Common.Helper;
+using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Core.Entity;
 using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType
 {
-    public class GetGratitudeRandomByTypeQueryHandler : IRequestHandler<GetGratitudeRandomByTypeQuery, Entity.Gratitude?>
+    public class GetGratitudeRandomByTypeQueryHandler : IRequestHandler<GetGratitudeRandomByTypeQuery, GratitudeDto?>
     {
         protected readonly ILogger<GetGratitudeRandomByTypeQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -21,7 +22,7 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType
             Context = context;
         }
 
-        public async Task<Entity.Gratitude?> Handle(GetGratitudeRandomByTypeQuery request, CancellationToken cancellationToken)
+        public async Task<GratitudeDto?> Handle(GetGratitudeRandomByTypeQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested random basic gratitude.");
 
@@ -31,21 +32,27 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType
                 .CountAsync(cancellationToken));
 
             var gratitude = await Context.Gratitudes.AsNoTracking()
-                .Include(g => g.Categories)
-                    .ThenInclude(c => c.Category)
                 .Where(g => g.Language == request.Language)
                 .Where(g => g.Type == request.Type)
                 .Skip(offset ?? 0)
-                .FirstOrDefaultAsync(cancellationToken);
+                .Select(g => new GratitudeDto
+                {
+                    Id = g.Id,
+                    Language = g.Language,
+                    Text = g.Text,
+                    Customization = (int) g.Type,
+                    Categories = g.Categories.Select(gc => gc.Category.Title)
+                }).FirstOrDefaultAsync(cancellationToken);
 
             if (gratitude != null)
             {
-                gratitude.Text = gratitude.Type switch
+                gratitude.Text = gratitude.Customization switch
                 {
-                    GratitudeType.Basic => gratitude.Text,
-                    GratitudeType.Named => gratitude.Text.Replace("{{NAME}}", request.Name),
-                    GratitudeType.Signed => gratitude.Text.Replace("{{SIGNATURE}}", request.Signature),
-                    GratitudeType.NamedAndSigned => gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature),
+                    (int) GratitudeType.Basic => gratitude.Text,
+                    (int) GratitudeType.Named => gratitude.Text.Replace("{{NAME}}", request.Name),
+                    (int) GratitudeType.Signed => gratitude.Text.Replace("{{SIGNATURE}}", request.Signature),
+                    (int) GratitudeType.NamedAndSigned => gratitude.Text.Replace("{{NAME}}", request.Name)
+                        .Replace("{{SIGNATURE}}", request.Signature),
                     _ => gratitude.Text
                 };
             }

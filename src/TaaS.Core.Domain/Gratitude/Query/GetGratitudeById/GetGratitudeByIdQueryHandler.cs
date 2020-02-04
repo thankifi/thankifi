@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Persistence.Context;
 
 namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
 {
-    public class GetGratitudeByIdQueryHandler : IRequestHandler<GetGratitudeByIdQuery, Entity.Gratitude?>
+    public class GetGratitudeByIdQueryHandler : IRequestHandler<GetGratitudeByIdQuery, GratitudeDto?>
     {
         protected readonly ILogger<GetGratitudeByIdQueryHandler> Logger;
         protected readonly TaaSDbContext Context;
@@ -19,15 +20,19 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
             Context = context;
         }
 
-        public async Task<Entity.Gratitude?> Handle(GetGratitudeByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GratitudeDto?> Handle(GetGratitudeByIdQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested gratitude by id.");
-            
+
             var gratitude = await Context.Gratitudes.AsNoTracking()
-                .Include(g => g.Categories)
-                    .ThenInclude(c => c.Category)
                 .Where(g => g.Id == request.Id)
-                .FirstOrDefaultAsync(cancellationToken);
+                .Select(g => new GratitudeDto
+                {
+                    Id = g.Id,
+                    Language = g.Language,
+                    Text = g.Text,
+                    Categories = g.Categories.Select(gc => gc.Category.Title)
+                }).FirstOrDefaultAsync(cancellationToken);
 
             if (gratitude != null)
             {

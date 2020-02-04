@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Core.Entity;
 
 namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType
 {
-    public class GetGratitudeRandomByTypeQuery : IRequest<Entity.Gratitude?>
+    public class GetGratitudeRandomByTypeQuery : IRequest<GratitudeDto?>
     {
         public GetGratitudeRandomByTypeQuery(GratitudeType type, string language, string name = "Alice", string signature = "Bob")
         {
