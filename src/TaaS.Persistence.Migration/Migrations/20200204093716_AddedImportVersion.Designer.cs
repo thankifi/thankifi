@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaaS.Persistence.Context;
@@ -9,9 +10,10 @@ using TaaS.Persistence.Context;
 namespace TaaS.Persistence.Migration.Migrations
 {
     [DbContext(typeof(TaaSDbContext))]
-    partial class TaaSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200204093716_AddedImportVersion")]
+    partial class AddedImportVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
