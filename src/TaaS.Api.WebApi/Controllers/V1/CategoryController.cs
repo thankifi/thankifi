@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using TaaS.Api.WebApi.Model.V1;
+using TaaS.Common;
 using TaaS.Core.Domain.Category.Query.GetAllCategories;
 using TaaS.Core.Domain.Category.Query.GetCategoryById;
 
@@ -18,30 +21,39 @@ namespace TaaS.Api.WebApi.Controllers.V1
     public class CategoryController : ControllerBase
     {
         protected readonly ILogger<ThanksController> Logger;
+        protected readonly IMemoryCache Cache;
         protected readonly IMediator Mediator;
 
-        public CategoryController(ILogger<ThanksController> logger, IMediator mediator)
+        public CategoryController(ILogger<ThanksController> logger, IMemoryCache memoryCache, IMediator mediator)
         {
             Logger = logger;
+            Cache = memoryCache;
             Mediator = mediator;
         }
-        
+
         /// <summary>
         /// Get a list of all the categories available in TaaS.
         /// </summary>
         /// <param name="cancellationToken"></param>
-        /// <response code="200">Categories list.. Thanks!</response>
+        /// <response code="200">Categories list. Thanks!</response>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), 200)]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetAllCategoriesQuery(), cancellationToken);
+            if (!Cache.TryGetValue(CacheKeys.CategoryViewModelList, out IEnumerable<CategoryViewModel> cacheEntry))
+            {
+                var result = await Mediator.Send(new GetAllCategoriesQuery(), cancellationToken);
+                
+                cacheEntry = CategoryViewModel.Parse(result);
 
-            return Ok(CategoryViewModel.Parse(result));
+                Cache.Set(CacheKeys.CategoryViewModelList, cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+            }
+            
+            return Ok(cacheEntry);
         }
 
         /// <summary>
-        /// Get a list of all the categories available in TaaS.
+        /// Get detailed category. Includes number of items.
         /// </summary>
         /// <param name="id">Id of the category.</param>
         /// <param name="cancellationToken"></param>
