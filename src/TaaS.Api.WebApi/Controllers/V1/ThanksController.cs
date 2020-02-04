@@ -83,7 +83,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Basic), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Basic, language), cancellationToken);
 
             return Ok(GratitudeViewModel.Parse(result));
         }
@@ -121,7 +121,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, signature: signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.Signed, language, signature: signature), cancellationToken);
 
             return Ok(GratitudeViewModel.Parse(result));
         }
@@ -142,7 +142,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, name, signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeRandomByTypeQuery(GratitudeType.NamedAndSigned, language, name, signature), cancellationToken);
 
             return Ok(GratitudeViewModel.Parse(result));
         }
