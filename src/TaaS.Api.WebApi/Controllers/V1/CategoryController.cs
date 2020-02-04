@@ -32,7 +32,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Get a list of all the categories available in TaaS.
+        /// Get a list of all the categories available.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Categories list. Thanks!</response>
@@ -46,7 +46,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
                 
                 cacheEntry = CategoryViewModel.Parse(result);
 
-                Cache.Set(CacheKeys.CategoryViewModelList, cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1)));
+                Cache.Set(CacheKeys.CategoryViewModelList, cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
             }
             
             return Ok(cacheEntry);
