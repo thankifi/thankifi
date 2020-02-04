@@ -65,14 +65,21 @@ namespace TaaS.Api.WebApi.Controllers.V1
         public async Task<IActionResult> GetById([FromRoute, Required] int id,
             CancellationToken cancellationToken = default)
         {
-            var (total, category) = await Mediator.Send(new GetCategoryByIdQuery(id), cancellationToken);
-
-            if (category != null)
+            if (!Cache.TryGetValue(CacheKeys.CategoryDetailViewModel(id), out CategoryDetailViewModel cacheEntry))
             {
-                return Ok(CategoryDetailViewModel.Parse(category, total));
-            }
+                var result = await Mediator.Send(new GetCategoryByIdQuery(id), cancellationToken);
 
-            return NotFound("Category Not Found.");
+                if (result == null)
+                {
+                    return NotFound("Category Not Found.");
+                }
+                
+                cacheEntry = CategoryDetailViewModel.Parse(result);
+
+                Cache.Set(CacheKeys.CategoryDetailViewModel(id), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
+            }
+            
+            return Ok(cacheEntry);
         }
     }
 }
