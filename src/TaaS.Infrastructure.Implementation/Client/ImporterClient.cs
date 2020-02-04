@@ -43,5 +43,20 @@ namespace TaaS.Infrastructure.Implementation.Client
             
             return importData;
         }
+
+        public async Task<VersionResponse> GetVersion(CancellationToken cancellationToken = default)
+        {
+            var requestResponse = await Client.GetAsync($"{Client.BaseAddress}/version.json", cancellationToken);
+
+            requestResponse.EnsureSuccessStatusCode();
+
+            var importDataStream = await requestResponse.Content.ReadAsStreamAsync();
+
+            var importData = await JsonSerializer.DeserializeAsync<VersionResponse>(importDataStream, cancellationToken: cancellationToken);
+
+            requestResponse.Dispose();
+            
+            return importData;
+        }
     }
 }

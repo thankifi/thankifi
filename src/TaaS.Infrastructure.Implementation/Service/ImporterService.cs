@@ -32,8 +32,24 @@ namespace TaaS.Infrastructure.Implementation.Service
             }
             catch (Exception e)
             {
-                Logger.LogError(e,"Error while fetching data from source.");
-                
+                Logger.LogError(e, "Error while fetching data from source.");
+
+                return Error(e.Message);
+            }
+        }
+
+        public async Task<Result<string, string>> FindCurrentVersion(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var rawData = await Client.GetVersion(cancellationToken);
+
+                return Ok(rawData.Version);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error while fetching version from source.");
+
                 return Error(e.Message);
             }
         }
