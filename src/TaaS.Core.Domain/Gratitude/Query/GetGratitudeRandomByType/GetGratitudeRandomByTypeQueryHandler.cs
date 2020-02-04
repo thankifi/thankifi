@@ -24,7 +24,7 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType
         public async Task<Entity.Gratitude> Handle(GetGratitudeRandomByTypeQuery request, CancellationToken cancellationToken)
         {
             Logger.LogDebug("Requested random basic gratitude.");
-            
+
             var offset = RandomProvider.GetThreadRandom().Next(0, await Context.Gratitudes.AsNoTracking()
                 .Where(g => g.Language == request.Language)
                 .Where(g => g.Type == request.Type)
@@ -36,17 +36,20 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType
                 .Where(g => g.Language == request.Language)
                 .Where(g => g.Type == request.Type)
                 .Skip(offset)
-                .FirstAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
 
-            gratitude.Text = gratitude.Type switch
+            if (gratitude != null)
             {
-                GratitudeType.Basic => gratitude.Text,
-                GratitudeType.Named => gratitude.Text.Replace("{{NAME}}", request.Name),
-                GratitudeType.Signed => gratitude.Text.Replace("{{SIGNATURE}}", request.Signature),
-                GratitudeType.NamedAndSigned => gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature),
-                _ => gratitude.Text
-            };
-
+                gratitude.Text = gratitude.Type switch
+                {
+                    GratitudeType.Basic => gratitude.Text,
+                    GratitudeType.Named => gratitude.Text.Replace("{{NAME}}", request.Name),
+                    GratitudeType.Signed => gratitude.Text.Replace("{{SIGNATURE}}", request.Signature),
+                    GratitudeType.NamedAndSigned => gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature),
+                    _ => gratitude.Text
+                };
+            }
+            
             return gratitude;
         }
     }

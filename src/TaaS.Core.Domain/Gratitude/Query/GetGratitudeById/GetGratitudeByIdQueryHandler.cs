@@ -27,9 +27,12 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
                 .Include(g => g.Categories)
                     .ThenInclude(c => c.Category)
                 .Where(g => g.Id == request.Id)
-                .FirstAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
 
-            gratitude.Text = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
+            if (gratitude != null)
+            {
+                gratitude.Text = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
+            }
 
             return gratitude;
         }

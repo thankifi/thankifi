@@ -34,16 +34,19 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom
                     .ThenInclude(c => c.Category)
                 .Where(g => g.Language == request.Language)
                 .Skip(offset)
-                .FirstAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
 
-            gratitude.Text = gratitude.Type switch
+            if (gratitude != null)
             {
-                GratitudeType.Basic => gratitude.Text,
-                GratitudeType.Named => gratitude.Text.Replace("{{NAME}}", request.Name),
-                GratitudeType.Signed => gratitude.Text.Replace("{{SIGNATURE}}", request.Signature),
-                GratitudeType.NamedAndSigned => gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature),
-                _ => gratitude.Text
-            };
+                gratitude.Text = gratitude.Type switch
+                {
+                    GratitudeType.Basic => gratitude.Text,
+                    GratitudeType.Named => gratitude.Text.Replace("{{NAME}}", request.Name),
+                    GratitudeType.Signed => gratitude.Text.Replace("{{SIGNATURE}}", request.Signature),
+                    GratitudeType.NamedAndSigned => gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature),
+                    _ => gratitude.Text
+                };
+            }
 
             return gratitude;
         }
