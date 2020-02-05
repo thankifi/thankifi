@@ -2,17 +2,16 @@
 using MediatR;
 using TaaS.Core.Domain.Gratitude.Dto;
 
-namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeByCategory
+namespace TaaS.Core.Domain.Gratitude.Query.GetGratitude
 {
-    public class GetGratitudeByCategoryQuery : IRequest<GratitudeDto?>
+    public class GetGratitudeQuery : IRequest<GratitudeDto?>
     {
-        public GetGratitudeByCategoryQuery()
+        public GetGratitudeQuery()
         {
             Language = "eng";
             Filters = new List<string>();
         }
 
-        public string CategoryName { get; set; }
         public string? Name { get; set; }
         public string? Signature { get; set; }
         public string Language { get; set; }
