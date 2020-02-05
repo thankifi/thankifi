@@ -11,9 +11,6 @@ using TaaS.Api.WebApi.Model.V1;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeByCategory;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
-using TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandom;
-using TaaS.Core.Domain.Gratitude.Query.GetGratitudeRandomByType;
-using TaaS.Core.Entity;
 
 namespace TaaS.Api.WebApi.Controllers.V1
 {
@@ -67,13 +64,14 @@ namespace TaaS.Api.WebApi.Controllers.V1
 
             return NotFound("Gratitude Not Found.");
         }
-        
+
         /// <summary>
         /// Get a gratitude sentence by Id, optionally specify a name and a signature. Thanks!
         /// </summary>
         /// <param name="gratitudeId">Id of the gratitude sentence.</param>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
+        /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         /// <response code="404">Gratitude not found! Thanks!</response>
@@ -82,11 +80,18 @@ namespace TaaS.Api.WebApi.Controllers.V1
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetById(
             [FromRoute, Required] int gratitudeId,
-            [FromQuery, DefaultValue("Alice")] string name = "Alice",
-            [FromQuery, DefaultValue("Bob")] string signature = "Bob",
+            [FromQuery] string? name,
+            [FromQuery] string? signature,
+            [FromQuery] string[]? filters,
             CancellationToken cancellationToken = default)
         {
-            var result = await Mediator.Send(new GetGratitudeByIdQuery(gratitudeId, name, signature), cancellationToken);
+            var result = await Mediator.Send(new GetGratitudeByIdQuery
+            {
+                Id = gratitudeId,
+                Name = name,
+                Signature = signature,
+                Filters = new List<string>(filters)
+            }, cancellationToken);
 
             if (result != null)
             {
@@ -120,6 +125,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         {
             var result = await Mediator.Send(new GetGratitudeByCategoryQuery
             {
+                CategoryName = categoryName,
                 Name = name,
                 Signature = signature,
                 Language = language,
