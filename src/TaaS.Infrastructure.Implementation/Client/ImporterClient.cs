@@ -35,12 +35,10 @@ namespace TaaS.Infrastructure.Implementation.Client
 
             requestResponse.EnsureSuccessStatusCode();
 
-            var importDataStream = await requestResponse.Content.ReadAsStreamAsync();
-
-            var importData = await JsonSerializer.DeserializeAsync<ImportResponse>(importDataStream, cancellationToken: cancellationToken);
-
-            requestResponse.Dispose();
+            await using var importDataStream = await requestResponse.Content.ReadAsStreamAsync();
             
+            var importData = await JsonSerializer.DeserializeAsync<ImportResponse>(importDataStream, cancellationToken: cancellationToken);
+                
             return importData;
         }
 
@@ -50,10 +48,10 @@ namespace TaaS.Infrastructure.Implementation.Client
 
             requestResponse.EnsureSuccessStatusCode();
 
-            var importDataStream = await requestResponse.Content.ReadAsStreamAsync();
-
+            await using var importDataStream = await requestResponse.Content.ReadAsStreamAsync();
+            
             var importData = await JsonSerializer.DeserializeAsync<VersionResponse>(importDataStream, cancellationToken: cancellationToken);
-
+                
             return importData;
         }
     }
