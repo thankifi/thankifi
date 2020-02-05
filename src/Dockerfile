@@ -22,4 +22,8 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
 WORKDIR /app
 COPY --from=build /app ./
 
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS http://*:5100
+EXPOSE 5100
+
 ENTRYPOINT ["dotnet", "TaaS.Api.WebApi.dll"]
