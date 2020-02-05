@@ -55,19 +55,20 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <summary>
         /// Get detailed category. Includes number of items. Thanks!
         /// </summary>
-        /// <param name="id">Id of the category.</param>
+        /// <param name="categoryId">Id of the category.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Detailed view of the category. Thanks!</response>
         /// <response code="404">Category not found! Thanks!</response>
-        [HttpGet, Route("{id}")]
+        [HttpGet, Route("{categoryId}")]
         [ProducesResponseType(typeof(CategoryDetailViewModel), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> GetById([FromRoute, Required] int id,
-            CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetById(
+            [FromRoute, Required] int categoryId,
+            CancellationToken cancellationToken)
         {
-            if (!Cache.TryGetValue(CacheKeys.CategoryDetailViewModel(id), out CategoryDetailViewModel cacheEntry))
+            if (!Cache.TryGetValue(CacheKeys.CategoryDetailViewModel(categoryId), out CategoryDetailViewModel cacheEntry))
             {
-                var result = await Mediator.Send(new GetCategoryByIdQuery(id), cancellationToken);
+                var result = await Mediator.Send(new GetCategoryByIdQuery(categoryId), cancellationToken);
 
                 if (result == null)
                 {
@@ -76,7 +77,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
                 
                 cacheEntry = CategoryDetailViewModel.Parse(result);
 
-                Cache.Set(CacheKeys.CategoryDetailViewModel(id), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
+                Cache.Set(CacheKeys.CategoryDetailViewModel(categoryId), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
             }
             
             return Ok(cacheEntry);
