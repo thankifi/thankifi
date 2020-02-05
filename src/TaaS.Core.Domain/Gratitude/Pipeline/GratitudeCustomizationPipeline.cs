@@ -44,11 +44,6 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
 
         private static string ReplaceNameIfNecessary(string text, string? name)
         {
-            if (name == null)
-            {
-                return text;
-            }
-
             var firstBracket = text.IndexOf('{');
 
             if (firstBracket == -1)
@@ -60,10 +55,10 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
 
                 var t = text.Substring(firstBracket, lastBracket - firstBracket + 1) switch
             {
-                "{ {NAME} }" => text.Replace("{ {NAME} }", name),
-                "{{NAME}}" => text.Replace("{{NAME}}", name),
-                "{{NAME} }" => text.Replace("{{NAME} }", name),
-                "{ {NAME}}" => text.Replace("{ {NAME}}", name),
+                "{ {NAME} }" => text.Replace("{ {NAME} }", name != null ? $" {name} " : " "),
+                "{{NAME}}" => text.Replace("{{NAME}}", name != null ? $"{name}" : ""),
+                "{{NAME} }" => text.Replace("{{NAME} }", name != null ? $"{name} " : " "),
+                "{ {NAME}}" => text.Replace("{ {NAME}}", name != null ? $" {name}" : ""),
                 _ => text
             };
 
