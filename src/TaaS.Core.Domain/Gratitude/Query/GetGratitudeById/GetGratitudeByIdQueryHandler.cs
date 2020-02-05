@@ -34,11 +34,6 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitudeById
                     Categories = g.Categories.Select(gc => gc.Category.Title)
                 }).FirstOrDefaultAsync(cancellationToken);
 
-            if (gratitude != null)
-            {
-                gratitude.Text = gratitude.Text.Replace("{{NAME}}", request.Name).Replace("{{SIGNATURE}}", request.Signature);
-            }
-
             return gratitude;
         }
     }
