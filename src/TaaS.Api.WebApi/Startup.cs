@@ -14,6 +14,9 @@ using Microsoft.OpenApi.Models;
 using Polly;
 using TaaS.Api.WebApi.Configuration.Swagger;
 using TaaS.Api.WebApi.Hosted;
+using TaaS.Core.Domain.Gratitude.Dto;
+using TaaS.Core.Domain.Gratitude.Pipeline;
+using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
 using TaaS.Infrastructure.Contract.Client;
 using TaaS.Infrastructure.Contract.Service;
@@ -40,8 +43,14 @@ namespace TaaS.Api.WebApi
             services.AddMemoryCache();
 
             services.AddHostedService<ImportHostedService>();
-            
+
+            #region Pipeline
+
             services.AddMediatR(typeof(GetGratitudeByIdQuery).Assembly);
+            services.AddTransient<IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>, GratitudeFilterPipeline>();
+            services.AddTransient<IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>, GratitudeCustomizationPipeline>();
+
+            #endregion
             
             #region Persistence
 
