@@ -25,6 +25,7 @@ namespace TaaS.Core.Domain.Category.Query.GetCategoryById
             Logger.LogDebug("Requested detailed category.");
 
             var category = await Context.Categories.AsNoTracking()
+                .Where(c => c.Id == request.Id)
                 .Select(c => new CategoryDetailDto
                 {
                     Id = c.Id,
