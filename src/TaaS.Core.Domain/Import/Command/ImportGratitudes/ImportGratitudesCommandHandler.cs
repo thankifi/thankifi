@@ -112,7 +112,6 @@ namespace TaaS.Core.Domain.Import.Command.ImportGratitudes
                     Id = gratitude.Id,
                     Language = gratitude.Language,
                     Text = gratitude.Text,
-                    Type = Enum.Parse<GratitudeType>(gratitude.Type),
                     Categories = new List<GratitudeCategory>()
                 };
 
