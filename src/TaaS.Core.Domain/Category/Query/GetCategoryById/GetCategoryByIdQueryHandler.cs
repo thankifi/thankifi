@@ -29,7 +29,7 @@ namespace TaaS.Core.Domain.Category.Query.GetCategoryById
 
             if (request.Language != null)
             {
-                query = query.Where(c => c.Gratitudes.Any(gc => gc.Gratitude.Language.ToLower() == request.Language));
+                query = query.Where(c => c.Gratitudes.Any(gc => gc.Gratitude.Language.ToLower() == request.Language.ToLower()));
             }
             
             var category = await query
