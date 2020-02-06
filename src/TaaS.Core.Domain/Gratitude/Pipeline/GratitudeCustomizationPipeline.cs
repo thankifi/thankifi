@@ -3,13 +3,11 @@ using System.Threading.Tasks;
 using MediatR;
 using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
-using TaaS.Core.Domain.Gratitude.Query.GetGratitudeByCategory;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
 
 namespace TaaS.Core.Domain.Gratitude.Pipeline
 {
     public class GratitudeCustomizationPipeline : IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>,
-        IPipelineBehavior<GetGratitudeByCategoryQuery, GratitudeDto?>,
         IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>
     {
         public async Task<GratitudeDto?> Handle(GetGratitudeQuery request, CancellationToken cancellationToken,
@@ -27,22 +25,6 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
             return response;
         }
 
-
-        public async Task<GratitudeDto?> Handle(GetGratitudeByCategoryQuery request, CancellationToken cancellationToken,
-            RequestHandlerDelegate<GratitudeDto?> next)
-        {
-            var response = await next();
-
-            if (response != null)
-            {
-                response.Text = ReplaceNameIfNecessary(response.Text, request.Name);
-
-                response.Text = AddSignatureIfNecessary(response.Text, request.Signature);
-            }
-
-            return response;
-        }
-        
         public async Task<GratitudeDto?> Handle(GetGratitudeByIdQuery request, CancellationToken cancellationToken,
             RequestHandlerDelegate<GratitudeDto?> next)
         {

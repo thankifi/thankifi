@@ -15,6 +15,7 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitude
         public string? Name { get; set; }
         public string? Signature { get; set; }
         public string Language { get; set; }
+        public string? Category { get; set; }
         public List<string> Filters { get; set; }
     }
 }

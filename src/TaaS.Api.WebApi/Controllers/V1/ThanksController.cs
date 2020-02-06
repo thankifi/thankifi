@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TaaS.Api.WebApi.Model.V1;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
-using TaaS.Core.Domain.Gratitude.Query.GetGratitudeByCategory;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
 
 namespace TaaS.Api.WebApi.Controllers.V1
@@ -34,6 +33,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
+        /// <param name="category"></param>
         /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking.</param>
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
@@ -45,6 +45,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         public async Task<IActionResult> Get(
             [FromQuery] string? name,
             [FromQuery] string? signature,
+            [FromQuery] string? category,
             [FromQuery] string[]? filters,
             [FromQuery, DefaultValue("eng")] string language = "eng",
             CancellationToken cancellationToken = default)
@@ -54,6 +55,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
                 Name = name,
                 Signature = signature,
                 Language = language,
+                Category = category,
                 Filters = new List<string>(filters)
             }, cancellationToken);
             
@@ -123,9 +125,9 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery, DefaultValue("eng")] string language = "eng",
             CancellationToken cancellationToken = default)
         {
-            var result = await Mediator.Send(new GetGratitudeByCategoryQuery
+            var result = await Mediator.Send(new GetGratitudeQuery()
             {
-                CategoryName = categoryName,
+                Category = categoryName,
                 Name = name,
                 Signature = signature,
                 Language = language,

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -23,12 +24,17 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetGratitude
 
         public async Task<GratitudeDto?> Handle(GetGratitudeQuery request, CancellationToken cancellationToken)
         {
-            var offset = RandomProvider.GetThreadRandom()?.Next(0, await Context.Gratitudes.AsNoTracking()
-                .Where(g => g.Language == request.Language)
-                .CountAsync(cancellationToken));
+            var query = Context.Gratitudes.AsNoTracking()
+                .Where(g => g.Language == request.Language);
 
-            var gratitude = await Context.Gratitudes.AsNoTracking()
-                .Where(g => g.Language == request.Language)
+            if (request.Category != null)
+            {
+                query = query.Where(g => g.Categories.Any(c => c.Category.Title.ToLower() == request.Category));
+            }
+            
+            var offset = RandomProvider.GetThreadRandom()?.Next(0, await query.CountAsync(cancellationToken));
+
+            var gratitude = await query
                 .Skip(offset ?? 0)
                 .Select(g => new GratitudeDto
                 {
