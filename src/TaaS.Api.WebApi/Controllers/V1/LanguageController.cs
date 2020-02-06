@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using TaaS.Api.WebApi.Model.V1;
 using TaaS.Common;
 using TaaS.Core.Domain.Language.Query.GetAllLanguages;
+using TaaS.Core.Domain.Language.Query.GetLanguageByCode;
 
 namespace TaaS.Api.WebApi.Controllers.V1
 {
@@ -45,6 +47,35 @@ namespace TaaS.Api.WebApi.Controllers.V1
                 cacheEntry = LanguageViewModel.Parse(result);
 
                 Cache.Set(CacheKeys.LanguageViewModelList, cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
+            }
+            
+            return Ok(cacheEntry);
+        }
+
+        /// <summary>
+        /// Get detailed language. Includes number of items. Thanks!
+        /// </summary>
+        /// <param name="language">Language code</param>
+        /// <param name="cancellationToken"></param>
+        /// <response code="200">Detailed view of the language. Thanks!</response>
+        /// <response code="404">Language not found! Thanks!</response>
+        [HttpGet("{language}")]
+        [ProducesResponseType(typeof(LanguageDetailViewModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> GetById(
+            [FromRoute, Required] string language,
+            CancellationToken cancellationToken)
+        {
+            if (!Cache.TryGetValue(CacheKeys.LanguageDetailViewModel(language), out LanguageDetailViewModel cacheEntry))
+            {
+                var result = await Mediator.Send(new GetLanguageByCodeQuery
+                {
+                    Code = language
+                }, cancellationToken);
+                
+                cacheEntry = LanguageDetailViewModel.Parse(result);
+
+                Cache.Set(CacheKeys.LanguageDetailViewModel(language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
             }
             
             return Ok(cacheEntry);

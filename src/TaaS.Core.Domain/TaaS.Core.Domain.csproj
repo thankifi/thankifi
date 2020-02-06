@@ -20,7 +20,6 @@
 
     <ItemGroup>
       <Folder Include="Import" />
-      <Folder Include="Language\Query" />
     </ItemGroup>
 
 </Project>
