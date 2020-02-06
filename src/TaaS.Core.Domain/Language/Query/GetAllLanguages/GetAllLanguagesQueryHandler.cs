@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using TaaS.Core.Domain.Language.Dto;
 using TaaS.Persistence.Context;
 
-namespace TaaS.Core.Domain.Language.GetAllLanguages
+namespace TaaS.Core.Domain.Language.Query.GetAllLanguages
 {
     public class GetAllLanguagesQueryHandler : IRequestHandler<GetAllLanguagesQuery, IEnumerable<LanguageDto>>
     {

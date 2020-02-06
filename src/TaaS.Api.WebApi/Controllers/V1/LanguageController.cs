@@ -8,7 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using TaaS.Api.WebApi.Model.V1;
 using TaaS.Common;
-using TaaS.Core.Domain.Language.GetAllLanguages;
+using TaaS.Core.Domain.Language.Query.GetAllLanguages;
 
 namespace TaaS.Api.WebApi.Controllers.V1
 {

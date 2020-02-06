@@ -2,7 +2,7 @@
 using MediatR;
 using TaaS.Core.Domain.Language.Dto;
 
-namespace TaaS.Core.Domain.Language.GetAllLanguages
+namespace TaaS.Core.Domain.Language.Query.GetAllLanguages
 {
     public class GetAllLanguagesQuery : IRequest<IEnumerable<LanguageDto>>
     {
