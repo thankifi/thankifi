@@ -6,6 +6,6 @@ namespace TaaS.Core.Domain.Category.Query.GetAllCategories
 {
     public class GetAllCategoriesQuery : IRequest<IEnumerable<CategoryDto>>
     {
-        
+        public string? Language { get; set; }
     }
 }

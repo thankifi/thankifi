@@ -34,19 +34,25 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <summary>
         /// Get a list of all the categories available. Thanks!
         /// </summary>
+        /// <param name="language">Filter by language.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Categories list. Thanks!</response>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), 200)]
-        public async Task<IActionResult> Get(CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(
+            [FromQuery] string? language,
+            CancellationToken cancellationToken)
         {
-            if (!Cache.TryGetValue(CacheKeys.CategoryViewModelList, out IEnumerable<CategoryViewModel> cacheEntry))
+            if (!Cache.TryGetValue(CacheKeys.CategoryViewModelList(language), out IEnumerable<CategoryViewModel> cacheEntry))
             {
-                var result = await Mediator.Send(new GetAllCategoriesQuery(), cancellationToken);
+                var result = await Mediator.Send(new GetAllCategoriesQuery
+                {
+                    Language = language
+                }, cancellationToken);
                 
                 cacheEntry = CategoryViewModel.Parse(result);
 
-                Cache.Set(CacheKeys.CategoryViewModelList, cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
+                Cache.Set(CacheKeys.CategoryViewModelList(language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
             }
             
             return Ok(cacheEntry);
@@ -56,6 +62,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// Get detailed category. Includes number of items. Thanks!
         /// </summary>
         /// <param name="categoryId">Id of the category.</param>
+        /// <param name="language">Filter by language.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Detailed view of the category. Thanks!</response>
         /// <response code="404">Category not found! Thanks!</response>
@@ -64,11 +71,16 @@ namespace TaaS.Api.WebApi.Controllers.V1
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetById(
             [FromRoute, Required] int categoryId,
+            [FromQuery] string? language,
             CancellationToken cancellationToken)
         {
-            if (!Cache.TryGetValue(CacheKeys.CategoryDetailViewModel(categoryId), out CategoryDetailViewModel cacheEntry))
+            if (!Cache.TryGetValue(CacheKeys.CategoryDetailViewModel(categoryId, language), out CategoryDetailViewModel cacheEntry))
             {
-                var result = await Mediator.Send(new GetCategoryByIdQuery(categoryId), cancellationToken);
+                var result = await Mediator.Send(new GetCategoryByIdQuery
+                {
+                    Id = categoryId,
+                    Language = language
+                }, cancellationToken);
 
                 if (result == null)
                 {
@@ -77,7 +89,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
                 
                 cacheEntry = CategoryDetailViewModel.Parse(result);
 
-                Cache.Set(CacheKeys.CategoryDetailViewModel(categoryId), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
+                Cache.Set(CacheKeys.CategoryDetailViewModel(categoryId, language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
             }
             
             return Ok(cacheEntry);

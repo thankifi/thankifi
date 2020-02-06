@@ -24,8 +24,15 @@ namespace TaaS.Core.Domain.Category.Query.GetCategoryById
         {
             Logger.LogDebug("Requested detailed category.");
 
-            var category = await Context.Categories.AsNoTracking()
-                .Where(c => c.Id == request.Id)
+            var query = Context.Categories.AsNoTracking()
+                    .Where(c => c.Id == request.Id);
+
+            if (request.Language != null)
+            {
+                query = query.Where(c => c.Gratitudes.Any(gc => gc.Gratitude.Language.ToLower() == request.Language));
+            }
+            
+            var category = await query
                 .Select(c => new CategoryDetailDto
                 {
                     Id = c.Id,

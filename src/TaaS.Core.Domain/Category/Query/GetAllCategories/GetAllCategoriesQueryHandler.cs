@@ -25,11 +25,18 @@ namespace TaaS.Core.Domain.Category.Query.GetAllCategories
         {
             Logger.LogDebug("Requested categories list.");
 
-            var categories = await Context.Categories.AsNoTracking()
+            var query = Context.Categories.AsNoTracking();
+
+            if (request.Language != null)
+            {
+                query = query.Where(c => c.Gratitudes.Any(gc => gc.Gratitude.Language.ToLower() == request.Language));
+            }
+
+            var categories = await query
                 .Select(c => new CategoryDto
                 {
                     Id = c.Id,
-                    Title = c.Title
+                    Title = c.Title,
                 })
                 .ToListAsync(cancellationToken);
 
