@@ -25,6 +25,8 @@ Both ways have some basic requirements:
         - For format specification read the [cronos docs](https://github.com/HangfireIO/Cronos#cron-format).
 
 ## Docker example
+The official docker image exposes port 5100.
+
 A simple, working docker compose example:
 
 ```yaml
@@ -34,6 +36,8 @@ taas:
     container_name: taas
     environment:
         DB_CONNECTION_STRING: "Server=taas_database;Port=5432;Database=taas;User Id=taas;Password=taas;"
+    ports:
+        - 5100:5100 # This is only needed if you don't use traefik or something like that.
 
 taas_database:
     image: postgres:12.1-alpine   
