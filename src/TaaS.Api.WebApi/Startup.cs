@@ -17,6 +17,7 @@ using TaaS.Api.WebApi.Hosted;
 using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Core.Domain.Gratitude.Pipeline;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
+using TaaS.Core.Domain.Gratitude.Query.GetGratitudeByCategory;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
 using TaaS.Infrastructure.Contract.Client;
 using TaaS.Infrastructure.Contract.Service;
@@ -49,6 +50,12 @@ namespace TaaS.Api.WebApi
             services.AddMediatR(typeof(GetGratitudeByIdQuery).Assembly);
             services.AddTransient<IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>, GratitudeFilterPipeline>();
             services.AddTransient<IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>, GratitudeCustomizationPipeline>();
+            
+            services.AddTransient<IPipelineBehavior<GetGratitudeByCategoryQuery, GratitudeDto?>, GratitudeFilterPipeline>();
+            services.AddTransient<IPipelineBehavior<GetGratitudeByCategoryQuery, GratitudeDto?>, GratitudeCustomizationPipeline>();
+            
+            services.AddTransient<IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>, GratitudeFilterPipeline>();
+            services.AddTransient<IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>, GratitudeCustomizationPipeline>();
 
             #endregion
             
