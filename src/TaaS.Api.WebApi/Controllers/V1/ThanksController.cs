@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -34,7 +34,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
         /// <param name="category">Category to get the random gratitude from.</param>
-        /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking.</param>
+        /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking, leet.</param>
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
@@ -73,7 +73,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="gratitudeId">Id of the gratitude sentence.</param>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking.</param>
+        /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking, leet.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
         /// <response code="404">Gratitude not found! Thanks!</response>
@@ -109,7 +109,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <param name="categoryName">Name/title of the category.</param>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking.</param>
+        /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking, leet.</param>
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
         /// <response code="200">Gratitude sentence. Thanks!</response>
