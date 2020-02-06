@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TaaS.Common.Filter;
 using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
@@ -13,7 +14,6 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
 {
     public class GratitudeFilterPipeline : IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>,
         IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>
-
     {
         public async Task<GratitudeDto?> Handle(GetGratitudeQuery request, CancellationToken cancellationToken,
             RequestHandlerDelegate<GratitudeDto?> next)
@@ -45,31 +45,11 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
         {
             return requestFilters.Aggregate(text, (current, filter) => filter switch
             {
-                "mocking" => Mock(current),
+                "mocking" => MockFilter.Apply(current),
                 "shouting" => current.ToUpper(),
+                "leet" => LeetFilter.Apply(current),
                 _ => current
             });
-        }
-
-        private static string Mock(string text)
-        {
-            var lastIsUpper = true;
-            var stringBuilder = new StringBuilder(text.Length);
-
-            foreach (var character in text)
-            {
-                if (char.IsLetter(character))
-                {
-                    stringBuilder.Append(lastIsUpper ? char.ToLower(character) : char.ToUpper(character));
-                    lastIsUpper = !lastIsUpper;
-                }
-                else
-                {
-                    stringBuilder.Append(character);
-                }
-            }
-
-            return stringBuilder.ToString();
         }
     }
 }
