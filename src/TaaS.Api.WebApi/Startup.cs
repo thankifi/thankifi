@@ -100,7 +100,23 @@ namespace TaaS.Api.WebApi
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Thanks as a Service", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Thanks as a Service", 
+                    Version = "v1",
+                    Description = "TaaS is a public API that makes it easy for you to express gratitude. Be grateful!",
+                    Contact = new OpenApiContact
+                    {
+                      Name  = "Lucas Maximiliano Marino",
+                      Email = string.Empty,
+                      Url = new Uri("https://lucasmarino.me")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "GPL-3.0",
+                        Url = new Uri("https://github.com/elementh/taas/blob/master/LICENSE")
+                    }
+                });
                
                 c.OperationFilter<RemoveVersionFromParameter>();
                 c.DocumentFilter<ReplaceVersionWithExactValueInPath>();
