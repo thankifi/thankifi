@@ -27,8 +27,23 @@ Both ways have some basic requirements:
 ## Docker example
 A simple, working docker compose example:
 
-```docker
-TODO
+```yaml
+taas:
+    image: elementh/taas:0.1.1
+    restart: unless-stopped
+    container_name: taas
+    environment:
+        DB_CONNECTION_STRING: "Server=taas_database;Port=5432;Database=taas;User Id=taas;Password=taas;"
+
+taas_database:
+    image: postgres:12.1-alpine   
+    restart: unless-stopped
+    container_name: taas_database
+    environment:
+        POSTGRES_USER: "taas"
+        POSTGRES_PASSWORD: "taas"
+    volumes:
+        - ./db-taas:/var/lib/postgresql/data
 ```
 
 # License
