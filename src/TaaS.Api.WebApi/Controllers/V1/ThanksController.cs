@@ -29,11 +29,11 @@ namespace TaaS.Api.WebApi.Controllers.V1
         }
 
         /// <summary>
-        /// Get a random gratitude sentence, optionally specify a name and a signature. Thanks!
+        /// Get a random gratitude sentence, optionally specify a name, a signature and a category. Thanks!
         /// </summary>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
-        /// <param name="category"></param>
+        /// <param name="category">Category to get the random gratitude from.</param>
         /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking.</param>
         /// <param name="language">Language of the gratitude.</param>
         /// <param name="cancellationToken"></param>
@@ -106,7 +106,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
         /// <summary>
         /// Get a random gratitude filtered by category. Thanks!
         /// </summary>
-        /// <param name="categoryName">Title of the category.</param>
+        /// <param name="categoryName">Name/title of the category.</param>
         /// <param name="name">Name of the person receiving the expression of gratitude.</param>
         /// <param name="signature">Name of the person who expresses their gratitude.</param>
         /// <param name="filters">Filter or filters to apply to the text. Filters available: shouting, mocking.</param>
