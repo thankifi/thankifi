@@ -23,7 +23,7 @@ namespace TaaS.Api.WebApi.Hosted
         {
             Logger = logger;
             ServiceScopeFactory = serviceScopeFactory;
-            Expression = CronExpression.Parse(configuration["IMPORTER_CRON_CONFIGURATION"] ?? "0 0 1 * *");
+            Expression = CronExpression.Parse(configuration["IMPORTER_CRON_CONFIGURATION"] ?? "0 0 * * *");
             TimeZoneInfo = TimeZoneInfo.Utc;
         }
 
