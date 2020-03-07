@@ -35,13 +35,13 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude
             }
 
             var totalGratitudeFound = await query.CountAsync(cancellationToken);
-            
+
             if (request.Different)
             {
-                var offset = RandomProvider.GetThreadRandom()?.Next(0, totalGratitudeFound);
-
                 for (var i = 0; i < 4; i++)
                 {
+                    var offset = RandomProvider.GetThreadRandom()?.Next(0, totalGratitudeFound);
+
                     gratitude.Add(await query
                         .Skip(offset ?? 0)
                         .Select(g => new GratitudeDto
@@ -69,7 +69,13 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude
 
                 for (var i = 0; i < 4; i++)
                 {
-                    gratitude.Add(gratitudeDto);
+                    gratitude.Add(new GratitudeDto
+                    {
+                        Id = gratitudeDto.Id,
+                        Language = gratitudeDto.Language,
+                        Text = gratitudeDto.Text,
+                        Categories = gratitudeDto.Categories
+                    });
                 }
             }
 

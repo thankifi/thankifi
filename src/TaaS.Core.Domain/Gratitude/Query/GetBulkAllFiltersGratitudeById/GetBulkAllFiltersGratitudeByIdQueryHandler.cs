@@ -37,7 +37,13 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitudeById
 
             for (var i = 0; i < 4; i++)
             {
-                gratitude.Add(gratitudeDto);
+                gratitude.Add(new GratitudeDto
+                {
+                    Id = gratitudeDto.Id,
+                    Language = gratitudeDto.Language,
+                    Text = gratitudeDto.Text,
+                    Categories = gratitudeDto.Categories
+                });
             }
 
             return gratitude;
