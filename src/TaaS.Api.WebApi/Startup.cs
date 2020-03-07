@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using AspNetCoreRateLimit;
@@ -16,6 +17,9 @@ using TaaS.Api.WebApi.Configuration.Swagger;
 using TaaS.Api.WebApi.Hosted;
 using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Core.Domain.Gratitude.Pipeline;
+using TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude;
+using TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitudeById;
+using TaaS.Core.Domain.Gratitude.Query.GetBulkGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
 using TaaS.Infrastructure.Contract.Client;
@@ -53,6 +57,15 @@ namespace TaaS.Api.WebApi
             services.AddTransient<IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>, GratitudeFilterPipeline>();
             services.AddTransient<IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>, GratitudeCustomizationPipeline>();
 
+            services.AddTransient<IPipelineBehavior<GetBulkGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeFilterPipeline>();
+            services.AddTransient<IPipelineBehavior<GetBulkGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeCustomizationPipeline>();
+            
+            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeFilterPipeline>();
+            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeCustomizationPipeline>();
+            
+            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeByIdQuery, IEnumerable<GratitudeDto>>, GratitudeFilterPipeline>();
+            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeByIdQuery, IEnumerable<GratitudeDto>>, GratitudeCustomizationPipeline>();
+            
             #endregion
             
             #region Persistence
