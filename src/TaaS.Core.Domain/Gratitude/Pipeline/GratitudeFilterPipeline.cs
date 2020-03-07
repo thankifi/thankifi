@@ -8,6 +8,7 @@ using MediatR;
 using TaaS.Common.Filter;
 using TaaS.Core.Domain.Gratitude.Dto;
 using TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude;
+using TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitudeById;
 using TaaS.Core.Domain.Gratitude.Query.GetBulkGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
@@ -18,7 +19,8 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
         IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>,
         IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>,
         IPipelineBehavior<GetBulkGratitudeQuery, IEnumerable<GratitudeDto>>,
-        IPipelineBehavior<GetBulkAllFiltersGratitudeQuery, IEnumerable<GratitudeDto>>
+        IPipelineBehavior<GetBulkAllFiltersGratitudeQuery, IEnumerable<GratitudeDto>>,
+        IPipelineBehavior<GetBulkAllFiltersGratitudeByIdQuery, IEnumerable<GratitudeDto>>
     {
         public async Task<GratitudeDto?> Handle(GetGratitudeQuery request, CancellationToken cancellationToken,
             RequestHandlerDelegate<GratitudeDto?> next)
@@ -72,6 +74,24 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
                 gratitudeDtos[1].Text = ApplyFilters(gratitudeDtos[1].Text, new[] {"mocking"});
                 gratitudeDtos[2].Text = ApplyFilters(gratitudeDtos[2].Text, new[] {"shouting"});
                 gratitudeDtos[3].Text = ApplyFilters(gratitudeDtos[3].Text, new[] {"leet"});
+            }
+
+            return gratitudeDtos;
+        }
+        
+        public async Task<IEnumerable<GratitudeDto>> Handle(GetBulkAllFiltersGratitudeByIdQuery request, CancellationToken cancellationToken, RequestHandlerDelegate<IEnumerable<GratitudeDto>> next)
+        {
+            var response = await next();
+
+            var gratitudeDtos = response.ToList();
+            
+            if (gratitudeDtos.Count == 4)
+            {
+                var text = gratitudeDtos[0].Text;
+                
+                gratitudeDtos[1].Text = ApplyFilters(text, new[] {"mocking"});
+                gratitudeDtos[2].Text = ApplyFilters(text, new[] {"shouting"});
+                gratitudeDtos[3].Text = ApplyFilters(text, new[] {"leet"});
             }
 
             return gratitudeDtos;
