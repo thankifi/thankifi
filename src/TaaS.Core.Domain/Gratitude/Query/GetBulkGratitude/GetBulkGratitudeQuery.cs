@@ -6,6 +6,8 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetBulkGratitude
 {
     public class GetBulkGratitudeQuery : IRequest<IEnumerable<GratitudeDto>>
     {
+        private int _quantity;
+
         public GetBulkGratitudeQuery()
         {
             Quantity = 5;
@@ -13,7 +15,12 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetBulkGratitude
             Filters = new List<string>();
         }
 
-        public int Quantity { get; set; }
+        public int Quantity
+        {
+            get => _quantity;
+            set => _quantity = value > 50 ? 50 : value;
+        }
+
         public string? Name { get; set; }
         public string? Signature { get; set; }
         public string Language { get; set; }
