@@ -12,7 +12,6 @@ namespace TaaS.Core.Domain.Gratitude.Dto
         public int Id { get; set; }
         public string Language { get; set; }
         public string Text { get; set; }
-        public int Customization { get; set; }
         public IEnumerable<string> Categories { get; set; }
     }
 }
