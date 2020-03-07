@@ -34,9 +34,11 @@ namespace TaaS.Core.Domain.Gratitude.Query.GetBulkGratitude
                 query = query.Where(g => g.Categories.Any(c => c.Category.Title.ToLower() == request.Category));
             }
 
+            var totalGratitudeFound = await query.CountAsync(cancellationToken);
+
             for (var i = 0; i < request.Quantity; i++)
             {
-                var offset = RandomProvider.GetThreadRandom()?.Next(0, await query.CountAsync(cancellationToken));
+                var offset = RandomProvider.GetThreadRandom()?.Next(0, totalGratitudeFound);
 
                 gratitude.Add(await query
                     .Skip(offset ?? 0)
