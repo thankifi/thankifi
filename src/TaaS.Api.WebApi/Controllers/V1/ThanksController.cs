@@ -47,8 +47,8 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery] string? signature,
             [FromQuery] string? category,
             [FromQuery] string[]? filters,
-            [FromQuery, DefaultValue("eng")] string language = "eng",
-            CancellationToken cancellationToken = default)
+            [FromQuery, DefaultValue("eng")] string? language,
+            CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetGratitudeQuery
             {
@@ -122,7 +122,7 @@ namespace TaaS.Api.WebApi.Controllers.V1
             [FromQuery] string? name,
             [FromQuery] string? signature,
             [FromQuery] string[]? filters,
-            [FromQuery, DefaultValue("eng")] string language = "eng",
+            [FromQuery, DefaultValue("eng")] string? language,
             CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetGratitudeQuery
