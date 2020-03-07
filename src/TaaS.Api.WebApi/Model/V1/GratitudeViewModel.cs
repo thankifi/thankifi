@@ -21,5 +21,10 @@ namespace TaaS.Api.WebApi.Model.V1
                 Categories = gratitudeDto.Categories.Select(c => c.ToLower())
             };
         }
+
+        public static IEnumerable<GratitudeViewModel> Parse(IEnumerable<GratitudeDto> gratitudeDtos)
+        {
+            return gratitudeDtos.Select(Parse);
+        }
     }
 }
