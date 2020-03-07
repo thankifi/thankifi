@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TaaS.Common.Filter;
 using TaaS.Core.Domain.Gratitude.Dto;
+using TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetBulkGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitude;
 using TaaS.Core.Domain.Gratitude.Query.GetGratitudeById;
@@ -16,7 +17,8 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
     public class GratitudeFilterPipeline :
         IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>,
         IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>,
-        IPipelineBehavior<GetBulkGratitudeQuery, IEnumerable<GratitudeDto>>
+        IPipelineBehavior<GetBulkGratitudeQuery, IEnumerable<GratitudeDto>>,
+        IPipelineBehavior<GetBulkAllFiltersGratitudeQuery, IEnumerable<GratitudeDto>>
     {
         public async Task<GratitudeDto?> Handle(GetGratitudeQuery request, CancellationToken cancellationToken,
             RequestHandlerDelegate<GratitudeDto?> next)
@@ -59,6 +61,22 @@ namespace TaaS.Core.Domain.Gratitude.Pipeline
             return gratitudeDtos;
         }
 
+        public async Task<IEnumerable<GratitudeDto>> Handle(GetBulkAllFiltersGratitudeQuery request, CancellationToken cancellationToken, RequestHandlerDelegate<IEnumerable<GratitudeDto>> next)
+        {
+            var response = await next();
+
+            var gratitudeDtos = response.ToList();
+            
+            if (gratitudeDtos.Count == 4)
+            {
+                gratitudeDtos[1].Text = ApplyFilters(gratitudeDtos[1].Text, new[] {"mocking"});
+                gratitudeDtos[2].Text = ApplyFilters(gratitudeDtos[2].Text, new[] {"shouting"});
+                gratitudeDtos[3].Text = ApplyFilters(gratitudeDtos[3].Text, new[] {"leet"});
+            }
+
+            return gratitudeDtos;
+        }
+        
         private static string ApplyFilters(string text, IEnumerable<string> requestFilters)
         {
             return requestFilters.Aggregate(text, (current, filter) => filter switch
