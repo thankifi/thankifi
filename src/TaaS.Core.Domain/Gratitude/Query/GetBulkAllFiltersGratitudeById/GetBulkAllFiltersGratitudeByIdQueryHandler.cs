@@ -1,0 +1,46 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using TaaS.Core.Domain.Gratitude.Dto;
+using TaaS.Persistence.Context;
+
+namespace TaaS.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitudeById
+{
+    public class GetBulkAllFiltersGratitudeByIdQueryHandler : IRequestHandler<GetBulkAllFiltersGratitudeByIdQuery, IEnumerable<GratitudeDto>>
+    {
+        protected readonly ILogger<GetBulkAllFiltersGratitudeByIdQueryHandler> Logger;
+        protected readonly TaaSDbContext Context;
+
+        public GetBulkAllFiltersGratitudeByIdQueryHandler(ILogger<GetBulkAllFiltersGratitudeByIdQueryHandler> logger, TaaSDbContext context)
+        {
+            Logger = logger;
+            Context = context;
+        }
+
+        public async Task<IEnumerable<GratitudeDto>> Handle(GetBulkAllFiltersGratitudeByIdQuery request, CancellationToken cancellationToken)
+        {
+            var gratitude = new List<GratitudeDto>();
+            
+            var gratitudeDto = await Context.Gratitudes.AsNoTracking()
+                .Where(g => g.Id == request.Id)
+                .Select(g => new GratitudeDto
+                {
+                    Id = g.Id,
+                    Language = g.Language,
+                    Text = g.Text,
+                    Categories = g.Categories.Select(gc => gc.Category.Title)
+                }).FirstOrDefaultAsync(cancellationToken);
+
+            for (var i = 0; i < 4; i++)
+            {
+                gratitude.Add(gratitudeDto);
+            }
+
+            return gratitude;
+        }
+    }
+}
