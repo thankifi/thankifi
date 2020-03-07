@@ -3,7 +3,7 @@ TaaS is a public API that makes it easy for you to express gratitude. Be gratefu
 
 Made with ❤️ and gratitude by [Lucas Maximiliano Marino](https://lucasmarino.me).
 
-Check the [Open Api Documentation](https://api.taas.space).
+Check the [Open Api Documentation](https://api.taas.space). Find the docker image [here](https://hub.docker.com/r/elementh/taas).
 
 The dataset which the service uses te populate it's database is community driven an available at [this repository](https://github.com/elementh/taas.data).
 
@@ -25,7 +25,7 @@ Both ways have some basic requirements:
         - For format specification read the [cronos docs](https://github.com/HangfireIO/Cronos#cron-format).
 
 ## Docker example
-The official docker image exposes port 5100.
+The official [docker image](https://hub.docker.com/r/elementh/taas) exposes port 5100.
 
 A simple, working docker compose example:
 
