@@ -178,6 +178,11 @@ namespace TaaS.Api.WebApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaaS V1");
                 c.RoutePrefix = string.Empty;
+                c.DocumentTitle = "Thanks as a Service API Docs";
+                if (!string.IsNullOrWhiteSpace(Configuration["G_ANALYTICS"]))
+                {
+                    c.HeadContent = GAnalyticsHeader.GetHeader(Configuration["G_ANALYTICS"]);
+                }
             }); 
             
             app.UseRouting();
