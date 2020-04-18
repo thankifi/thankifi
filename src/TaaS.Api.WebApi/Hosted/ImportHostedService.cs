@@ -16,7 +16,7 @@ namespace TaaS.Api.WebApi.Hosted
         protected readonly ILogger<ImportHostedService> Logger;
         protected readonly IServiceScopeFactory ServiceScopeFactory;
         protected readonly CronExpression Expression;
-        protected System.Timers.Timer Timer;
+        protected System.Timers.Timer? Timer;
         protected readonly TimeZoneInfo TimeZoneInfo;
         
         public ImportHostedService(ILogger<ImportHostedService> logger, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration)
