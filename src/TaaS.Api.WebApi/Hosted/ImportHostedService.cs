@@ -18,7 +18,7 @@ namespace TaaS.Api.WebApi.Hosted
         protected readonly CronExpression Expression;
         protected System.Timers.Timer? Timer;
         protected readonly TimeZoneInfo TimeZoneInfo;
-        
+
         public ImportHostedService(ILogger<ImportHostedService> logger, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration)
         {
             Logger = logger;
@@ -29,7 +29,14 @@ namespace TaaS.Api.WebApi.Hosted
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await ScheduleImport(cancellationToken);
+            try
+            {
+                await ScheduleImport(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Unhandled error importing data in background.");
+            }
         }
 
         private async Task ScheduleImport(CancellationToken cancellationToken)
@@ -41,9 +48,9 @@ namespace TaaS.Api.WebApi.Hosted
             if (next.HasValue)
             {
                 var delay = next.Value - DateTimeOffset.Now;
-                
+
                 Logger.LogDebug("Next import run in {Delay}", delay);
-                
+
                 Timer = new System.Timers.Timer(delay.TotalMilliseconds);
                 Timer.Elapsed += async (sender, args) =>
                 {
@@ -55,10 +62,10 @@ namespace TaaS.Api.WebApi.Hosted
 
                         await mediator.Send(new ImportGratitudesCommand(), cancellationToken);
                     }
-                    
+
                     await ScheduleImport(cancellationToken);
                 };
-                
+
                 Timer.Start();
             }
 
