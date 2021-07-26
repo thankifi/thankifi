@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Thankifi.Api.Configuration.Swagger;
-using Thankifi.Api.Hosted;
 using Thankifi.Core.Domain.Gratitude.Dto;
 using Thankifi.Core.Domain.Gratitude.Pipeline;
 using Thankifi.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude;
@@ -40,9 +39,7 @@ namespace Thankifi.Api
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddMemoryCache();
-
-            services.AddHostedService<ImportHostedService>();
-
+            
             #region Pipeline
 
             services.AddMediatR(typeof(GetGratitudeByIdQuery).Assembly);
@@ -99,9 +96,9 @@ namespace Thankifi.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Thanks as a Service", 
+                    Title = "🙏 Thankifi — Being Thankful as a Service ", 
                     Version = "v1",
-                    Description = "TaaS is a public API that makes it easy for you to express gratitude. Be grateful!",
+                    Description = "Thankifi is a FOSS API that makes it easy for you to express gratitude. Be grateful!",
                     Contact = new OpenApiContact
                     {
                       Name  = "Lucas Maximiliano Marino",
@@ -110,7 +107,7 @@ namespace Thankifi.Api
                     },
                     License = new OpenApiLicense
                     {
-                        Name = "GPL-3.0",
+                        Name = "AGPL-3.0",
                         Url = new Uri("https://github.com/elementh/taas/blob/master/LICENSE")
                     }
                 });
@@ -147,9 +144,9 @@ namespace Thankifi.Api
 
             #region Migration
             
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
             {
-                serviceScope.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
+                serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
             }
             
             #endregion
@@ -160,13 +157,9 @@ namespace Thankifi.Api
             
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaaS V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Thankify V1");
                 c.RoutePrefix = string.Empty;
-                c.DocumentTitle = "Thanks as a Service API Docs";
-                if (!string.IsNullOrWhiteSpace(Configuration["G_ANALYTICS"]))
-                {
-                    c.HeadContent = GAnalyticsHeader.GetHeader(Configuration["G_ANALYTICS"]);
-                }
+                c.DocumentTitle = "Thankify API Documentation";
             }); 
             
             app.UseRouting();

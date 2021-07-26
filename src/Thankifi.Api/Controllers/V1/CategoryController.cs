@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Thankifi.Api.Model.V1;
 using Thankifi.Core.Domain.Category.Query.GetAllCategories;
 using Thankifi.Core.Domain.Category.Query.GetCategoryById;
@@ -20,15 +19,13 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class CategoryController : ControllerBase
     {
-        protected readonly ILogger<ThanksController> Logger;
-        protected readonly IMemoryCache Cache;
-        protected readonly IMediator Mediator;
+        private readonly IMemoryCache _cache;
+        private readonly IMediator _mediator;
 
-        public CategoryController(ILogger<ThanksController> logger, IMemoryCache memoryCache, IMediator mediator)
+        public CategoryController(IMemoryCache memoryCache, IMediator mediator)
         {
-            Logger = logger;
-            Cache = memoryCache;
-            Mediator = mediator;
+            _cache = memoryCache;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -43,16 +40,16 @@ namespace Thankifi.Api.Controllers.V1
             [FromQuery] string? language,
             CancellationToken cancellationToken)
         {
-            if (!Cache.TryGetValue(CacheKeys.CategoryViewModelList(language), out IEnumerable<CategoryViewModel> cacheEntry))
+            if (!_cache.TryGetValue(CacheKeys.CategoryViewModelList(language), out IEnumerable<CategoryViewModel> cacheEntry))
             {
-                var result = await Mediator.Send(new GetAllCategoriesQuery
+                var result = await _mediator.Send(new GetAllCategoriesQuery
                 {
                     Language = language
                 }, cancellationToken);
                 
                 cacheEntry = CategoryViewModel.Parse(result);
 
-                Cache.Set(CacheKeys.CategoryViewModelList(language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
+                _cache.Set(CacheKeys.CategoryViewModelList(language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
             }
             
             return Ok(cacheEntry);
@@ -74,9 +71,9 @@ namespace Thankifi.Api.Controllers.V1
             [FromQuery] string? language,
             CancellationToken cancellationToken)
         {
-            if (!Cache.TryGetValue(CacheKeys.CategoryDetailViewModel(categoryId, language), out CategoryDetailViewModel cacheEntry))
+            if (!_cache.TryGetValue(CacheKeys.CategoryDetailViewModel(categoryId, language), out CategoryDetailViewModel cacheEntry))
             {
-                var result = await Mediator.Send(new GetCategoryByIdQuery
+                var result = await _mediator.Send(new GetCategoryByIdQuery
                 {
                     Id = categoryId,
                     Language = language
@@ -89,7 +86,7 @@ namespace Thankifi.Api.Controllers.V1
                 
                 cacheEntry = CategoryDetailViewModel.Parse(result);
 
-                Cache.Set(CacheKeys.CategoryDetailViewModel(categoryId, language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
+                _cache.Set(CacheKeys.CategoryDetailViewModel(categoryId, language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
             }
             
             return Ok(cacheEntry);

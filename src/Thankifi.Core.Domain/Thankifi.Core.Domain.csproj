@@ -16,8 +16,4 @@
       <ProjectReference Include="..\Thankifi.Persistence\Thankifi.Persistence.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Import" />
-    </ItemGroup>
-
 </Project>
