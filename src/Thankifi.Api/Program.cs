@@ -1,23 +1,9 @@
 using System;
 using System.Reflection;
-using Amazon;
-using Amazon.CloudWatchLogs;
-using Amazon.Runtime;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Events;
-using Serilog.Exceptions;
-using Serilog.Exceptions.Core;
-using Serilog.Exceptions.EntityFrameworkCore.Destructurers;
-using Serilog.Formatting.Compact;
-using Serilog.Sinks.AwsCloudWatch;
-using Serilog.Sinks.AwsCloudWatch.LogStreamNameProvider;
-using Thankifi.Api.Configuration;
 using Thankifi.Common.Logging;
 
 namespace Thankifi.Api
