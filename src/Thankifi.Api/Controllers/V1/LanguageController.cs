@@ -23,15 +23,6 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class LanguageController : ControllerBase
     {
-        protected readonly IMemoryCache Cache;
-        protected readonly IMediator Mediator;
-
-        public LanguageController(IMemoryCache cache, IMediator mediator)
-        {
-            Cache = cache;
-            Mediator = mediator;
-        }
-
         /// <summary>
         /// Retrieve a paginated list of all the supported languages. Thanks!
         /// </summary>

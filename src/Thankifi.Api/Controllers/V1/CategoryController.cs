@@ -21,15 +21,6 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly IMemoryCache _cache;
-        private readonly IMediator _mediator;
-
-        public CategoryController(IMemoryCache memoryCache, IMediator mediator)
-        {
-            _cache = memoryCache;
-            _mediator = mediator;
-        }
-        
         /// <summary>
         /// Retrieve a paginated list of all the available categories. Thanks!
         /// </summary>
