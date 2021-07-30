@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Thankifi.Api.Model.V1;
 using Thankifi.Api.Model.V1.Requests.Gratitude;
 using Thankifi.Api.Model.V1.Responses;
-using Thankifi.Core.Domain.Gratitude.Query.GetGratitude;
-using Thankifi.Core.Domain.Gratitude.Query.GetGratitudeById;
 
 namespace Thankifi.Api.Controllers.V1
 {
@@ -32,7 +27,8 @@ namespace Thankifi.Api.Controllers.V1
         }
 
         /// <summary>
-        /// Retrieve a paginated list of gratitudes, optionally specify a subject, a signature and a flavour. Thanks!
+        /// Retrieve a paginated list of gratitudes.
+        /// Optionally specify a subject, a signature and flavours. Thanks!
         /// </summary>
         [HttpGet(Name = nameof(RetrieveAllGratitudes))]
         [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
@@ -43,7 +39,8 @@ namespace Thankifi.Api.Controllers.V1
         }
 
         /// <summary>
-        /// Retrieve a gratitude by id, optionally specify a subject, a signature and a flavour. Thanks!
+        /// Retrieve a gratitude by id.
+        /// Optionally specify a subject, a signature and flavours. Thanks!
         /// </summary>
         [HttpGet("{id:guid:required}",Name = nameof(RetrieveGratitudeById))]
         [ProducesResponseType(typeof(GratitudeViewModel), StatusCodes.Status200OK)]

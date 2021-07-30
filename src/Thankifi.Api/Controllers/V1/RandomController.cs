@@ -1,12 +1,8 @@
 using System;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Thankifi.Api.Model.V1;
-using Thankifi.Api.Model.V1.Requests.Gratitude;
 using Thankifi.Api.Model.V1.Requests.Random;
 using Thankifi.Api.Model.V1.Responses;
 
@@ -19,7 +15,8 @@ namespace Thankifi.Api.Controllers.V1
     public class RandomController : ControllerBase
     {
         /// <summary>
-        /// Retrieve a random gratitude, optionally specify a subject, a signature, flavours, categories and languages. Thanks!
+        /// Retrieve a random gratitude.
+        /// Optionally specify a subject, a signature, flavours, categories and languages. Thanks!
         /// </summary>
         [HttpGet(Name = nameof(RetrieveRandom))]
         [ProducesResponseType(typeof(GratitudeViewModel), StatusCodes.Status200OK)]
