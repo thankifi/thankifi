@@ -4,13 +4,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Thankifi.Api.Model.V1;
+using Thankifi.Api.Model.V1.Requests.Language;
+using Thankifi.Api.Model.V1.Responses;
 using Thankifi.Core.Domain.Language.Query.GetAllLanguages;
 using Thankifi.Core.Domain.Language.Query.GetLanguageByCode;
 using Thankifi.Common;
+using Thankifi.Common.Pagination;
 
 namespace Thankifi.Api.Controllers.V1
 {
@@ -20,65 +23,35 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class LanguageController : ControllerBase
     {
-        protected readonly ILogger<ThanksController> Logger;
         protected readonly IMemoryCache Cache;
         protected readonly IMediator Mediator;
 
-        public LanguageController(ILogger<ThanksController> logger, IMemoryCache cache, IMediator mediator)
+        public LanguageController(IMemoryCache cache, IMediator mediator)
         {
-            Logger = logger;
             Cache = cache;
             Mediator = mediator;
         }
-        
-        /// <summary>
-        /// Get a list of all the languages available. Thanks!
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <response code="200">Languages list. Thanks!</response>
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<LanguageViewModel>), 200)]
-        public async Task<IActionResult> Get(CancellationToken cancellationToken)
-        {
-            if (!Cache.TryGetValue(CacheKeys.LanguageViewModelList, out IEnumerable<LanguageViewModel> cacheEntry))
-            {
-                var result = await Mediator.Send(new GetAllLanguagesQuery(), cancellationToken);
-                
-                cacheEntry = LanguageViewModel.Parse(result);
 
-                Cache.Set(CacheKeys.LanguageViewModelList, cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
-            }
-            
-            return Ok(cacheEntry);
+        /// <summary>
+        /// Retrieve a paginated list of all the supported languages. Thanks!
+        /// </summary>
+        [HttpGet(nameof(RetrieveAllLanguages))]
+        [ProducesResponseType(typeof(IEnumerable<LanguageViewModel>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> RetrieveAllLanguages(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Get detailed language. Includes number of items. Thanks!
+        /// Retrieve a detail view of a language and a paginated list of gratitudes for the specified language.
+        /// Optionally specify a subject, a signature, flavours and categories. Thanks!
         /// </summary>
-        /// <param name="language">Language code</param>
-        /// <param name="cancellationToken"></param>
-        /// <response code="200">Detailed view of the language. Thanks!</response>
-        /// <response code="404">Language not found! Thanks!</response>
-        [HttpGet("{language}")]
-        [ProducesResponseType(typeof(LanguageDetailViewModel), 200)]
-        [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> GetById(
-            [FromRoute, Required] string language,
-            CancellationToken cancellationToken)
+        [HttpGet("{language:required}", Name = nameof(RetrieveByLanguageCode))]
+        [ProducesResponseType(typeof(LanguageDetailViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RetrieveByLanguageCode([FromRoute, Required] string language, [FromQuery] RetrieveByLanguageCodeQueryParameters query, CancellationToken cancellationToken)
         {
-            if (!Cache.TryGetValue(CacheKeys.LanguageDetailViewModel(language), out LanguageDetailViewModel cacheEntry))
-            {
-                var result = await Mediator.Send(new GetLanguageByCodeQuery
-                {
-                    Code = language
-                }, cancellationToken);
-                
-                cacheEntry = LanguageDetailViewModel.Parse(result);
-
-                Cache.Set(CacheKeys.LanguageDetailViewModel(language), cacheEntry, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(12)));
-            }
-            
-            return Ok(cacheEntry);
+            throw new NotImplementedException();
         }
     }
 }
