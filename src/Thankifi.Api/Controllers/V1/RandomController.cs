@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +22,19 @@ namespace Thankifi.Api.Controllers.V1
         [HttpGet(Name = nameof(RetrieveRandom))]
         [ProducesResponseType(typeof(GratitudeViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RetrieveRandom([FromQuery] RetrieveRandomQueryParameters gratitudeByIdQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveRandom([FromQuery] RetrieveRandomQueryParameters query, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// Retrieve a random gratitude repeated once instance per available flavour.
+        /// Optionally specify a subject, a signature, categories and languages. Thanks!
+        /// </summary>
+        [HttpGet("flavourful",Name = nameof(RetrieveRandomFlavourful))]
+        [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RetrieveRandomFlavourful([FromQuery] RetrieveRandomFlavourfulQueryParameters query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

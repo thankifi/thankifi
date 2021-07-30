@@ -17,15 +17,6 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class GratitudeController : ControllerBase
     {
-        protected readonly ILogger<GratitudeController> Logger;
-        protected readonly IMediator Mediator;
-
-        public GratitudeController(ILogger<GratitudeController> logger, IMediator mediator)
-        {
-            Logger = logger;
-            Mediator = mediator;
-        }
-
         /// <summary>
         /// Retrieve a paginated list of gratitudes.
         /// Optionally specify a subject, a signature and flavours. Thanks!
@@ -33,20 +24,20 @@ namespace Thankifi.Api.Controllers.V1
         [HttpGet(Name = nameof(RetrieveAllGratitudes))]
         [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RetrieveAllGratitudes([FromQuery] RetrieveAllGratitudesQueryParameters allGratitudesQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveAllGratitudes([FromQuery] RetrieveAllGratitudesQueryParameters query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Retrieve a gratitude by id.
+        /// Retrieve a random gratitude repeated once instance per available flavour.
         /// Optionally specify a subject, a signature and flavours. Thanks!
         /// </summary>
-        [HttpGet("{id:guid:required}",Name = nameof(RetrieveGratitudeById))]
-        [ProducesResponseType(typeof(GratitudeViewModel), StatusCodes.Status200OK)]
+        [HttpGet("{id:guid:required}/flavourful",Name = nameof(RetrieveGratitudeByIdFlavourful))]
+        [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RetrieveGratitudeById([FromRoute] Guid id, [FromQuery] RetrieveGratitudeByIdQueryParameters gratitudeByIdQuery, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveGratitudeByIdFlavourful([FromRoute] Guid id, [FromQuery] RetrieveGratitudeByIdQueryParameters query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
