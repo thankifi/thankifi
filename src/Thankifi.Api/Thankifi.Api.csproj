@@ -19,6 +19,7 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
         <PackageReference Include="Thankifi.Common.Logging" Version="1.0.0" />
+        <PackageReference Include="Thankifi.Common.Pagination" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
