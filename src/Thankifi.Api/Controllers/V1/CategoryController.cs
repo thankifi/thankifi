@@ -33,7 +33,7 @@ namespace Thankifi.Api.Controllers.V1
         /// <summary>
         /// Retrieve a paginated list of all the available categories. Thanks!
         /// </summary>
-        [HttpGet(nameof(RetrieveAllCategories))]
+        [HttpGet(Name = nameof(RetrieveAllCategories))]
         [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> RetrieveAllCategories(CancellationToken cancellationToken)
         {
@@ -44,10 +44,10 @@ namespace Thankifi.Api.Controllers.V1
         /// Retrieve a detail view of a category and a paginated list of gratitudes for the specified category.
         /// Optionally specify a subject, a signature, flavours and languages. Thanks!
         /// </summary>
-        [HttpGet("{category:required}", Name = nameof(RetrieveByCategorySlug))]
+        [HttpGet("{slug:required}", Name = nameof(RetrieveByCategorySlug))]
         [ProducesResponseType(typeof(CategoryDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute, Required] string category, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute, Required] string slug, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

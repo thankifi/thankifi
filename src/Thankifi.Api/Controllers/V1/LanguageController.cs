@@ -35,7 +35,7 @@ namespace Thankifi.Api.Controllers.V1
         /// <summary>
         /// Retrieve a paginated list of all the supported languages. Thanks!
         /// </summary>
-        [HttpGet(nameof(RetrieveAllLanguages))]
+        [HttpGet(Name = nameof(RetrieveAllLanguages))]
         [ProducesResponseType(typeof(IEnumerable<LanguageViewModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> RetrieveAllLanguages(CancellationToken cancellationToken)
         {
@@ -43,13 +43,13 @@ namespace Thankifi.Api.Controllers.V1
         }
 
         /// <summary>
-        /// Retrieve a detail view of a language and a paginated list of gratitudes for the specified language.
+        /// Retrieve a detail view of a language and a paginated list of gratitudes for the specified language code.
         /// Optionally specify a subject, a signature, flavours and categories. Thanks!
         /// </summary>
-        [HttpGet("{language:required}", Name = nameof(RetrieveByLanguageCode))]
+        [HttpGet("{code:required}", Name = nameof(RetrieveByLanguageCode))]
         [ProducesResponseType(typeof(LanguageDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RetrieveByLanguageCode([FromRoute, Required] string language, [FromQuery] RetrieveByLanguageCodeQueryParameters query, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveByLanguageCode([FromRoute, Required] string code, [FromQuery] RetrieveByLanguageCodeQueryParameters query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
