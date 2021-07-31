@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,10 +29,22 @@ namespace Thankifi.Api.Controllers.V1
         }
         
         /// <summary>
+        /// Retrieve random gratitudes in bulk up to 50 per call.
+        /// Optionally specify a subject, a signature, flavours, categories and languages. Thanks!
+        /// </summary>
+        [HttpGet("bulk", Name = nameof(RetrieveRandomBulk))]
+        [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RetrieveRandomBulk([FromQuery] RetrieveRandomBulkQueryParameters query, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
         /// Retrieve a random gratitude repeated once instance per available flavour.
         /// Optionally specify a subject, a signature, categories and languages. Thanks!
         /// </summary>
-        [HttpGet("flavourful",Name = nameof(RetrieveRandomFlavourful))]
+        [HttpGet("flavourful", Name = nameof(RetrieveRandomFlavourful))]
         [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RetrieveRandomFlavourful([FromQuery] RetrieveRandomFlavourfulQueryParameters query, CancellationToken cancellationToken)
