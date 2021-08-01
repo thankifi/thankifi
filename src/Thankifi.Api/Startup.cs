@@ -98,7 +98,7 @@ namespace Thankifi.Api
                 {
                     Title = "🙏 Thankifi — Being Thankful as a Service ", 
                     Version = "v1",
-                    Description = "Thankifi is a FOSS API that makes it easy for you to express gratitude. Be grateful!",
+                    Description = "Thankifi is a free (as in speech) API that makes it easy for you to express gratitude. Be grateful!",
                     Contact = new OpenApiContact
                     {
                       Name  = "Lucas Maximiliano Marino",
@@ -108,7 +108,7 @@ namespace Thankifi.Api
                     License = new OpenApiLicense
                     {
                         Name = "AGPL-3.0",
-                        Url = new Uri("https://github.com/elementh/taas/blob/master/LICENSE")
+                        Url = new Uri("https://github.com/thankifi/thankifi/blob/master/LICENSE")
                     }
                 });
                
