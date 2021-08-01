@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using AspNetCoreRateLimit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Thankifi.Api.Configuration.Swagger;
 using Thankifi.Core.Domain.Gratitude.Dto;
 using Thankifi.Core.Domain.Gratitude.Pipeline;
@@ -72,10 +72,10 @@ namespace Thankifi.Api
 
             #region IpRateLimiting
 
-            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            // services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            // services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            // services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            // services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
             #endregion
 
@@ -144,13 +144,15 @@ namespace Thankifi.Api
 
             #region Migration
             
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
-            {
-                serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
-            }
+            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
+            // {
+            //     serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
+            // }
             
             #endregion
             
+            app.UseSerilogRequestLogging();
+
             app.UseStaticFiles();
             
             app.UseSwagger();
@@ -164,7 +166,7 @@ namespace Thankifi.Api
             
             app.UseRouting();
 
-            app.UseIpRateLimiting();
+            // app.UseIpRateLimiting();
 
             app.UseEndpoints(endpoints =>
             {

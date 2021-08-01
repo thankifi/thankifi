@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Thankifi.Common.Pagination;
 
 namespace Thankifi.Api.Model.V1.Requests.Gratitude

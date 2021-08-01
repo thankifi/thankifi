@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Thankifi.Api.Model.V1;
 using Thankifi.Api.Model.V1.Requests.Category;
 using Thankifi.Api.Model.V1.Responses;
-using Thankifi.Core.Domain.Category.Query.GetAllCategories;
-using Thankifi.Core.Domain.Category.Query.GetCategoryById;
-using Thankifi.Common;
 
 namespace Thankifi.Api.Controllers.V1
 {

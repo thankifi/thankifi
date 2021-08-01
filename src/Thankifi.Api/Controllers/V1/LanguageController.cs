@@ -3,17 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Thankifi.Api.Model.V1;
 using Thankifi.Api.Model.V1.Requests.Language;
 using Thankifi.Api.Model.V1.Responses;
-using Thankifi.Core.Domain.Language.Query.GetAllLanguages;
-using Thankifi.Core.Domain.Language.Query.GetLanguageByCode;
-using Thankifi.Common;
-using Thankifi.Common.Pagination;
 
 namespace Thankifi.Api.Controllers.V1
 {
