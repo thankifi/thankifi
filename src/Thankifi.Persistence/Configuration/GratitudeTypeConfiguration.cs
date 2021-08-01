@@ -9,6 +9,17 @@ namespace Thankifi.Persistence.Configuration
         public void Configure(EntityTypeBuilder<Gratitude> builder)
         {
             builder.HasKey(e => e.Id);
+
+            builder.HasOne(e => e.Language)
+                .WithMany(e => e.Gratitudes)
+                .IsRequired();
+            
+            builder.Property(e => e.Text)
+                .IsRequired();
+
+            builder.HasMany(e => e.Categories)
+                .WithMany(e => e.Gratitudes);
+
         }
     }
 }

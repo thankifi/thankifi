@@ -9,6 +9,15 @@ namespace Thankifi.Persistence.Configuration
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.HasKey(e => e.Id);
+
+            builder.Property(e => e.Slug)
+                .IsRequired();
+
+            builder.HasMany(e => e.Gratitudes)
+                .WithMany(e => e.Categories);
+
+            builder.HasIndex(e => e.Slug)
+                .IsUnique();
         }
     }
 }
