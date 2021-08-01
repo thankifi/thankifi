@@ -1,8 +1,8 @@
 using Thankifi.Common.Pagination;
 
-namespace Thankifi.Api.Model.V1.Requests.Category
+namespace Thankifi.Api.Model.V1.Requests.Language
 {
-    public record RetrieveByCategoryCodeQueryParameters : QueryStringParameters
+    public record RetrieveByLanguageQueryParameters : QueryStringParameters
     {
         /// <summary>
         /// Subject receiving the gratitude.
@@ -20,8 +20,8 @@ namespace Thankifi.Api.Model.V1.Requests.Category
         public string[]? Flavours { get; init; }
 
         /// <summary>
-        /// Filter gratitudes by languages.
+        /// Filter gratitudes by categories.
         /// </summary>
-        public string[]? Languages { get; init; }
+        public string[]? Categories { get; init; }
     }
 }

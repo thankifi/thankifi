@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Thankifi.Api.Model.V1;
+using Thankifi.Api.Model.V1.Requests.Category;
 using Thankifi.Api.Model.V1.Responses;
 using Thankifi.Core.Domain.Category.Query.GetAllCategories;
 using Thankifi.Core.Domain.Category.Query.GetCategoryById;
@@ -32,15 +33,29 @@ namespace Thankifi.Api.Controllers.V1
         }
 
         /// <summary>
-        /// Retrieve a detail view of a category and a paginated list of gratitudes for the specified category.
+        /// Retrieve a detail view of a category and a paginated list of gratitudes for the specified category id.
         /// Optionally specify a subject, a signature, flavours and languages. Thanks!
         /// </summary>
-        [HttpGet("{slug:required}", Name = nameof(RetrieveByCategorySlug))]
+        [HttpGet("{id:guid:required}", Name = nameof(RetrieveByCategoryId), Order = 1)]
         [ProducesResponseType(typeof(CategoryDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute, Required] string slug, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RetrieveByCategoryId([FromRoute] Guid id, RetrieveByCategoryQueryParameters query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Ok(Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Retrieve a detail view of a category and a paginated list of gratitudes for the specified category slug.
+        /// Optionally specify a subject, a signature, flavours and languages. Thanks!
+        /// </summary>
+        [HttpGet("{slug:required}", Name = nameof(RetrieveByCategorySlug), Order = 2)]
+        [ProducesResponseType(typeof(CategoryDetailViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute] string slug, RetrieveByCategoryQueryParameters query, CancellationToken cancellationToken)
+        {
+            return Ok("slug");
         }
     }
 }

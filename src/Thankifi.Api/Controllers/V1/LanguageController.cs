@@ -34,13 +34,27 @@ namespace Thankifi.Api.Controllers.V1
         }
 
         /// <summary>
+        /// Retrieve a detail view of a language and a paginated list of gratitudes for the specified language id.
+        /// Optionally specify a subject, a signature, flavours and categories. Thanks!
+        /// </summary>
+        [HttpGet("{id:guid:required}", Name = nameof(RetrieveByLanguageId), Order = 1)]
+        [ProducesResponseType(typeof(LanguageDetailViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RetrieveByLanguageId([FromRoute] Guid id, [FromQuery] RetrieveByLanguageQueryParameters query, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Retrieve a detail view of a language and a paginated list of gratitudes for the specified language code.
         /// Optionally specify a subject, a signature, flavours and categories. Thanks!
         /// </summary>
-        [HttpGet("{code:required}", Name = nameof(RetrieveByLanguageCode))]
+        [HttpGet("{code:required}", Name = nameof(RetrieveByLanguageCode), Order = 2)]
         [ProducesResponseType(typeof(LanguageDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RetrieveByLanguageCode([FromRoute, Required] string code, [FromQuery] RetrieveByLanguageCodeQueryParameters query, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RetrieveByLanguageCode([FromRoute, Required] string code, [FromQuery] RetrieveByLanguageQueryParameters query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

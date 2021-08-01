@@ -28,6 +28,19 @@ namespace Thankifi.Api.Controllers.V1
         {
             throw new NotImplementedException();
         }
+        
+        /// <summary>
+        /// Retrieve a gratitude by id.
+        /// Optionally specify a subject, a signature and flavours. Thanks!
+        /// </summary>
+        [HttpGet("{id:guid:required}",Name = nameof(RetrieveGratitudeById))]
+        [ProducesResponseType(typeof(GratitudeViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RetrieveGratitudeById([FromRoute] Guid id, [FromQuery] RetrieveGratitudeByIdQueryParameters query, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Retrieve a random gratitude repeated once instance per available flavour.
@@ -37,7 +50,7 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RetrieveGratitudeByIdFlavourful([FromRoute] Guid id, [FromQuery] RetrieveGratitudeByIdQueryParameters query, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveGratitudeByIdFlavourful([FromRoute] Guid id, [FromQuery] RetrieveGratitudeByIdFlavourfulQueryParameters query, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
