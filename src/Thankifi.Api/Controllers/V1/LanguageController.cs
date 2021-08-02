@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using Incremental.Common.Sourcing.Abstractions.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Requests.Language;
 using Thankifi.Api.Model.V1.Responses;
+using Thankifi.Common.Pagination;
+using Thankifi.Core.Domain.Contract.Language.Queries;
 
 namespace Thankifi.Api.Controllers.V1
 {
@@ -16,14 +21,32 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class LanguageController : ControllerBase
     {
+        private readonly IQueryBus _queryBus;
+        private readonly IMapper _mapper;
+        public LanguageController(IQueryBus queryBus, IMapper mapper)
+        {
+            _queryBus = queryBus;
+            _mapper = mapper;
+        }
+        
         /// <summary>
         /// Retrieve a paginated list of all the supported languages. Thanks!
         /// </summary>
         [HttpGet(Name = nameof(RetrieveAllLanguages))]
         [ProducesResponseType(typeof(IEnumerable<LanguageViewModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RetrieveAllLanguages(CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveAllLanguages(QueryStringParameters query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _queryBus.Send(new RetrieveAll
+            {
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            }, cancellationToken);
+
+            Response.Headers.AddPagination(result);
+
+            var languages = result.Select(_mapper.Map<LanguageViewModel>);
+
+            return Ok(languages);
         }
 
         /// <summary>
