@@ -20,11 +20,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Common", "Thankifi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Persistence.Migrations", "Thankifi.Persistence.Migrations\Thankifi.Persistence.Migrations.csproj", "{33465FF3-76C7-4747-8921-5CA3E9426851}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{2FE1EF0D-0C87-484A-93EE-300FD150029E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution-files", ".solution-files", "{2FE1EF0D-0C87-484A-93EE-300FD150029E}"
 ProjectSection(SolutionItems) = preProject
 	Dockerfile = Dockerfile
 	.dockerignore = .dockerignore
 EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Core.Domain.Contract", "Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj", "{7206CE0F-755B-4015-AC14-899FC31C5B63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,7 @@ Global
 		{5DEC0143-92F0-48A1-8E2C-D592493CE519} = {871328EA-1216-4728-97DD-4B4D13F2BEA8}
 		{11588941-6DE1-4D8B-8D17-E8A5470998E9} = {5A8ABEF4-CC10-4102-815C-73086E016BFF}
 		{33465FF3-76C7-4747-8921-5CA3E9426851} = {871328EA-1216-4728-97DD-4B4D13F2BEA8}
+		{7206CE0F-755B-4015-AC14-899FC31C5B63} = {374DF343-0F41-4B9F-A14A-E1F7876749B2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -64,5 +67,9 @@ Global
 		{33465FF3-76C7-4747-8921-5CA3E9426851}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33465FF3-76C7-4747-8921-5CA3E9426851}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33465FF3-76C7-4747-8921-5CA3E9426851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7206CE0F-755B-4015-AC14-899FC31C5B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7206CE0F-755B-4015-AC14-899FC31C5B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7206CE0F-755B-4015-AC14-899FC31C5B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7206CE0F-755B-4015-AC14-899FC31C5B63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

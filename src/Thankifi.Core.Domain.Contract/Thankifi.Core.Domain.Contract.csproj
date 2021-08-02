@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Thankifi.Common\Thankifi.Common.csproj" />
+        <ProjectReference Include="..\Thankifi.Persistence\Thankifi.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>
