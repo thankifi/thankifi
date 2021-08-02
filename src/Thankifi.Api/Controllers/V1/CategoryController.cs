@@ -93,7 +93,27 @@ namespace Thankifi.Api.Controllers.V1
         public async Task<IActionResult> RetrieveByCategorySlug([FromRoute] string slug, RetrieveByCategoryQueryParameters query,
             CancellationToken cancellationToken)
         {
-            return Ok("slug");
+            var result = await _queryBus.Send(new RetrieveBySlug
+            {
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize,
+                Slug = slug,
+                Subject = query.Subject,
+                Signature = query.Signature,
+                Flavours = query.Flavours,
+                Languages = query.Languages
+            }, cancellationToken);
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+            
+            Response.Headers.AddPagination(result.Gratitudes);
+
+            var category= _mapper.Map<CategoryDetailViewModel>(result);
+
+            return Ok(category);
         }
     }
 }
