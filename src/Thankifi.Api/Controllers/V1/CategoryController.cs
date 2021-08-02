@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using Incremental.Common.Sourcing.Abstractions.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Requests.Category;
 using Thankifi.Api.Model.V1.Responses;
+using Thankifi.Common.Pagination;
+using Thankifi.Core.Domain.Contract.Category.Queries;
 
 namespace Thankifi.Api.Controllers.V1
 {
@@ -15,14 +20,32 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class CategoryController : ControllerBase
     {
+        private readonly IQueryBus _queryBus;
+        private readonly IMapper _mapper;
+        public CategoryController(IQueryBus queryBus, IMapper mapper)
+        {
+            _queryBus = queryBus;
+            _mapper = mapper;
+        }
+
         /// <summary>
         /// Retrieve a paginated list of all the available categories. Thanks!
         /// </summary>
         [HttpGet(Name = nameof(RetrieveAllCategories))]
         [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RetrieveAllCategories(CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveAllCategories(QueryStringParameters query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _queryBus.Send(new RetrieveAll
+            {
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            }, cancellationToken);
+
+            Response.Headers.AddPagination(result);
+
+            var categories = result.Select(_mapper.Map<CategoryViewModel>);
+
+            return Ok(categories);
         }
 
         /// <summary>
@@ -33,7 +56,8 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(CategoryDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RetrieveByCategoryId([FromRoute] Guid id, RetrieveByCategoryQueryParameters query, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveByCategoryId([FromRoute] Guid id, RetrieveByCategoryQueryParameters query,
+            CancellationToken cancellationToken)
         {
             return Ok(Guid.NewGuid());
         }
@@ -46,7 +70,8 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(CategoryDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute] string slug, RetrieveByCategoryQueryParameters query, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute] string slug, RetrieveByCategoryQueryParameters query,
+            CancellationToken cancellationToken)
         {
             return Ok("slug");
         }

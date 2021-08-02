@@ -1,6 +1,6 @@
-﻿namespace Thankifi.Api.Model.V1.Responses
+namespace Thankifi.Core.Domain.Contract.Category.Dto
 {
-    public record CategoryViewModel
+    public record CategoryDto
     {
         public int Id { get; init; }
         public string Slug { get; init; }
