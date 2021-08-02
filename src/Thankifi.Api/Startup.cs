@@ -42,33 +42,13 @@ namespace Thankifi.Api
             services.AddMemoryCache();
 
             services.AddFilters();
-            
-            #region Pipeline
 
-            services.AddMediatR(typeof(GetGratitudeByIdQuery).Assembly);
-            services.AddTransient<IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>, GratitudeFilterPipeline>();
-            services.AddTransient<IPipelineBehavior<GetGratitudeQuery, GratitudeDto?>, GratitudeCustomizationPipeline>();
-
-            services.AddTransient<IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>, GratitudeFilterPipeline>();
-            services.AddTransient<IPipelineBehavior<GetGratitudeByIdQuery, GratitudeDto?>, GratitudeCustomizationPipeline>();
-
-            services.AddTransient<IPipelineBehavior<GetBulkGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeFilterPipeline>();
-            services.AddTransient<IPipelineBehavior<GetBulkGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeCustomizationPipeline>();
-            
-            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeFilterPipeline>();
-            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeQuery, IEnumerable<GratitudeDto>>, GratitudeCustomizationPipeline>();
-            
-            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeByIdQuery, IEnumerable<GratitudeDto>>, GratitudeFilterPipeline>();
-            services.AddTransient<IPipelineBehavior<GetBulkAllFiltersGratitudeByIdQuery, IEnumerable<GratitudeDto>>, GratitudeCustomizationPipeline>();
-            
-            #endregion
-            
             #region Persistence
 
             services.AddDbContext<ThankifiDbContext>(builder =>
             { 
                 var connectionString = Configuration["DB_CONNECTION_STRING"];
-                builder.UseNpgsql(connectionString, optionsBuilder => { optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migration"); });
+                builder.UseNpgsql(connectionString, optionsBuilder => { optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations"); });
             });
 
             #endregion
@@ -145,15 +125,11 @@ namespace Thankifi.Api
                 app.UseHttpsRedirection();
             }
 
-            #region Migration
-            
-            // using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
-            // {
-            //     serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
-            // }
-            
-            #endregion
-            
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
+            {
+                serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
+            }
+
             app.UseSerilogRequestLogging();
 
             app.UseStaticFiles();
