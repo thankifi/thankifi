@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using Incremental.Common.Sourcing.Abstractions.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Requests.Gratitude;
 using Thankifi.Api.Model.V1.Responses;
+using Thankifi.Common.Pagination;
+using Thankifi.Core.Domain.Contract.Gratitude.Queries;
 
 namespace Thankifi.Api.Controllers.V1
 {
@@ -15,6 +20,14 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class GratitudeController : ControllerBase
     {
+        private readonly IQueryBus _queryBus;
+        private readonly IMapper _mapper;
+        public GratitudeController(IQueryBus queryBus, IMapper mapper)
+        {
+            _queryBus = queryBus;
+            _mapper = mapper;
+        }
+        
         /// <summary>
         /// Retrieve a paginated list of gratitudes.
         /// Optionally specify a subject, a signature and flavours. Thanks!
@@ -24,7 +37,20 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RetrieveAllGratitudes([FromQuery] RetrieveAllGratitudesQueryParameters query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _queryBus.Send(new RetrieveAll
+            {
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize,
+                Subject = query.Subject,
+                Signature = query.Signature,
+                Flavours = query.Flavours
+            }, cancellationToken);
+
+            Response.Headers.AddPagination(result);
+
+            var gratitudes = result.Select(_mapper.Map<GratitudeViewModel>);
+
+            return Ok(gratitudes);
         }
         
         /// <summary>
