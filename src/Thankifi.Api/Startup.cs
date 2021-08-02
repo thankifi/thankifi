@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Thankifi.Api.Configuration.Swagger;
+using Thankifi.Common.Filters;
 using Thankifi.Core.Domain.Gratitude.Dto;
 using Thankifi.Core.Domain.Gratitude.Pipeline;
 using Thankifi.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude;
@@ -39,6 +40,8 @@ namespace Thankifi.Api
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddMemoryCache();
+
+            services.AddFilters();
             
             #region Pipeline
 
