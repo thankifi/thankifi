@@ -59,7 +59,27 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RetrieveByLanguageId([FromRoute] Guid id, [FromQuery] RetrieveByLanguageQueryParameters query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _queryBus.Send(new RetrieveById
+            {
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize,
+                Id = id,
+                Subject = query.Subject,
+                Signature = query.Signature,
+                Flavours = query.Flavours,
+                Categories = query.Categories
+            }, cancellationToken);
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+            
+            Response.Headers.AddPagination(result.Gratitudes);
+
+            var language = _mapper.Map<LanguageViewModel>(result);
+
+            return Ok(language);
         }
 
         /// <summary>
