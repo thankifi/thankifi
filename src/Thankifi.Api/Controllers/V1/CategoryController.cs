@@ -59,7 +59,27 @@ namespace Thankifi.Api.Controllers.V1
         public async Task<IActionResult> RetrieveByCategoryId([FromRoute] Guid id, RetrieveByCategoryQueryParameters query,
             CancellationToken cancellationToken)
         {
-            return Ok(Guid.NewGuid());
+            var result = await _queryBus.Send(new RetrieveById
+            {
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize,
+                Id = id,
+                Subject = query.Subject,
+                Signature = query.Signature,
+                Flavours = query.Flavours,
+                Languages = query.Languages
+            }, cancellationToken);
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+            
+            Response.Headers.AddPagination(result.Gratitudes);
+
+            var category= _mapper.Map<CategoryDetailViewModel>(result);
+
+            return Ok(category);
         }
 
         /// <summary>
