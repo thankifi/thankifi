@@ -63,7 +63,22 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RetrieveGratitudeById([FromRoute] Guid id, [FromQuery] RetrieveGratitudeByIdQueryParameters query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _queryBus.Send(new RetrieveById
+            {
+                Id = id,
+                Subject = query.Subject,
+                Signature = query.Signature,
+                Flavours = query.Flavours
+            });
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+            var gratitude = _mapper.Map<GratitudeViewModel>(result);
+
+            return Ok(gratitude);
         }
 
         /// <summary>
