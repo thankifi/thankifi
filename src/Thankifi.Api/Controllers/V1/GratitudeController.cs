@@ -69,7 +69,7 @@ namespace Thankifi.Api.Controllers.V1
                 Subject = query.Subject,
                 Signature = query.Signature,
                 Flavours = query.Flavours
-            });
+            }, cancellationToken);
 
             if (result is null)
             {
@@ -86,12 +86,26 @@ namespace Thankifi.Api.Controllers.V1
         /// Optionally specify a subject, a signature and flavours. Thanks!
         /// </summary>
         [HttpGet("{id:guid:required}/flavourful",Name = nameof(RetrieveGratitudeByIdFlavourful))]
-        [ProducesResponseType(typeof(IEnumerable<GratitudeViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GratitudeFlavourfulViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RetrieveGratitudeByIdFlavourful([FromRoute] Guid id, [FromQuery] RetrieveGratitudeByIdFlavourfulQueryParameters query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _queryBus.Send(new RetrieveByIdFlavourful
+            {
+                Id = id,
+                Subject = query.Subject,
+                Signature = query.Signature,
+            }, cancellationToken);
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+            var gratitude = _mapper.Map<GratitudeFlavourfulViewModel>(result);
+
+            return Ok(gratitude);
         }
     }
 }

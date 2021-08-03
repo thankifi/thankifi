@@ -2,10 +2,11 @@
 
 namespace Thankifi.Api.Model.V1.Responses
 {
-    public class GratitudeViewModel
+    public record GratitudeViewModel
     {
-        public int Id { get; set; }
-        public string Text { get; set; } = null!;
-        public IEnumerable<CategoryViewModel> Categories { get; set; } = null!;
+        public int Id { get; init; }
+        public LanguageViewModel Language { get; init; }
+        public string Text { get; init; } 
+        public IEnumerable<CategoryViewModel> Categories { get; set; }
     }
 }
