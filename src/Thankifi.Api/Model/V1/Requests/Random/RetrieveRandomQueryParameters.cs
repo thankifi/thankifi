@@ -13,7 +13,7 @@ namespace Thankifi.Api.Model.V1.Requests.Random
         public string? Signature { get; init; }
 
         /// <summary>
-        /// List of flavours to apply to the gratitude. Currently available: shouting, mocking, leet.
+        /// List of flavours to apply to the gratitude.
         /// </summary>
         public string[]? Flavours { get; init; }
 
