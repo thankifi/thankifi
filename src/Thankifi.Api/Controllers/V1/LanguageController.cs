@@ -23,6 +23,7 @@ namespace Thankifi.Api.Controllers.V1
     {
         private readonly IQueryBus _queryBus;
         private readonly IMapper _mapper;
+        
         public LanguageController(IQueryBus queryBus, IMapper mapper)
         {
             _queryBus = queryBus;
