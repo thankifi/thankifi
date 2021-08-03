@@ -6,13 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Thankifi.Common\Thankifi.Common.csproj" />
-        <ProjectReference Include="..\Thankifi.Persistence\Thankifi.Persistence.csproj" />
+      <PackageReference Include="Incremental.Common.Sourcing.Abstractions" Version="2.0.3" />
+      <PackageReference Include="Thankifi.Common.Pagination" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Incremental.Common.Sourcing.Abstractions" Version="2.0.3" />
-      <PackageReference Include="Thankifi.Common.Pagination" Version="1.0.0" />
+        <ProjectReference Include="..\Thankifi.Persistence\Thankifi.Persistence.csproj" />
     </ItemGroup>
 
 </Project>
