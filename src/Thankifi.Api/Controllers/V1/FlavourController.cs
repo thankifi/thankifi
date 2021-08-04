@@ -26,9 +26,9 @@ namespace Thankifi.Api.Controllers.V1
         /// <summary>
         /// Retrieve a list of all the available flavours. Thanks!
         /// </summary>
-        [HttpGet(Name = nameof(RetrieveAllCategories))]
+        [HttpGet(Name = nameof(RetrieveAllFlavours))]
         [ProducesResponseType(typeof(IEnumerable<FlavourViewModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RetrieveAllCategories(CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveAllFlavours(CancellationToken cancellationToken)
         {
             
             return Ok(_filters.Select(f => new FlavourViewModel
