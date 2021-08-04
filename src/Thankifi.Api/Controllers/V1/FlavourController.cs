@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Responses;
@@ -16,11 +17,11 @@ namespace Thankifi.Api.Controllers.V1
     [Route("api/v{v:apiVersion}/[controller]")]
     public class FlavourController : ControllerBase
     {
-        private readonly IEnumerable<IFilter> _filters;
+        private readonly IFilterService _filterService;
 
-        public FlavourController(IEnumerable<IFilter> filters)
+        public FlavourController(IFilterService filterService)
         {
-            _filters = filters;
+            _filterService = filterService;
         }
 
         /// <summary>
@@ -28,12 +29,12 @@ namespace Thankifi.Api.Controllers.V1
         /// </summary>
         [HttpGet(Name = nameof(RetrieveAllFlavours))]
         [ProducesResponseType(typeof(IEnumerable<FlavourViewModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RetrieveAllFlavours(CancellationToken cancellationToken)
+        public IActionResult RetrieveAllFlavours(CancellationToken cancellationToken)
         {
             
-            return Ok(_filters.Select(f => new FlavourViewModel
+            return Ok(_filterService.GetAvailableFilterIdentifiers().Select(identifier => new FlavourViewModel
             {
-                Flavour = f.Identifier,
+                Flavour = identifier,
                 Text = string.Empty
             }));
         }
