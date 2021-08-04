@@ -25,6 +25,10 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Core.Domain.Contract", "Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj", "{7206CE0F-755B-4015-AC14-899FC31C5B63}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{0D774B1B-6BC3-432E-A786-B7E8AA2C8CD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Core.Application", "Thankifi.Core.Application\Thankifi.Core.Application.csproj", "{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,8 @@ Global
 		{5DEC0143-92F0-48A1-8E2C-D592493CE519} = {871328EA-1216-4728-97DD-4B4D13F2BEA8}
 		{33465FF3-76C7-4747-8921-5CA3E9426851} = {871328EA-1216-4728-97DD-4B4D13F2BEA8}
 		{7206CE0F-755B-4015-AC14-899FC31C5B63} = {374DF343-0F41-4B9F-A14A-E1F7876749B2}
+		{0D774B1B-6BC3-432E-A786-B7E8AA2C8CD1} = {374DF343-0F41-4B9F-A14A-E1F7876749B2}
+		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD} = {0D774B1B-6BC3-432E-A786-B7E8AA2C8CD1}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -63,5 +69,9 @@ Global
 		{7206CE0F-755B-4015-AC14-899FC31C5B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7206CE0F-755B-4015-AC14-899FC31C5B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7206CE0F-755B-4015-AC14-899FC31C5B63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
