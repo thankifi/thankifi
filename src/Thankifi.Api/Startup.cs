@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Incremental.Common.Sourcing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,9 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Thankifi.Api.Configuration.Swagger;
 using Thankifi.Common.Filters;
+using Thankifi.Core.Application.Pipelines;
+using Thankifi.Core.Domain.Contract.Gratitude.Queries;
+using Thankifi.Core.Domain.Gratitude.Query;
 using Thankifi.Persistence.Context;
 
 namespace Thankifi.Api
@@ -34,6 +38,18 @@ namespace Thankifi.Api
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            #region Sourcing
+
+            services.AddSourcing(typeof(RetrieveById).Assembly, typeof(RetrieveByIdHandler).Assembly);
+            
+            services.Scan(scanner => scanner
+                .FromAssembliesOf(typeof(FlavouringPipeline))
+                .AddClasses(filter => filter.Where(type => type == typeof(FlavouringPipeline)))
+                .AsImplementedInterfaces()
+            );
+
+            #endregion
+            
             services.AddFilters();
 
             #region Persistence
