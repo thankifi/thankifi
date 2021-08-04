@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Thankifi.Common.Filters.Abstractions" Version="1.2.0" />
+      <PackageReference Include="Thankifi.Common.Filters.Abstractions" Version="1.2.1" />
     </ItemGroup>
 
 </Project>
