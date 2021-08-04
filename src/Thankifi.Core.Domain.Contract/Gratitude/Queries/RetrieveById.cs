@@ -4,7 +4,7 @@ using Thankifi.Core.Domain.Contract.Gratitude.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Gratitude.Queries
 {
-    public record RetrieveById : IQuery<GratitudeDto>
+    public record RetrieveById : IQuery<GratitudeDto?>
     {
         public Guid Id { get; init; }
         public string? Subject { get; init; }
