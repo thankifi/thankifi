@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +12,6 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Thankifi.Api.Configuration.Swagger;
 using Thankifi.Common.Filters;
-using Thankifi.Core.Domain.Gratitude.Dto;
-using Thankifi.Core.Domain.Gratitude.Pipeline;
-using Thankifi.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitude;
-using Thankifi.Core.Domain.Gratitude.Query.GetBulkAllFiltersGratitudeById;
-using Thankifi.Core.Domain.Gratitude.Query.GetBulkGratitude;
-using Thankifi.Core.Domain.Gratitude.Query.GetGratitude;
-using Thankifi.Core.Domain.Gratitude.Query.GetGratitudeById;
 using Thankifi.Persistence.Context;
 
 namespace Thankifi.Api
@@ -40,6 +31,8 @@ namespace Thankifi.Api
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddMemoryCache();
+            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddFilters();
 
