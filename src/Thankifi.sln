@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Core.Application", "Thankifi.Core.Application\Thankifi.Core.Application.csproj", "{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Core.Application.Entity", "Thankifi.Core.Application.Entity\Thankifi.Core.Application.Entity.csproj", "{C25A63B3-572D-493C-95C6-7A4F12346280}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,7 @@ Global
 		{7206CE0F-755B-4015-AC14-899FC31C5B63} = {374DF343-0F41-4B9F-A14A-E1F7876749B2}
 		{0D774B1B-6BC3-432E-A786-B7E8AA2C8CD1} = {374DF343-0F41-4B9F-A14A-E1F7876749B2}
 		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD} = {0D774B1B-6BC3-432E-A786-B7E8AA2C8CD1}
+		{C25A63B3-572D-493C-95C6-7A4F12346280} = {0D774B1B-6BC3-432E-A786-B7E8AA2C8CD1}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9B037E41-2CC7-493E-BE5E-B815AA43DEBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -73,5 +76,9 @@ Global
 		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6956ED1-8E1B-4AD5-A6B8-18405FFC55AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C25A63B3-572D-493C-95C6-7A4F12346280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C25A63B3-572D-493C-95C6-7A4F12346280}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C25A63B3-572D-493C-95C6-7A4F12346280}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C25A63B3-572D-493C-95C6-7A4F12346280}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
