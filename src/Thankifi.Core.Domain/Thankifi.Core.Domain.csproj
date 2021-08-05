@@ -9,4 +9,8 @@
       <ProjectReference Include="..\Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj" />
     </ItemGroup>
     
+    <ItemGroup>
+      <PackageReference Include="Thankifi.Common.Random" Version="1.0.0" />
+    </ItemGroup>
+    
 </Project>
