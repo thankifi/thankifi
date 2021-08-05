@@ -27,12 +27,12 @@ namespace Thankifi.Core.Domain.Gratitude.Query
 
             if (request.Languages is not null && request.Languages.Any())
             {
-                query = query.Where(g => request.Languages.Any(language => language == g.Language.Code));
+                query = query.Where(gratitude => request.Languages.Any(language => language == gratitude.Language.Code));
             }
 
             if (request.Categories is not null && request.Categories.Any())
             {
-                query = query.Where(g => g.Categories.Any(category => request.Categories.Any(c => c == category.Slug)));
+                query = query.Where(gratitude => gratitude.Categories.Any(category => request.Categories.Any(c => c == category.Slug)));
             }
 
             var offset = RandomProvider.GetThreadRandom()?.Next(0, await query.CountAsync(cancellationToken));
