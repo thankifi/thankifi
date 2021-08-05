@@ -6,6 +6,7 @@ namespace Thankifi.Persistence.Context
     public class ThankifiDbContext : DbContext
     {
         public DbSet<Gratitude> Gratitudes { get; set; }
+        public DbSet<Language> Languages { get; set; }
         public DbSet<Category> Categories { get; set; }
 
         protected ThankifiDbContext()
