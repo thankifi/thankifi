@@ -24,7 +24,7 @@ The official [docker image](https://hub.docker.com/r/thankifi/thankifi) exposes 
 ## License
 Thankifi — Being Thankful as a Service
 
-Copyright (C) 2020  Lucas Maximiliano Marino <https://lucasmarino.me>
+Copyright (C) 2021  Lucas Maximiliano Marino <https://lucasmarino.me>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
