@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Requests.Language;
 using Thankifi.Api.Model.V1.Responses;
-using Thankifi.Common.Pagination;
+using Incremental.Common.Pagination;
 using Thankifi.Core.Domain.Contract.Language.Queries;
 
 namespace Thankifi.Api.Controllers.V1

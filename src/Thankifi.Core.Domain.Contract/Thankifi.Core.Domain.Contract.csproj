@@ -7,7 +7,7 @@
 
     <ItemGroup>
       <PackageReference Include="Incremental.Common.Sourcing.Abstractions" Version="2.0.3" />
-      <PackageReference Include="Thankifi.Common.Pagination" Version="1.0.0" />
+      <PackageReference Include="Incremental.Common.Pagination" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>

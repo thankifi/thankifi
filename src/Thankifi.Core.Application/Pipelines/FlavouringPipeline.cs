@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Thankifi.Common.Filters.Abstractions;
-using Thankifi.Common.Pagination;
+using Incremental.Common.Pagination;
 using Thankifi.Core.Application.Customization;
 using Thankifi.Core.Domain.Contract.Category.Dto;
 using Thankifi.Core.Domain.Contract.Gratitude.Dto;

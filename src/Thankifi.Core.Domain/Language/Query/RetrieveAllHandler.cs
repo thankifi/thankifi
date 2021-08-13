@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Incremental.Common.Sourcing.Abstractions.Queries;
 using Microsoft.EntityFrameworkCore;
-using Thankifi.Common.Pagination;
+using Incremental.Common.Pagination;
 using Thankifi.Core.Domain.Contract.Language.Dto;
 using Thankifi.Core.Domain.Contract.Language.Queries;
 using Thankifi.Persistence.Context;

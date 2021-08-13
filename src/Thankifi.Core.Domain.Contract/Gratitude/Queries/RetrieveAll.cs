@@ -1,5 +1,5 @@
 using Incremental.Common.Sourcing.Abstractions.Queries;
-using Thankifi.Common.Pagination;
+using Incremental.Common.Pagination;
 using Thankifi.Core.Domain.Contract.Gratitude.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Gratitude.Queries

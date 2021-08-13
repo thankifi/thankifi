@@ -1,4 +1,4 @@
-using Thankifi.Common.Pagination;
+using Incremental.Common.Pagination;
 
 namespace Thankifi.Api.Model.V1.Requests.Language
 {
