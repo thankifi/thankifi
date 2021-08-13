@@ -1,24 +1,24 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 WORKDIR /src
 
 COPY *.sln ./
 
-COPY TaaS.Api.WebApi/*.csproj TaaS.Api.WebApi/
-COPY TaaS.Common/*.csproj TaaS.Common/
-COPY TaaS.Core.Domain/*.csproj TaaS.Core.Domain/
-COPY TaaS.Core.Entity/*.csproj TaaS.Core.Entity/
-COPY TaaS.Infrastructure.Contract/*.csproj TaaS.Infrastructure.Contract/
-COPY TaaS.Infrastructure.Implementation/*.csproj TaaS.Infrastructure.Implementation/
-COPY TaaS.Persistence/*.csproj TaaS.Persistence/
-COPY TaaS.Persistence.Migration/*.csproj TaaS.Persistence.Migration/
+COPY Thankifi.Api/*.csproj Thankifi.Api/
+COPY Thankifi.Core.Application/*.csproj Thankifi.Core.Application/
+COPY Thankifi.Core.Application.Entity/*.csproj Thankifi.Core.Application.Entity/
+COPY Thankifi.Core.Domain/*.csproj Thankifi.Core.Domain/
+COPY Thankifi.Core.Domain.Contract/*.csproj Thankifi.Core.Domain.Contract/
+COPY Thankifi.Core.Entity/*.csproj Thankifi.Core.Entity/
+COPY Thankifi.Persistence/*.csproj Thankifi.Persistence/
+COPY Thankifi.Persistence.Migrations/*.csproj Thankifi.Persistence.Migrations/
 
 RUN dotnet restore -r linux-musl-x64
 
 COPY . .
-WORKDIR /src/TaaS
-RUN dotnet publish -c Release -o /app -r linux-musl-x64 --self-contained false --no-restore ../TaaS.sln 
+WORKDIR /src/Thankifi
+RUN dotnet publish -c Release -o /app -r linux-musl-x64 --self-contained false --no-restore ../Thankifi.sln 
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine
 WORKDIR /app
 COPY --from=build /app ./
 
@@ -26,4 +26,4 @@ ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS http://*:5100
 EXPOSE 5100
 
-ENTRYPOINT ["dotnet", "TaaS.Api.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Thankifi.Api.dll"]

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.9" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Thankifi.Core.Application.Entity\Thankifi.Core.Application.Entity.csproj" />
+      <ProjectReference Include="..\Thankifi.Core.Entity\Thankifi.Core.Entity.csproj" />
+    </ItemGroup>
+
+</Project>
