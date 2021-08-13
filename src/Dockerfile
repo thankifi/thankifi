@@ -4,6 +4,8 @@ WORKDIR /src
 COPY *.sln ./
 
 COPY Thankifi.Api/*.csproj Thankifi.Api/
+COPY Thankifi.Core.Application/*.csproj Thankifi.Core.Application/
+COPY Thankifi.Core.Application.Entity/*.csproj Thankifi.Core.Application.Entity/
 COPY Thankifi.Core.Domain/*.csproj Thankifi.Core.Domain/
 COPY Thankifi.Core.Domain.Contract/*.csproj Thankifi.Core.Domain.Contract/
 COPY Thankifi.Core.Entity/*.csproj Thankifi.Core.Entity/
