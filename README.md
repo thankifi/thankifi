@@ -3,7 +3,7 @@ Thankifi is a free (as in speech) API that makes it easy for you to express grat
 
 Made with ❤️ and gratitude by [Lucas Maximiliano Marino](https://lucasmarino.me).
 
-Check the [Open Api Documentation](https://api.thanki.fi). Find the docker image [here](https://hub.docker.com/r/elementh/thankifi).
+Check the [Open Api Documentation](https://api.thanki.fi). Find the docker image [here](https://hub.docker.com/r/thankifi/thankifi).
 
 The dataset which the service uses te populate it's database is community driven an available at [this repository](https://github.com/thankifi/dataset).
 
@@ -19,7 +19,7 @@ Both ways have some basic requirements:
     + `DB_CONNECTION_STRING`, for the connection string to the Postgresql database
 
 ## Docker
-The official [docker image](https://hub.docker.com/r/elementh/thankifi) exposes port 5100.
+The official [docker image](https://hub.docker.com/r/thankifi/thankifi) exposes port 5100.
 
 ## License
 Thankifi — Being Thankful as a Service
