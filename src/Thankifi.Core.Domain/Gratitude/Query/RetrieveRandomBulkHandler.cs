@@ -46,22 +46,23 @@ namespace Thankifi.Core.Domain.Gratitude.Query
                 var offset = RandomProvider.GetThreadRandom()?.Next(0, totalGratitudes);
 
                 gratitudes.Add(await query
-                     .Skip(offset ?? 0)
-                     .Select(g => new GratitudeDto
-                     {
-                         Id = g.Id,
-                         Language = new LanguageDto
-                         {
-                             Id = g.Language.Id,
-                             Code = g.Language.Code
-                         },
-                         Text = g.Text,
-                         Categories = g.Categories.Select(c => new CategoryDto
-                         {
-                             Id = c.Id,
-                             Slug = c.Slug
-                         })
-                     }).FirstOrDefaultAsync(cancellationToken));
+                    .OrderBy(g => g.Id)
+                    .Skip(offset ?? 0)
+                    .Select(g => new GratitudeDto
+                    {
+                        Id = g.Id,
+                        Language = new LanguageDto
+                        {
+                            Id = g.Language.Id,
+                            Code = g.Language.Code
+                        },
+                        Text = g.Text,
+                        Categories = g.Categories.Select(c => new CategoryDto
+                        {
+                            Id = c.Id,
+                            Slug = c.Slug
+                        })
+                    }).FirstOrDefaultAsync(cancellationToken));
             }
 
             return gratitudes;

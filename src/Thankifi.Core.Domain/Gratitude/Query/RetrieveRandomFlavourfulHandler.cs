@@ -38,6 +38,7 @@ namespace Thankifi.Core.Domain.Gratitude.Query
             var offset = RandomProvider.GetThreadRandom()?.Next(0, await query.CountAsync(cancellationToken));
 
             var gratitude = await query
+                .OrderBy(g => g.Id)
                 .Skip(offset ?? 0)
                 .Select(g => new GratitudeFlavourfulDto
                 {
@@ -55,7 +56,7 @@ namespace Thankifi.Core.Domain.Gratitude.Query
                     })
                 })
                 .FirstOrDefaultAsync(cancellationToken);
-            
+
             return gratitude;
         }
     }

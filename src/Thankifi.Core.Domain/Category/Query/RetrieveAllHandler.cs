@@ -26,6 +26,7 @@ namespace Thankifi.Core.Domain.Category.Query
             var count = await query.CountAsync(cancellationToken);
 
             var items = await query
+                .OrderBy(g => g.Id)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(category => new CategoryDto
