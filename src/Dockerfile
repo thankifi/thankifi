@@ -12,6 +12,12 @@ COPY Thankifi.Core.Entity/*.csproj Thankifi.Core.Entity/
 COPY Thankifi.Persistence/*.csproj Thankifi.Persistence/
 COPY Thankifi.Persistence.Migrations/*.csproj Thankifi.Persistence.Migrations/
 
+COPY nuget.config nuget.config
+
+ARG GITHUB_USER=GITHUB_USER
+ARG GITHUB_TOKEN=GITHUB_TOKEN
+
+RUN sed -i "s|</configuration>|<packageSourceCredentials><github><add key=\"Username\" value=\"${GITHUB_USER}\" /><add key=\"ClearTextPassword\" value=\"${GITHUB_TOKEN}\" /></github></packageSourceCredentials></configuration>|" nuget.config
 RUN dotnet restore -r linux-musl-x64
 
 COPY . .
