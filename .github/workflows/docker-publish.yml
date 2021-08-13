@@ -60,5 +60,5 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            GITHUB_USER=$GITHUB_USER
-            GITHUB_TOKEN=$GITHUB_TOKEN
+            GITHUB_USER=${{ env.GITHUB_USER }}
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
