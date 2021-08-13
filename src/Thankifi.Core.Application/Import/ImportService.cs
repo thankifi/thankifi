@@ -31,13 +31,9 @@ namespace Thankifi.Core.Application.Import
 
             if (applicationState is null)
             {
-                applicationState = new ApplicationState
-                {
-                    DatasetVersion = 0,
-                    LastUpdated = DateTime.UtcNow
-                };
+                applicationState = new ApplicationState();
 
-                _logger.LogInformation("Generating new application state: {@ApplicationState}", applicationState);
+                _logger.LogInformation("Generating new application state", applicationState);
                 
                 await _dbContext.ApplicationState.AddAsync(applicationState, cancellationToken);
                 await _dbContext.SaveChangesAsync(cancellationToken);
@@ -74,20 +70,27 @@ namespace Thankifi.Core.Application.Import
                 await CleanTablesAsync(cancellationToken);
 
                 await AddOrUpdateCategoriesAsync(dataset.Categories, cancellationToken);
-                await AddOrUpdateLanguagesAsync(dataset.Languages, cancellationToken);
-                await AddOrUpdateGratitudesAsync(dataset.Gratitudes, cancellationToken);
-                await UpdateApplicationStateAsync(datasetVersion, cancellationToken);
-
-                _logger.LogInformation("Saving changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+                _logger.LogInformation("Saving categories changes to database within transaction with id {TransactionId}", transaction.TransactionId);
                 await _dbContext.SaveChangesAsync(cancellationToken);
+
+                await AddOrUpdateLanguagesAsync(dataset.Languages, cancellationToken);
+                _logger.LogInformation("Saving language changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                
+                await AddOrUpdateGratitudesAsync(dataset.Gratitudes, cancellationToken);
+                _logger.LogInformation("Saving gratitudes changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                
+                await UpdateApplicationStateAsync(datasetVersion, cancellationToken);
+                _logger.LogInformation("Saving application state changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                
                 await transaction.CommitAsync(cancellationToken);
+                _logger.LogInformation("Imported newer dataset successfully at {ImportDate}", DateTime.UtcNow);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Unhandled error during import database transaction");
-            }
-            finally
-            {
                 _logger.LogWarning("Rolling back database transaction with id {TransactionId} due to unhandled error during import", transaction.TransactionId);
                 await transaction.RollbackAsync(cancellationToken);
             }
@@ -95,7 +98,9 @@ namespace Thankifi.Core.Application.Import
 
         private async Task CleanTablesAsync(CancellationToken cancellationToken = default)
         {
-            var tableNames = _dbContext.Model.GetEntityTypes().Select(type => type.GetTableName());
+            var tableNames = _dbContext.Model.GetEntityTypes()
+                .Where(type => type.ClrType == typeof(Category) || type.ClrType == typeof(Language) || type.ClrType == typeof(Gratitude))
+                .Select(type => type.GetTableName());
 
             foreach (var tableName in tableNames)
             {
@@ -171,6 +176,7 @@ namespace Thankifi.Core.Application.Import
                         continue;
                     }
 
+                    _logger.LogInformation("Adding new gratitude {@Gratitude}", gratitudeToImport);
                     await AddGratitude(gratitudeToImport.Id, gratitudeToImport.Text, language, categories);
                 }
                 else
@@ -192,7 +198,7 @@ namespace Thankifi.Core.Application.Import
                         }
 
                         _logger.LogInformation("Updating language for gratitude with id {GratitudeId}", gratitude.Id);
-                        _logger.LogInformation("New language for gratitude with id {GratitudeId}: {@Language}", gratitude.Id, gratitude.Language);
+                        _logger.LogInformation("New language for gratitude with id {GratitudeId}: {Language}", gratitude.Id, gratitudeToImport.Language);
                         gratitude.Language = language;
                     }
 
@@ -207,7 +213,7 @@ namespace Thankifi.Core.Application.Import
                         }
 
                         _logger.LogInformation("Updating categories for gratitude with id {GratitudeId}", gratitude.Id);
-                        _logger.LogInformation("New categories for gratitude with id {GratitudeId}: {@Categories}", gratitude.Id, gratitude.Categories);
+                        _logger.LogInformation("New categories for gratitude with id {GratitudeId}: {@Categories}", gratitude.Id, gratitudeToImport.Categories);
                         gratitude.Categories = categories;
                     }
                 }
@@ -233,7 +239,6 @@ namespace Thankifi.Core.Application.Import
                     Categories = categories
                 };
 
-                _logger.LogInformation("Adding new gratitude {@Gratitude}", gratitude);
                 await _dbContext.AddAsync(gratitude, cancellationToken);
             }
         }

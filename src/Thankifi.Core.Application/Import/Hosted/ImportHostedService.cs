@@ -14,6 +14,9 @@ namespace Thankifi.Core.Application.Import.Hosted
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private Timer? _timer;
 
+        private static readonly double FirstRunInterval = TimeSpan.FromSeconds(10).TotalMilliseconds;
+        private static readonly double DefaultInterval = TimeSpan.FromHours(1).TotalMilliseconds;
+
         public ImportHostedService(ILogger<ImportHostedService> logger, IServiceScopeFactory serviceScopeFactory)
         {
             _logger = logger;
@@ -34,20 +37,30 @@ namespace Thankifi.Core.Application.Import.Hosted
 
         private Task ScheduleImportTimer(CancellationToken cancellationToken)
         {
-            _timer = new Timer(TimeSpan.FromHours(1).TotalMilliseconds)
+            _timer = new Timer(FirstRunInterval)
             {
                 AutoReset = true
             };
             
-            _logger.LogInformation("Scheduling import with an interval of {Interval} seconds", TimeSpan.FromMilliseconds(_timer.Interval).TotalSeconds);
-            
+            _logger.LogInformation("Scheduling import with an interval of {DefaultInterval} seconds", TimeSpan.FromMilliseconds(DefaultInterval).TotalSeconds);
+            _logger.LogInformation("First import to start in around {FirstRunInterval} seconds", TimeSpan.FromMilliseconds(FirstRunInterval).TotalSeconds);
+
             _timer.Elapsed += async (_, _ ) =>
             {
+                _timer.Stop();
+                
                 using var scope = _serviceScopeFactory.CreateScope();
                 
                 var importService = scope.ServiceProvider.GetRequiredService<ImportService>();
 
                 await importService.TryImport(cancellationToken);
+
+                if (_timer.Interval < DefaultInterval)
+                {
+                    _timer.Interval = DefaultInterval;
+                }
+                
+                _timer.Start();
             };
 
             _timer.Disposed += (_, _) =>
@@ -57,6 +70,7 @@ namespace Thankifi.Core.Application.Import.Hosted
                 
             _timer.Start();
             
+
             _logger.LogInformation("Import scheduled");
             
             return Task.CompletedTask;

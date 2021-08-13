@@ -13,6 +13,9 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Thankifi.Api.Configuration.Swagger;
 using Thankifi.Common.Filters;
+using Thankifi.Common.Importer;
+using Thankifi.Core.Application.Import;
+using Thankifi.Core.Application.Import.Hosted;
 using Thankifi.Core.Application.Pipelines;
 using Thankifi.Core.Domain.Contract.Gratitude.Queries;
 using Thankifi.Core.Domain.Gratitude.Query;
@@ -51,6 +54,12 @@ namespace Thankifi.Api
             #endregion
             
             services.AddFilters();
+
+            services.AddImporter(default);
+
+            services.AddScoped<ImportService>();
+            
+            services.AddHostedService<ImportHostedService>();
 
             #region Persistence
 

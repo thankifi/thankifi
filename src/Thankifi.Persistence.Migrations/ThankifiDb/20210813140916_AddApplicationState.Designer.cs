@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Thankifi.Persistence.Context;
@@ -9,9 +10,10 @@ using Thankifi.Persistence.Context;
 namespace Thankifi.Persistence.Migrations.ThankifiDb
 {
     [DbContext(typeof(ThankifiDbContext))]
-    partial class ThankifiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210813140916_AddApplicationState")]
+    partial class AddApplicationState
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

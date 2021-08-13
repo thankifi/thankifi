@@ -17,11 +17,12 @@
         <PackageReference Include="Incremental.Common.Sourcing" Version="2.0.3" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="5.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="5.0.9" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
         <PackageReference Include="Scrutor" Version="3.3.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
         <PackageReference Include="Thankifi.Common.Filters" Version="1.2.1" />
+        <PackageReference Include="Thankifi.Common.Importer" Version="1.1.3" />
         <PackageReference Include="Thankifi.Common.Logging" Version="1.0.0" />
         <PackageReference Include="Thankifi.Common.Pagination" Version="1.0.0" />
     </ItemGroup>
