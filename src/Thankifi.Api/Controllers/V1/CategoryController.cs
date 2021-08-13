@@ -34,7 +34,7 @@ namespace Thankifi.Api.Controllers.V1
         /// </summary>
         [HttpGet(Name = nameof(RetrieveAllCategories))]
         [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RetrieveAllCategories(QueryStringParameters query, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveAllCategories([FromQuery] QueryStringParameters query, CancellationToken cancellationToken)
         {
             var result = await _queryBus.Send(new RetrieveAll
             {
@@ -57,7 +57,7 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(CategoryDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RetrieveByCategoryId([FromRoute] Guid id, RetrieveByCategoryQueryParameters query,
+        public async Task<IActionResult> RetrieveByCategoryId([FromRoute] Guid id, [FromQuery] RetrieveByCategoryQueryParameters query,
             CancellationToken cancellationToken)
         {
             var result = await _queryBus.Send(new RetrieveById
@@ -91,7 +91,7 @@ namespace Thankifi.Api.Controllers.V1
         [ProducesResponseType(typeof(CategoryDetailViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute] string slug, RetrieveByCategoryQueryParameters query,
+        public async Task<IActionResult> RetrieveByCategorySlug([FromRoute] string slug, [FromQuery] RetrieveByCategoryQueryParameters query,
             CancellationToken cancellationToken)
         {
             var result = await _queryBus.Send(new RetrieveBySlug

@@ -35,7 +35,7 @@ namespace Thankifi.Api.Controllers.V1
         /// </summary>
         [HttpGet(Name = nameof(RetrieveAllLanguages))]
         [ProducesResponseType(typeof(IEnumerable<LanguageViewModel>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RetrieveAllLanguages(QueryStringParameters query, CancellationToken cancellationToken)
+        public async Task<IActionResult> RetrieveAllLanguages([FromQuery] QueryStringParameters query, CancellationToken cancellationToken)
         {
             var result = await _queryBus.Send(new RetrieveAll
             {
