@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thankifi.Core.Entity;
 
-namespace Thankifi.Persistence.Configuration
+namespace Thankifi.Persistence.Configuration.Core
 {
     public class LanguageEntityTypeConfiguration : IEntityTypeConfiguration<Language>
     {

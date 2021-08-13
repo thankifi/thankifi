@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thankifi.Core.Entity;
 
-namespace Thankifi.Persistence.Configuration
+namespace Thankifi.Persistence.Configuration.Core
 {
-    public class GratitudeTypeConfiguration : IEntityTypeConfiguration<Gratitude>
+    public class GratitudeEntityTypeConfiguration : IEntityTypeConfiguration<Gratitude>
     {
         public void Configure(EntityTypeBuilder<Gratitude> builder)
         {

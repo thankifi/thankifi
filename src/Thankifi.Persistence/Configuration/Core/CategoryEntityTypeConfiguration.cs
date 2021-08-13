@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thankifi.Core.Entity;
 
-namespace Thankifi.Persistence.Configuration
+namespace Thankifi.Persistence.Configuration.Core
 {
-    public class CategoryTypeConfiguration : IEntityTypeConfiguration<Category>
+    public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category>
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {

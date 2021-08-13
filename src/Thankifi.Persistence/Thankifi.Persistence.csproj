@@ -10,6 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Thankifi.Core.Application.Entity\Thankifi.Core.Application.Entity.csproj" />
       <ProjectReference Include="..\Thankifi.Core.Entity\Thankifi.Core.Entity.csproj" />
     </ItemGroup>
 
