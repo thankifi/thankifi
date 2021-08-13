@@ -18,6 +18,8 @@ env:
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
+  GITHUB_USER: thankifibot
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 jobs:
@@ -59,3 +61,4 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: GITHUB_USER=$GITHUB_USER, GITHUB_TOKEN=$GITHUB_TOKEN
