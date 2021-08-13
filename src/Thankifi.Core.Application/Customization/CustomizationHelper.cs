@@ -9,7 +9,7 @@ namespace Thankifi.Core.Application.Customization
 
             return text;
         }
-        
+
         private static string ReplaceSubjectIfNecessary(string text, string? subject)
         {
             var firstBracket = text.IndexOf('{');
@@ -19,21 +19,27 @@ namespace Thankifi.Core.Application.Customization
                 return text;
             }
 
-            subject ??= " ";
-
             var lastBracket = text.LastIndexOf('}');
 
-            var replaced = text.Substring(firstBracket, lastBracket - firstBracket + 1) switch
-            {
-                "{ {SUBJECT} }" => text.Replace("{ {SUBJECT} }", $" {subject} "),
-                "{{SUBJECT}}" => text.Replace("{{SUBJECT}}", $"{subject}"),
-                "{{SUBJECT} }" => text.Replace("{{SUBJECT} }", $"{subject} "),
-                "{ {SUBJECT}}" => text.Replace("{ {SUBJECT}}", $" {subject}"),
-                _ => text
-            };
-
-            return replaced;
+            return subject is null
+                ? text.Substring(firstBracket, lastBracket - firstBracket + 1) switch
+                {
+                    "{ {SUBJECT} }" => text.Replace("{ {SUBJECT} }", " "),
+                    "{{SUBJECT}}" => text.Replace("{{SUBJECT}}", string.Empty),
+                    "{{SUBJECT} }" => text.Replace("{{SUBJECT} }", " "),
+                    "{ {SUBJECT}}" => text.Replace("{ {SUBJECT}}", string.Empty),
+                    _ => text
+                }
+                : text.Substring(firstBracket, lastBracket - firstBracket + 1) switch
+                {
+                    "{ {SUBJECT} }" => text.Replace("{ {SUBJECT} }", $" {subject} "),
+                    "{{SUBJECT}}" => text.Replace("{{SUBJECT}}", $"{subject}"),
+                    "{{SUBJECT} }" => text.Replace("{{SUBJECT} }", $"{subject} "),
+                    "{ {SUBJECT}}" => text.Replace("{ {SUBJECT}}", $" {subject}"),
+                    _ => text
+                };
         }
+
 
         private static string AddSignatureIfNecessary(string text, string? signature)
         {
