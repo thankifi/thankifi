@@ -1,8 +1,10 @@
-﻿namespace Thankifi.Api.Model.V1.Responses
+﻿using System;
+
+namespace Thankifi.Api.Model.V1.Responses
 {
     public record CategoryViewModel
     {
-        public int Id { get; init; }
+        public Guid Id { get; init; }
         public string Slug { get; init; }
     }
 }
