@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using AspNetCoreRateLimit;
 using Incremental.Common.Sourcing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,8 +36,10 @@ namespace Thankifi.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpContextAccessor();
             services.AddControllers();
+            services.AddHttpContextAccessor();
+
+            services.AddOptions();
             services.AddMemoryCache();
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -72,11 +75,13 @@ namespace Thankifi.Api
             #endregion
 
             #region IpRateLimiting
+            
+            //load general configuration from appsettings.json
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
 
-            // services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-            // services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-            // services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-            // services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            services.AddInMemoryRateLimiting();
+            
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
             #endregion
 
@@ -163,7 +168,7 @@ namespace Thankifi.Api
             
             app.UseRouting();
 
-            // app.UseIpRateLimiting();
+            app.UseIpRateLimiting();
 
             app.UseEndpoints(endpoints =>
             {
