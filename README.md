@@ -22,7 +22,7 @@ Both ways have some basic requirements:
 #### Docker
 The official [docker image](https://hub.docker.com/r/thankifi/thankifi) exposes port 5100.
 
-#### License
+## License
 Thankifi — Being Thankful as a Service
 
 Copyright (C) 2021  Lucas Maximiliano Marino <https://lucasmarino.me>
