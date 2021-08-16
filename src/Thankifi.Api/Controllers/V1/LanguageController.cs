@@ -78,7 +78,7 @@ namespace Thankifi.Api.Controllers.V1
             
             Response.Headers.AddPagination(result.Gratitudes);
 
-            var language = _mapper.Map<LanguageViewModel>(result);
+            var language = _mapper.Map<LanguageDetailViewModel>(result);
 
             return Ok(language);
         }
@@ -111,7 +111,7 @@ namespace Thankifi.Api.Controllers.V1
             
             Response.Headers.AddPagination(result.Gratitudes);
 
-            var language = _mapper.Map<LanguageViewModel>(result);
+            var language = _mapper.Map<LanguageDetailViewModel>(result);
 
             return Ok(language);
         }
