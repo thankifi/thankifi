@@ -1,27 +1,28 @@
 # Thankifi — Being Thankful as a Service
 Thankifi is a free (as in speech) API that makes it easy for you to express gratitude. Be grateful!
 
+Check the [Open API Reference](https://api.thanki.fi).
+
 Made with ❤️ and gratitude by [Lucas Maximiliano Marino](https://lucasmarino.me).
 
-Check the [Open Api Documentation](https://api.thanki.fi). Find the docker image [here](https://hub.docker.com/r/thankifi/thankifi).
+## Dataset
 
-The dataset which the service uses te populate it's database is community driven an available at [this repository](https://github.com/thankifi/dataset).
+The dataset which the service uses te populate it's database is community driven and available [here](https://github.com/thankifi/dataset).
 
-# Running your own instance
+## Running your own instance
 
-## Two ways
+### Two ways + Requirements
 You can either download this repo and start the server with `dotnet run -p src/Thankifi.Api/Thankifi.Api.csproj` or you can setup a docker installation.
 
-## Requirements
 Both ways have some basic requirements: 
 - A PostgreSQL database.
 - An env variable:
     + `DB_CONNECTION_STRING`, for the connection string to the Postgresql database
 
-## Docker
+#### Docker
 The official [docker image](https://hub.docker.com/r/thankifi/thankifi) exposes port 5100.
 
-## License
+#### License
 Thankifi — Being Thankful as a Service
 
 Copyright (C) 2021  Lucas Maximiliano Marino <https://lucasmarino.me>
