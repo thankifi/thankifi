@@ -1,10 +1,10 @@
 using System;
 using System.Reflection;
+using Incremental.Common.Configuration;
+using Incremental.Common.Logging;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Thankifi.Common.Logging;
 
 namespace Thankifi.Api
 {
@@ -42,7 +42,7 @@ namespace Thankifi.Api
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -51,8 +51,7 @@ namespace Thankifi.Api
                 })
                 .ConfigureAppConfiguration(builder =>
                 {
-                    builder.AddJsonFile("appsettings.Local.json", true);
-                    builder.AddEnvironmentVariables();
+                    builder.AddCommonConfiguration();
                 });
     }
 }
