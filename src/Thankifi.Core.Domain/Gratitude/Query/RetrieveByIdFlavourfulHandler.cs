@@ -11,11 +11,16 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Gratitude.Query
 {
-    public class RetrieveByIdFlavourfulHandler : IQueryHandler<RetrieveByIdFlavourful, GratitudeFlavourfulDto>
+    public class RetrieveByIdFlavourfulHandler : IQueryHandler<RetrieveByIdFlavourful, GratitudeFlavourfulDto?>
     {
         private readonly ThankifiDbContext _dbContext;
 
-        public async Task<GratitudeFlavourfulDto> Handle(RetrieveByIdFlavourful request, CancellationToken cancellationToken)
+        public RetrieveByIdFlavourfulHandler(ThankifiDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<GratitudeFlavourfulDto?> Handle(RetrieveByIdFlavourful request, CancellationToken cancellationToken)
         {
             var gratitude = await _dbContext.Gratitudes.AsNoTracking()
                 .Where(g => g.Id == request.Id)

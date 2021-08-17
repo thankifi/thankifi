@@ -4,13 +4,13 @@
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj" />
+        <ProjectReference Include="..\Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <PackageReference Include="Thankifi.Common.Random" Version="1.0.0" />
+        <PackageReference Include="Incremental.Common.Random" Version="1.1.2"/>
     </ItemGroup>
-    
+
 </Project>
