@@ -34,7 +34,6 @@ namespace Thankifi.Api
             }
             finally
             {
-                
                 if (Log.Logger is not null)
                 {
                     Log.CloseAndFlush();
