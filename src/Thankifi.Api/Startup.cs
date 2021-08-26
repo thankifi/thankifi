@@ -148,11 +148,12 @@ namespace Thankifi.Api
                 app.UseHttpsRedirection();
             }
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
+            if (env.IsProduction() || env.IsDevelopment())
             {
+                using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope();
                 serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
             }
-
+            
             app.UseSerilogRequestLogging();
 
             app.UseStaticFiles();
