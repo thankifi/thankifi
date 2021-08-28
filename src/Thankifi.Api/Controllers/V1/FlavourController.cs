@@ -34,7 +34,7 @@ namespace Thankifi.Api.Controllers.V1
             
             return Ok(_filterService.GetAvailableFilterIdentifiers().Select(identifier => new FlavourViewModel
             {
-                Flavour = identifier,
+                Name = identifier,
                 Text = string.Empty
             }));
         }
