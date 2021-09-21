@@ -69,7 +69,7 @@ namespace Thankifi.Core.Application.Import.Hosted
 
                 await importService.TryImport(cancellationToken);
 
-                if (TimeSpan.FromMilliseconds(_timer.Interval) == DefaultInterval)
+                if (TimeSpan.FromMilliseconds(_timer.Interval) == FirstRunInterval)
                 {
                     _timer.Interval = DefaultInterval.TotalMilliseconds;
                 }
