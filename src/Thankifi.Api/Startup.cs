@@ -6,10 +6,12 @@ using Incremental.Common.Sourcing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Thankifi.Api.Configuration.Swagger;
@@ -97,6 +99,8 @@ namespace Thankifi.Api
             #endregion
 
             #region SwaggerGen
+            
+            AnalyticsHeadContent.Configure(Configuration);
 
             services.AddSwaggerGen(c =>
             {
@@ -120,10 +124,11 @@ namespace Thankifi.Api
                
                 c.OperationFilter<RemoveVersionFromParameter>();
                 c.DocumentFilter<ReplaceVersionWithExactValueInPath>();
-                
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+                
             }); 
 
             #endregion
@@ -164,6 +169,7 @@ namespace Thankifi.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Thankifi V1");
                 c.RoutePrefix = string.Empty;
                 c.DocumentTitle = "Thankify API Documentation";
+                c.HeadContent = AnalyticsHeadContent.Content;
             }); 
             
             app.UseRouting();
