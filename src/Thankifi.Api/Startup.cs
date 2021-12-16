@@ -161,7 +161,7 @@ namespace Thankifi.Api
             
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Thankify V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Thankifi V1");
                 c.RoutePrefix = string.Empty;
                 c.DocumentTitle = "Thankify API Documentation";
             }); 
