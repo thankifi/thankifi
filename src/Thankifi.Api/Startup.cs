@@ -1,17 +1,16 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using AspNetCoreRateLimit;
 using Incremental.Common.Sourcing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Thankifi.Api.Configuration.Swagger;
@@ -71,7 +70,18 @@ namespace Thankifi.Api
             services.AddDbContext<ThankifiDbContext>(builder =>
             { 
                 var connectionString = Configuration["DB_CONNECTION_STRING"];
-                builder.UseNpgsql(connectionString, optionsBuilder => { optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations"); });
+                builder.UseNpgsql(connectionString, optionsBuilder =>
+                {
+                    optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
+                    if (connectionString.Contains("SSLMode=Require"))
+                    {
+                        optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
+                        {
+                            var rawCertificate = System.Text.Encoding.UTF8.GetBytes(Configuration["DB_CONNECTION_CERTIFICATE"]);
+                            clientCerts.Add(new X509Certificate(rawCertificate));
+                        });
+                    }
+                });
             });
 
             #endregion
