@@ -46,7 +46,7 @@ namespace Thankifi.Core.Application.Import.Hosted
             _logger.LogInformation("Scheduling import with an interval of {DefaultInterval} hours", DefaultInterval.TotalHours);
             _logger.LogInformation("First import to start in around {FirstRunInterval} seconds", FirstRunInterval.TotalSeconds);
 
-            _timer.Elapsed += OnElapsed;
+            _timer.Elapsed += OnElapsed!;
 
             _timer.Disposed += (_, _) =>
             {
