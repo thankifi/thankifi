@@ -4,7 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using AspNetCoreRateLimit;
+using Incremental.Common.Metrics;
+using Incremental.Common.Metrics.Sinks.EntityFramework;
 using Incremental.Common.Sourcing;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +49,39 @@ namespace Thankifi.Api
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            
+            #region Metrics
+
+            services.AddCommonMetrics();
+
+            services.ConfigureEntityFrameworkSink<MetricsDbContext>(builder =>
+            {
+                var connectionString = Configuration["METRICS_DB_CONNECTION_STRING"];
+                builder.UseNpgsql(connectionString, optionsBuilder =>
+                {
+                    optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
+                    if (connectionString.Contains("SSLMode=Require"))
+                    {
+                        var certificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]
+                            .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
+                            .Select(certificate => certificate
+                                .Replace("-----BEGIN CERTIFICATE-----", "")
+                                .Replace("-----END CERTIFICATE-----", ""))
+                            .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
+                            .ToArray();
+
+                        optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
+                        {
+                            clientCerts.AddRange(certificates);
+                        });
+                    }
+                });
+            });
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MetricsPipeline<,>));
+            
+            #endregion
+            
             #region Sourcing
 
             services.AddSourcing(typeof(RetrieveById).Assembly, typeof(RetrieveByIdHandler).Assembly);
@@ -173,6 +209,7 @@ namespace Thankifi.Api
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
             {
                 serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
+                serviceScope?.ServiceProvider.GetRequiredService<MetricsDbContext>().Database.Migrate();
             }
 
             app.UseSerilogRequestLogging();
