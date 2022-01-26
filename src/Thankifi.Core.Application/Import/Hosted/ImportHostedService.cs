@@ -15,7 +15,7 @@ namespace Thankifi.Core.Application.Import.Hosted
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private Timer? _timer;
 
-        private static readonly TimeSpan FirstRunInterval = TimeSpan.FromSeconds(15);
+        private static readonly TimeSpan FirstRunInterval = TimeSpan.FromSeconds(30);
         private static readonly TimeSpan DefaultInterval = TimeSpan.FromHours(6);
 
         public ImportHostedService(ILogger<ImportHostedService> logger, IServiceScopeFactory serviceScopeFactory)

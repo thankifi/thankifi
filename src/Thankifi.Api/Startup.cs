@@ -60,7 +60,7 @@ namespace Thankifi.Api
                 builder.UseNpgsql(connectionString, optionsBuilder =>
                 {
                     optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-                    if (connectionString.Contains("SSLMode=Require"))
+                    if (connectionString.Contains("SSLMode=VerifyFull"))
                     {
                         var certificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]
                             .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
@@ -110,7 +110,7 @@ namespace Thankifi.Api
                 builder.UseNpgsql(connectionString, optionsBuilder =>
                 {
                     optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-                    if (connectionString.Contains("SSLMode=Require"))
+                    if (connectionString.Contains("SSLMode=VerifyFull"))
                     {
                         var certificates = Configuration["DB_CONNECTION_CERTIFICATE"]
                             .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
