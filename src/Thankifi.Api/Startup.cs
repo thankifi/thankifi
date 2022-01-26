@@ -54,27 +54,25 @@ namespace Thankifi.Api
 
             services.AddCommonMetrics();
 
+            var metricsCertificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]?
+                .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
+                .Select(certificate => certificate
+                    .Replace("-----BEGIN CERTIFICATE-----", "")
+                    .Replace("-----END CERTIFICATE-----", ""))
+                .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
+                .ToArray() ?? Array.Empty<X509Certificate>();
+            
             services.ConfigureEntityFrameworkSink<MetricsDbContext>(builder =>
             {
                 var connectionString = Configuration["METRICS_DB_CONNECTION_STRING"];
                 builder.UseNpgsql(connectionString, optionsBuilder =>
                 {
                     optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-                    if (connectionString.Contains("SSLMode=VerifyFull"))
-                    {
-                        var certificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]
-                            .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
-                            .Select(certificate => certificate
-                                .Replace("-----BEGIN CERTIFICATE-----", "")
-                                .Replace("-----END CERTIFICATE-----", ""))
-                            .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
-                            .ToArray();
 
-                        optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
-                        {
-                            clientCerts.AddRange(certificates);
-                        });
-                    }
+                    optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
+                    {
+                        clientCerts.AddRange(metricsCertificates);
+                    });
                 });
             });
 
@@ -82,7 +80,7 @@ namespace Thankifi.Api
             
             #endregion
             
-            #region Sourcing
+            #region Sourcing 
 
             services.AddSourcing(typeof(RetrieveById).Assembly, typeof(RetrieveByIdHandler).Assembly);
 
@@ -103,6 +101,14 @@ namespace Thankifi.Api
             services.AddHostedService<ImportHostedService>();
 
             #region Persistence
+            
+            var dbCertificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]?
+                .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
+                .Select(certificate => certificate
+                    .Replace("-----BEGIN CERTIFICATE-----", "")
+                    .Replace("-----END CERTIFICATE-----", ""))
+                .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
+                .ToArray() ?? Array.Empty<X509Certificate>();
 
             services.AddDbContext<ThankifiDbContext>(builder =>
             {
@@ -110,21 +116,11 @@ namespace Thankifi.Api
                 builder.UseNpgsql(connectionString, optionsBuilder =>
                 {
                     optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-                    if (connectionString.Contains("SSLMode=VerifyFull"))
+                    
+                    optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
                     {
-                        var certificates = Configuration["DB_CONNECTION_CERTIFICATE"]
-                            .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
-                            .Select(certificate => certificate
-                                .Replace("-----BEGIN CERTIFICATE-----", "")
-                                .Replace("-----END CERTIFICATE-----", ""))
-                            .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
-                            .ToArray();
-
-                        optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
-                        {
-                            clientCerts.AddRange(certificates);
-                        });
-                    }
+                        clientCerts.AddRange(dbCertificates);
+                    });
                 });
             });
 
