@@ -15,4 +15,16 @@
       <PackageReference Include="Thankifi.Common.Importer.Abstractions" Version="1.1.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Pipelines\CachePipeline.Category.cs">
+        <DependentUpon>CachePipeline.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pipelines\CachePipeline.Gratitude.cs">
+        <DependentUpon>CachePipeline.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pipelines\CachePipeline.Language.cs">
+        <DependentUpon>CachePipeline.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>
