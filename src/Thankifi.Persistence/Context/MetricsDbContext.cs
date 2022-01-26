@@ -11,7 +11,7 @@ public class MetricsDbContext : IncrementalMetricsDbContext
     {
     }
 
-    public MetricsDbContext(DbContextOptions<IncrementalMetricsDbContext> options) : base(options)
+    public MetricsDbContext(DbContextOptions options) : base(options)
     {
     }
 
