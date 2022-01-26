@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Incremental.Common.Metrics" Version="0.1.0" />
+      <PackageReference Include="Incremental.Common.Metrics" Version="0.1.4" />
     </ItemGroup>
 
 </Project>
