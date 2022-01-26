@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 WORKDIR /src
 
 COPY *.sln ./
@@ -24,7 +24,7 @@ COPY . .
 WORKDIR /src/Thankifi
 RUN dotnet publish -c Release -o /app -r linux-musl-x64 --self-contained false --no-restore ../Thankifi.sln 
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 WORKDIR /app
 COPY --from=build /app ./
 
