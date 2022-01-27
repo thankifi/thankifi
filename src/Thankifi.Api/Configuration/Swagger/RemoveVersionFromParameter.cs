@@ -8,8 +8,11 @@ namespace Thankifi.Api.Configuration.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var versionParameter = operation.Parameters.Single(p => p.Name == "v");
-            operation.Parameters.Remove(versionParameter);
+            var versionParameter = operation.Parameters.SingleOrDefault(p => p.Name == "v");
+            if (versionParameter is not null)
+            {
+                operation.Parameters.Remove(versionParameter);
+            }
         }
     }
 }
