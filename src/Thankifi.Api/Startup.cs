@@ -246,7 +246,7 @@ public class Startup
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Thankifi V1");
             c.RoutePrefix = string.Empty;
-            c.DocumentTitle = "Thankify API Documentation";
+            c.DocumentTitle = "Thankifi API Documentation";
             c.HeadContent = AnalyticsHeadContent.Content;
         });
 
