@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Incremental.Common.Pagination;
 using Thankifi.Core.Domain.Contract.Gratitude.Dto;
 

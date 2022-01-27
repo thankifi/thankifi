@@ -1,4 +1,3 @@
-using System;
 using Incremental.Common.Sourcing.Abstractions.Queries;
 using Thankifi.Core.Domain.Contract.Language.Dto;
 

@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.DataProtection.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Responses;

@@ -1,6 +1,5 @@
 using System;
 using Incremental.Common.Sourcing.Abstractions.Queries;
-using Thankifi.Core.Domain.Contract.Category.Dto;
 using Thankifi.Core.Domain.Contract.Language.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Language.Queries

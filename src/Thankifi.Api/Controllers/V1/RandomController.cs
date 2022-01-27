@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Requests.Random;
 using Thankifi.Api.Model.V1.Responses;
-using Incremental.Common.Pagination;
 using Thankifi.Core.Domain.Contract.Gratitude.Queries;
 
 namespace Thankifi.Api.Controllers.V1
