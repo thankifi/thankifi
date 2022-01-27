@@ -67,12 +67,6 @@ namespace Thankifi.Api
                     options.InstanceName = "thankifi_api_query_cache";
                 });
             }
-            
-            services.Scan(scanner => scanner
-                .FromAssembliesOf(typeof(CachePipeline))
-                .AddClasses(filter => filter.Where(type => type == typeof(CachePipeline)))
-                .AsImplementedInterfaces()
-            );
 
             #endregion
             
@@ -110,6 +104,12 @@ namespace Thankifi.Api
 
             services.AddSourcing(typeof(RetrieveById).Assembly, typeof(RetrieveByIdHandler).Assembly);
 
+            services.Scan(scanner => scanner
+                .FromAssembliesOf(typeof(CachePipeline))
+                .AddClasses(filter => filter.Where(type => type == typeof(CachePipeline)))
+                .AsImplementedInterfaces()
+            );
+            
             services.Scan(scanner => scanner
                 .FromAssembliesOf(typeof(FlavouringPipeline))
                 .AddClasses(filter => filter.Where(type => type == typeof(FlavouringPipeline)))
