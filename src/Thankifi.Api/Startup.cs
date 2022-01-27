@@ -8,6 +8,7 @@ using Incremental.Common.Metrics;
 using Incremental.Common.Metrics.Sinks.EntityFramework;
 using Incremental.Common.Sourcing;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Thankifi.Api.Configuration.Authorization;
 using Thankifi.Api.Configuration.Swagger;
 using Thankifi.Common.Filters;
 using Thankifi.Common.Importer;
@@ -52,7 +54,7 @@ namespace Thankifi.Api
 
             // required by IPRateLimiting
             services.AddMemoryCache();
-            
+
             var cacheConnectionString = Configuration["CACHE_CONNECTION_STRING"];
 
             if (string.IsNullOrWhiteSpace(cacheConnectionString))
@@ -69,7 +71,7 @@ namespace Thankifi.Api
             }
 
             #endregion
-            
+
             #region Metrics
 
             services.AddCommonMetrics();
@@ -81,7 +83,7 @@ namespace Thankifi.Api
                     .Replace("-----END CERTIFICATE-----", ""))
                 .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
                 .ToArray() ?? Array.Empty<X509Certificate>();
-            
+
             services.ConfigureEntityFrameworkSink<MetricsDbContext>(builder =>
             {
                 var connectionString = Configuration["METRICS_DB_CONNECTION_STRING"];
@@ -89,18 +91,15 @@ namespace Thankifi.Api
                 {
                     optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
 
-                    optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
-                    {
-                        clientCerts.AddRange(metricsCertificates);
-                    });
+                    optionsBuilder.ProvideClientCertificatesCallback(clientCerts => { clientCerts.AddRange(metricsCertificates); });
                 });
             });
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MetricsPipeline<,>));
-            
+
             #endregion
-            
-            #region Sourcing 
+
+            #region Sourcing
 
             services.AddSourcing(typeof(RetrieveById).Assembly, typeof(RetrieveByIdHandler).Assembly);
 
@@ -109,7 +108,7 @@ namespace Thankifi.Api
                 .AddClasses(filter => filter.Where(type => type == typeof(CachePipeline)))
                 .AsImplementedInterfaces()
             );
-            
+
             services.Scan(scanner => scanner
                 .FromAssembliesOf(typeof(FlavouringPipeline))
                 .AddClasses(filter => filter.Where(type => type == typeof(FlavouringPipeline)))
@@ -127,7 +126,7 @@ namespace Thankifi.Api
             services.AddHostedService<ImportHostedService>();
 
             #region Persistence
-            
+
             var dbCertificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]?
                 .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
                 .Select(certificate => certificate
@@ -142,11 +141,8 @@ namespace Thankifi.Api
                 builder.UseNpgsql(connectionString, optionsBuilder =>
                 {
                     optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-                    
-                    optionsBuilder.ProvideClientCertificatesCallback(clientCerts =>
-                    {
-                        clientCerts.AddRange(dbCertificates);
-                    });
+
+                    optionsBuilder.ProvideClientCertificatesCallback(clientCerts => { clientCerts.AddRange(dbCertificates); });
                 });
             });
 
@@ -208,6 +204,14 @@ namespace Thankifi.Api
 
             #endregion
 
+            #region Authentication
+
+            services.AddAuthentication(o => { o.DefaultScheme = nameof(ManagementAuthenticationScheme); })
+                .AddScheme<ManagementAuthenticationScheme, ManagementAuthenticationHandler>(nameof(ManagementAuthenticationScheme),
+                    _ => { });
+
+            #endregion
+
             #region HealthChecks
 
             services.AddHealthChecks()
@@ -249,6 +253,8 @@ namespace Thankifi.Api
             });
 
             app.UseRouting();
+
+            app.UseAuthorization();
 
             app.UseIpRateLimiting();
 
