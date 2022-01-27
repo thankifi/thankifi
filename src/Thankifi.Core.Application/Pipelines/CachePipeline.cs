@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +18,15 @@ public partial class CachePipeline
 {
     private readonly IDistributedCache _cache;
 
+    private static readonly DistributedCacheEntryOptions DefaultCacheEntryOptions =
+        new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7) };
+
     public CachePipeline(IDistributedCache cache)
     {
         _cache = cache;
     }
 
-    protected async Task<TItem?> RetrieveAsync<TKey, TItem>(TKey key, CancellationToken cancellationToken = default)
+    private async Task<TItem?> RetrieveAsync<TKey, TItem>(TKey key, CancellationToken cancellationToken = default)
     {
         var cacheKey = $"{key?.GetType().FullName}:{JsonSerializer.Serialize(key)}";
 
@@ -31,17 +35,12 @@ public partial class CachePipeline
         return item is not null ? JsonSerializer.Deserialize<TItem>(item) : default;
     }
 
-    protected async Task StoreAsync<TKey, TItem>(TKey key, TItem item, DistributedCacheEntryOptions? options = default, CancellationToken cancellationToken = default)
+    private async Task StoreAsync<TKey, TItem>(TKey key, TItem item, DistributedCacheEntryOptions? options = default,
+        CancellationToken cancellationToken = default)
     {
         var cacheKey = $"{key?.GetType().FullName}:{JsonSerializer.Serialize(key)}";
-
         var cacheItem = JsonSerializer.SerializeToUtf8Bytes(item);
-
-        var cacheOptions = options ?? new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7)
-        };
-
-        await _cache.SetAsync(cacheKey, cacheItem, cacheOptions, cancellationToken);
+        
+        await _cache.SetAsync(cacheKey, cacheItem, options ?? DefaultCacheEntryOptions, cancellationToken);
     }
 }
