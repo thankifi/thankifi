@@ -18,16 +18,16 @@ public partial class CachePipeline :
     {
         var cachedResponse = await RetrieveAsync<RetrieveAll, PaginatedList<CategoryDto>>(request, cancellationToken);
 
-        if (cachedResponse is null)
+        if (cachedResponse is not null)
         {
-            var response = await next();
-
-            await StoreAsync(request, response, cancellationToken: cancellationToken);
-
-            return response;
+            return cachedResponse;
         }
 
-        return cachedResponse;
+        var response = await next();
+
+        await StoreAsync(request, response, cancellationToken: cancellationToken);
+
+        return response;
     }
 
     public async Task<CategoryDetailDto?> Handle(RetrieveById request, CancellationToken cancellationToken,
@@ -37,14 +37,16 @@ public partial class CachePipeline :
         {
             var cachedResponse = await RetrieveAsync<RetrieveById, CategoryDetailDto?>(request, cancellationToken);
 
-            if (cachedResponse is null)
+            if (cachedResponse is not null)
             {
-                var response = await next();
-
-                await StoreAsync(request, response, cancellationToken: cancellationToken);
+                return cachedResponse;
             }
-            
-            return cachedResponse;
+
+            var response = await next();
+
+            await StoreAsync(request, response, cancellationToken: cancellationToken);
+
+            return response;
         }
 
         return await next();
@@ -57,14 +59,16 @@ public partial class CachePipeline :
         {
             var cachedResponse = await RetrieveAsync<RetrieveBySlug, CategoryDetailDto?>(request, cancellationToken);
 
-            if (cachedResponse is null)
+            if (cachedResponse is not null)
             {
-                var response = await next();
-
-                await StoreAsync(request, response, cancellationToken: cancellationToken);
+                return cachedResponse;
             }
-            
-            return cachedResponse;
+
+            var response = await next();
+
+            await StoreAsync(request, response, cancellationToken: cancellationToken);
+
+            return response;
         }
 
         return await next();

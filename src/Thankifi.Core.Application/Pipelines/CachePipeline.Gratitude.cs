@@ -20,16 +20,16 @@ public partial class CachePipeline:
         {
             var cachedResponse = await RetrieveAsync<RetrieveAll, PaginatedList<GratitudeDto>>(request, cancellationToken);
 
-            if (cachedResponse is null)
+            if (cachedResponse is not null)
             {
-                var response = await next();
-
-                await StoreAsync(request, response, cancellationToken: cancellationToken);
-
-                return response;
+                return cachedResponse;
             }
 
-            return cachedResponse;
+            var response = await next();
+
+            await StoreAsync(request, response, cancellationToken: cancellationToken);
+
+            return response;
         }
 
         return await next();
@@ -41,16 +41,16 @@ public partial class CachePipeline:
         {
             var cachedResponse = await RetrieveAsync<RetrieveById, GratitudeDto?>(request, cancellationToken);
 
-            if (cachedResponse is null)
+            if (cachedResponse is not null)
             {
-                var response = await next();
-
-                await StoreAsync(request, response, cancellationToken: cancellationToken);
-
-                return response;
+                return cachedResponse;
             }
 
-            return cachedResponse;
+            var response = await next();
+
+            await StoreAsync(request, response, cancellationToken: cancellationToken);
+
+            return response;
         }
 
         return await next();
@@ -62,16 +62,16 @@ public partial class CachePipeline:
         {
             var cachedResponse = await RetrieveAsync<RetrieveByIdFlavourful, GratitudeFlavourfulDto?>(request, cancellationToken);
 
-            if (cachedResponse is null)
+            if (cachedResponse is not null)
             {
-                var response = await next();
-
-                await StoreAsync(request, response, cancellationToken: cancellationToken);
-
-                return response;
+                return cachedResponse;
             }
 
-            return cachedResponse;
+            var response = await next();
+
+            await StoreAsync(request, response, cancellationToken: cancellationToken);
+
+            return response;
         }
 
         return await next();
