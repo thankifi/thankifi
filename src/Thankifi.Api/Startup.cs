@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,10 +46,35 @@ namespace Thankifi.Api
             services.AddHttpContextAccessor();
 
             services.AddOptions();
-            services.AddMemoryCache();
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            #region Cache
+
+            // required by IPRateLimiting
+            services.AddMemoryCache();
+            
+            var cacheConnectionString = Configuration["CACHE_CONNECTION_STRING"];
+
+            if (string.IsNullOrWhiteSpace(cacheConnectionString))
+            {
+                services.AddDistributedMemoryCache();
+            }
+            else
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = cacheConnectionString;
+                    options.InstanceName = "thankifi_api_query_cache";
+                });
+            }
+            
+            services.Scan(scanner => scanner
+                .FromAssembliesOf(typeof(CachePipeline))
+                .AddClasses(filter => filter.Where(type => type == typeof(CachePipeline)))
+                .AsImplementedInterfaces()
+            );
+
+            #endregion
             
             #region Metrics
 
