@@ -1,8 +1,7 @@
-namespace Thankifi.Api.Model.V1.Responses
+namespace Thankifi.Api.Model.V1.Responses;
+
+public record FlavourViewModel
 {
-    public record FlavourViewModel
-    {
-        public string Name { get; init; }
-        public string Text { get; init; }
-    }
+    public string Name { get; init; }
+    public string Text { get; init; }
 }

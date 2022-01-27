@@ -2,13 +2,12 @@ using AutoMapper;
 using Thankifi.Api.Model.V1.Responses;
 using Thankifi.Core.Domain.Contract.Gratitude.Dto;
 
-namespace Thankifi.Api.Mapping.V1
+namespace Thankifi.Api.Mapping.V1;
+
+public class FlavourMappingProfile : Profile
 {
-    public class FlavourMappingProfile : Profile
+    public FlavourMappingProfile()
     {
-        public FlavourMappingProfile()
-        {
-            CreateMap<FlavourDto, FlavourViewModel>();
-        }
+        CreateMap<FlavourDto, FlavourViewModel>();
     }
 }

@@ -6,35 +6,34 @@ using Microsoft.AspNetCore.Mvc;
 using Thankifi.Api.Model.V1.Responses;
 using Thankifi.Common.Filters.Abstractions;
 
-namespace Thankifi.Api.Controllers.V1
+namespace Thankifi.Api.Controllers.V1;
+
+[ApiController]
+[ApiVersion("1")]
+[Produces("application/json")]
+[Route("api/v{v:apiVersion}/[controller]")]
+public class FlavourController : ControllerBase
 {
-    [ApiController]
-    [ApiVersion("1")]
-    [Produces("application/json")]
-    [Route("api/v{v:apiVersion}/[controller]")]
-    public class FlavourController : ControllerBase
+    private readonly IFilterService _filterService;
+
+    public FlavourController(IFilterService filterService)
     {
-        private readonly IFilterService _filterService;
-
-        public FlavourController(IFilterService filterService)
-        {
-            _filterService = filterService;
-        }
-
-        /// <summary>
-        /// Retrieve a list of all the available flavours. Thanks!
-        /// </summary>
-        [HttpGet(Name = nameof(RetrieveAllFlavours))]
-        [ProducesResponseType(typeof(IEnumerable<FlavourViewModel>), StatusCodes.Status200OK)]
-        public IActionResult RetrieveAllFlavours(CancellationToken cancellationToken)
-        {
-            
-            return Ok(_filterService.GetAvailableFilterIdentifiers().Select(identifier => new FlavourViewModel
-            {
-                Name = identifier,
-                Text = string.Empty
-            }));
-        }
-
+        _filterService = filterService;
     }
+
+    /// <summary>
+    /// Retrieve a list of all the available flavours. Thanks!
+    /// </summary>
+    [HttpGet(Name = nameof(RetrieveAllFlavours))]
+    [ProducesResponseType(typeof(IEnumerable<FlavourViewModel>), StatusCodes.Status200OK)]
+    public IActionResult RetrieveAllFlavours(CancellationToken cancellationToken)
+    {
+            
+        return Ok(_filterService.GetAvailableFilterIdentifiers().Select(identifier => new FlavourViewModel
+        {
+            Name = identifier,
+            Text = string.Empty
+        }));
+    }
+
 }
