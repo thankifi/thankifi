@@ -1,8 +1,7 @@
-namespace Thankifi.Core.Domain.Contract.Gratitude.Dto
+namespace Thankifi.Core.Domain.Contract.Gratitude.Dto;
+
+public record FlavourDto
 {
-    public record FlavourDto
-    {
-        public string Flavour { get; init; }
-        public string Text { get; init; }
-    }
+    public string Flavour { get; init; }
+    public string Text { get; init; }
 }

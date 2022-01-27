@@ -10,54 +10,53 @@ using Thankifi.Core.Domain.Contract.Gratitude.Queries;
 using Thankifi.Core.Domain.Contract.Language.Dto;
 using Thankifi.Persistence.Context;
 
-namespace Thankifi.Core.Domain.Gratitude.Query
+namespace Thankifi.Core.Domain.Gratitude.Query;
+
+public class RetrieveRandomHandler : IQueryHandler<RetrieveRandom, GratitudeDto>
 {
-    public class RetrieveRandomHandler : IQueryHandler<RetrieveRandom, GratitudeDto>
+    private readonly ThankifiDbContext _dbContext;
+
+    public RetrieveRandomHandler(ThankifiDbContext dbContext)
     {
-        private readonly ThankifiDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
-        public RetrieveRandomHandler(ThankifiDbContext dbContext)
+    public async Task<GratitudeDto> Handle(RetrieveRandom request, CancellationToken cancellationToken)
+    {
+        var query = _dbContext.Gratitudes.AsNoTracking();
+
+        if (request.Languages is not null && request.Languages.Any())
         {
-            _dbContext = dbContext;
+            query = query.Where(gratitude => request.Languages.Any(language => language == gratitude.Language.Code));
         }
 
-        public async Task<GratitudeDto> Handle(RetrieveRandom request, CancellationToken cancellationToken)
+        if (request.Categories is not null && request.Categories.Any())
         {
-            var query = _dbContext.Gratitudes.AsNoTracking();
+            query = query.Where(gratitude => gratitude.Categories.Any(category => request.Categories.Any(c => c == category.Slug)));
+        }
 
-            if (request.Languages is not null && request.Languages.Any())
+        var offset = RandomProvider.GetThreadRandom()?.Next(0, await query.CountAsync(cancellationToken));
+
+        var gratitude = await query
+            .OrderBy(g => g.Id)
+            .Skip(offset ?? 0)
+            .Select(g => new GratitudeDto
             {
-                query = query.Where(gratitude => request.Languages.Any(language => language == gratitude.Language.Code));
-            }
-
-            if (request.Categories is not null && request.Categories.Any())
-            {
-                query = query.Where(gratitude => gratitude.Categories.Any(category => request.Categories.Any(c => c == category.Slug)));
-            }
-
-            var offset = RandomProvider.GetThreadRandom()?.Next(0, await query.CountAsync(cancellationToken));
-
-            var gratitude = await query
-                .OrderBy(g => g.Id)
-                .Skip(offset ?? 0)
-                .Select(g => new GratitudeDto
+                Id = g.Id,
+                Language = new LanguageDto
                 {
-                    Id = g.Id,
-                    Language = new LanguageDto
-                    {
-                        Id = g.Language.Id,
-                        Code = g.Language.Code
-                    },
-                    Text = g.Text,
-                    Categories = g.Categories.Select(c => new CategoryDto
-                    {
-                        Id = c.Id,
-                        Slug = c.Slug
-                    })
+                    Id = g.Language.Id,
+                    Code = g.Language.Code
+                },
+                Text = g.Text,
+                Categories = g.Categories.Select(c => new CategoryDto
+                {
+                    Id = c.Id,
+                    Slug = c.Slug
                 })
-                .FirstOrDefaultAsync(cancellationToken);
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-            return gratitude;
-        }
+        return gratitude;
     }
 }

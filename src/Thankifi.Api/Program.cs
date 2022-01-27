@@ -6,51 +6,50 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace Thankifi.Api
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var assembly = Assembly.GetCallingAssembly().GetName().Name;
-            
-            try
-            {
-                var host = CreateHostBuilder(args).Build();
-                
-                if (Log.Logger is not null)
-                {
-                    Log.Information("Starting {Service}", assembly);
-                }
+namespace Thankifi.Api;
 
-                host.Run();
-            }
-            catch (Exception ex)
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var assembly = Assembly.GetCallingAssembly().GetName().Name;
+            
+        try
+        {
+            var host = CreateHostBuilder(args).Build();
+                
+            if (Log.Logger is not null)
             {
-                if (Log.Logger is not null)
-                {
-                    Log.Fatal(ex, "{Service} terminated unexpectedly", assembly);
-                }
+                Log.Information("Starting {Service}", assembly);
             }
-            finally
+
+            host.Run();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Logger is not null)
             {
-                if (Log.Logger is not null)
-                {
-                    Log.CloseAndFlush();
-                }
+                Log.Fatal(ex, "{Service} terminated unexpectedly", assembly);
             }
         }
-
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                    webBuilder.AddCommonLogging();
-                })
-                .ConfigureAppConfiguration(builder =>
-                {
-                    builder.AddCommonConfiguration();
-                });
+        finally
+        {
+            if (Log.Logger is not null)
+            {
+                Log.CloseAndFlush();
+            }
+        }
     }
+
+    private static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+                webBuilder.AddCommonLogging();
+            })
+            .ConfigureAppConfiguration(builder =>
+            {
+                builder.AddCommonConfiguration();
+            });
 }
