@@ -21,22 +21,19 @@ public static class ServiceCollectionExtensions
 
         var options = configuration.GetSection(CacheOptions.Cache).Get<CacheOptions>();
 
-        return options.Strategy switch
-        {
-            CacheOptions.CachingStrategy.Disabled => services,
-            CacheOptions.CachingStrategy.InMemory => services
-                .Configure<CacheOptions>(configuration.GetSection(CacheOptions.Cache))
-                .AddDistributedMemoryCache(),
-            CacheOptions.CachingStrategy.Distributed when !string.IsNullOrWhiteSpace(configuration.GetConnectionString(CacheOptions.Cache))
-                => services
-                    .Configure<CacheOptions>(configuration.GetSection(CacheOptions.Cache))
-                    .AddStackExchangeRedisCache(builder =>
-                    {
-                        builder.Configuration = configuration.GetConnectionString(CacheOptions.Cache);
-                        builder.InstanceName = options.InstanceNaming;
-                    }),
-            _ => services
-        };
+        if (options.Strategy == CacheOptions.CachingStrategy.Disabled)
+            return services;
+        if (options.Strategy == CacheOptions.CachingStrategy.InMemory)
+            return services.Configure<CacheOptions>(configuration.GetSection(CacheOptions.Cache)).AddDistributedMemoryCache();
+        if (options.Strategy == CacheOptions.CachingStrategy.Distributed &&
+            !string.IsNullOrWhiteSpace(configuration.GetConnectionString(CacheOptions.Cache)))
+            return services.Configure<CacheOptions>(configuration.GetSection(CacheOptions.Cache))
+                .AddStackExchangeRedisCache(builder =>
+                {
+                    builder.Configuration = configuration.GetConnectionString(CacheOptions.Cache);
+                    builder.InstanceName = options.InstanceNaming;
+                });
+        return services;
     }
 
     public static IServiceCollection AddMetrics(this IServiceCollection services, IConfiguration configuration)
@@ -70,12 +67,12 @@ public static class ServiceCollectionExtensions
 
     private static X509Certificate[] GetConnectionCertificates(IConfiguration configuration, string connection)
     {
-        return configuration.GetSection("Certificates").GetValue<string>(connection)
+        return configuration[$"Certificates:{connection}"]?
             .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
             .Select(certificate => certificate
                 .Replace("-----BEGIN CERTIFICATE-----", "")
                 .Replace("-----END CERTIFICATE-----", ""))
             .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
-            .ToArray();
+            .ToArray() ?? Array.Empty<X509Certificate>();
     }
 }

@@ -48,39 +48,39 @@ public class Startup
 
         services.AddOptions();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+        
         services.AddCache(Configuration);
-
+        
         services.AddMetrics(Configuration);
-
+        
         #region Sourcing
-
+        
         services.AddSourcing(typeof(RetrieveById).Assembly, typeof(RetrieveByIdHandler).Assembly);
-
+        
         services.Scan(scanner => scanner
             .FromAssembliesOf(typeof(CachePipeline))
             .AddClasses(filter => filter.Where(type => type == typeof(CachePipeline)))
             .AsImplementedInterfaces()
         );
-
+        
         services.Scan(scanner => scanner
             .FromAssembliesOf(typeof(FlavouringPipeline))
             .AddClasses(filter => filter.Where(type => type == typeof(FlavouringPipeline)))
             .AsImplementedInterfaces()
         );
-
+        
         #endregion
-
+        
         services.AddFilters();
-
+        
         services.AddImporter(default);
-
+        
         services.AddScoped<ImportService>();
-
+        
         services.AddHostedService<ImportHostedService>();
-
+        
         #region Persistence
-
+        
         var dbCertificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]?
             .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
             .Select(certificate => certificate
@@ -88,46 +88,46 @@ public class Startup
                 .Replace("-----END CERTIFICATE-----", ""))
             .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
             .ToArray() ?? Array.Empty<X509Certificate>();
-
+        
         services.AddDbContext<ThankifiDbContext>(builder =>
         {
             var connectionString = Configuration["DB_CONNECTION_STRING"];
             builder.UseNpgsql(connectionString, optionsBuilder =>
             {
                 optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-
+        
                 optionsBuilder.ProvideClientCertificatesCallback(clientCerts => { clientCerts.AddRange(dbCertificates); });
             });
         });
-
+        
         #endregion
-
+        
         #region IpRateLimiting
-
+        
         //load general configuration from appsettings.json
         services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
-
+        
         services.AddInMemoryRateLimiting();
-
+        
         services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-
+        
         #endregion
-
+        
         #region Api Versioning
-
+        
         services.AddApiVersioning(o =>
         {
             o.ReportApiVersions = true;
             o.AssumeDefaultVersionWhenUnspecified = true;
             o.DefaultApiVersion = new ApiVersion(1, 0);
         });
-
+        
         #endregion
-
+        
         #region SwaggerGen
-
+        
         AnalyticsHeadContent.Configure(Configuration);
-
+        
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo
@@ -147,30 +147,30 @@ public class Startup
                     Url = new Uri("https://github.com/thankifi/thankifi/blob/master/LICENSE")
                 }
             });
-
+        
             c.OperationFilter<RemoveVersionFromParameter>();
             c.DocumentFilter<ReplaceVersionWithExactValueInPath>();
-
+        
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
         });
-
+        
         #endregion
-
+        
         #region Authentication
-
+        
         services.AddAuthentication(o => { o.DefaultScheme = nameof(ManagementAuthenticationScheme); })
             .AddScheme<ManagementAuthenticationScheme, ManagementAuthenticationHandler>(nameof(ManagementAuthenticationScheme),
                 _ => { });
-
+        
         #endregion
-
+        
         #region HealthChecks
-
+        
         services.AddHealthChecks()
             .AddDbContextCheck<ThankifiDbContext>();
-
+        
         #endregion
     }
 
