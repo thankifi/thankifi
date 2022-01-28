@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Thankifi.Api.Configuration;
 using Thankifi.Api.Configuration.Authorization;
 using Thankifi.Api.Configuration.Swagger;
 using Thankifi.Common.Filters;
@@ -48,54 +49,9 @@ public class Startup
         services.AddOptions();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        #region Cache
+        services.AddCache(Configuration);
 
-        // required by IPRateLimiting
-        services.AddMemoryCache();
-
-        var cacheConnectionString = Configuration["CACHE_CONNECTION_STRING"];
-
-        if (string.IsNullOrWhiteSpace(cacheConnectionString))
-        {
-            services.AddDistributedMemoryCache();
-        }
-        else
-        {
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = cacheConnectionString;
-                options.InstanceName = "thankifi_api_query_cache";
-            });
-        }
-
-        #endregion
-
-        #region Metrics
-
-        services.AddCommonMetrics();
-
-        var metricsCertificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]?
-            .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
-            .Select(certificate => certificate
-                .Replace("-----BEGIN CERTIFICATE-----", "")
-                .Replace("-----END CERTIFICATE-----", ""))
-            .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
-            .ToArray() ?? Array.Empty<X509Certificate>();
-
-        services.ConfigureEntityFrameworkSink<MetricsDbContext>(builder =>
-        {
-            var connectionString = Configuration["METRICS_DB_CONNECTION_STRING"];
-            builder.UseNpgsql(connectionString, optionsBuilder =>
-            {
-                optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-
-                optionsBuilder.ProvideClientCertificatesCallback(clientCerts => { clientCerts.AddRange(metricsCertificates); });
-            });
-        });
-
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MetricsPipeline<,>));
-
-        #endregion
+        services.AddMetrics(Configuration);
 
         #region Sourcing
 
