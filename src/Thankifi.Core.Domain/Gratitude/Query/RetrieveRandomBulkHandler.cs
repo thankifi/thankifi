@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,60 +11,59 @@ using Thankifi.Core.Domain.Contract.Gratitude.Queries;
 using Thankifi.Core.Domain.Contract.Language.Dto;
 using Thankifi.Persistence.Context;
 
-namespace Thankifi.Core.Domain.Gratitude.Query
+namespace Thankifi.Core.Domain.Gratitude.Query;
+
+public class RetrieveRandomBulkHandler : IQueryHandler<RetrieveRandomBulk, IEnumerable<GratitudeDto>>
 {
-    public class RetrieveRandomBulkHandler : IQueryHandler<RetrieveRandomBulk, IEnumerable<GratitudeDto>>
+    private readonly ThankifiDbContext _dbContext;
+
+    public RetrieveRandomBulkHandler(ThankifiDbContext dbContext)
     {
-        private readonly ThankifiDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
-        public RetrieveRandomBulkHandler(ThankifiDbContext dbContext)
+    public async Task<IEnumerable<GratitudeDto>> Handle(RetrieveRandomBulk request, CancellationToken cancellationToken)
+    {
+        var query = _dbContext.Gratitudes.AsNoTracking();
+
+        if (request.Languages is not null && request.Languages.Any())
         {
-            _dbContext = dbContext;
+            query = query.Where(g => request.Languages.Any(language => language == g.Language.Code));
         }
 
-        public async Task<IEnumerable<GratitudeDto>> Handle(RetrieveRandomBulk request, CancellationToken cancellationToken)
+        if (request.Categories is not null && request.Categories.Any())
         {
-            var query = _dbContext.Gratitudes.AsNoTracking();
+            query = query.Where(g => g.Categories.Any(category => request.Categories.Any(c => c == category.Slug)));
+        }
 
-            if (request.Languages is not null && request.Languages.Any())
-            {
-                query = query.Where(g => request.Languages.Any(language => language == g.Language.Code));
-            }
+        var totalGratitudes = await query.CountAsync(cancellationToken);
 
-            if (request.Categories is not null && request.Categories.Any())
-            {
-                query = query.Where(g => g.Categories.Any(category => request.Categories.Any(c => c == category.Slug)));
-            }
+        var gratitudes = new List<GratitudeDto>(request.Quantity);
 
-            var totalGratitudes = await query.CountAsync(cancellationToken);
+        while (gratitudes.Count < totalGratitudes && gratitudes.Count < request.Quantity)
+        {
+            var offset = RandomProvider.GetThreadRandom()?.Next(0, totalGratitudes);
 
-            var gratitudes = new List<GratitudeDto>(request.Quantity);
-
-            while (gratitudes.Count < totalGratitudes && gratitudes.Count < request.Quantity)
-            {
-                var offset = RandomProvider.GetThreadRandom()?.Next(0, totalGratitudes);
-
-                gratitudes.Add(await query
-                    .OrderBy(g => g.Id)
-                    .Skip(offset ?? 0)
-                    .Select(g => new GratitudeDto
+            gratitudes.Add(await query
+                .OrderBy(g => g.Id)
+                .Skip(offset ?? 0)
+                .Select(g => new GratitudeDto
+                {
+                    Id = g.Id,
+                    Language = new LanguageDto
                     {
-                        Id = g.Id,
-                        Language = new LanguageDto
-                        {
-                            Id = g.Language.Id,
-                            Code = g.Language.Code
-                        },
-                        Text = g.Text,
-                        Categories = g.Categories.Select(c => new CategoryDto
-                        {
-                            Id = c.Id,
-                            Slug = c.Slug
-                        })
-                    }).FirstOrDefaultAsync(cancellationToken));
-            }
-
-            return gratitudes;
+                        Id = g.Language.Id,
+                        Code = g.Language.Code
+                    },
+                    Text = g.Text,
+                    Categories = g.Categories.Select(c => new CategoryDto
+                    {
+                        Id = c.Id,
+                        Slug = c.Slug
+                    })
+                }).FirstOrDefaultAsync(cancellationToken));
         }
+
+        return gratitudes;
     }
 }

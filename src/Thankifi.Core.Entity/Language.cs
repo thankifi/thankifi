@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace Thankifi.Core.Entity
+namespace Thankifi.Core.Entity;
+
+public class Language
 {
-    public class Language
+    public Language()
     {
-        public Language()
-        {
-            Gratitudes = new List<Gratitude>();
-        }
-        
-        public Guid Id { get; set; }
-        public string Code { get; set; }
-        public List<Gratitude> Gratitudes { get; set; }
+        Gratitudes = new List<Gratitude>();
     }
+        
+    public Guid Id { get; set; }
+    public string Code { get; set; }
+    public List<Gratitude> Gratitudes { get; set; }
 }

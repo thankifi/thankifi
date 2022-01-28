@@ -1,16 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Incremental.Common.Pagination;
-using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
-using Thankifi.Core.Domain.Contract.Category.Dto;
-using Thankifi.Core.Domain.Contract.Category.Queries;
-using Thankifi.Core.Domain.Contract.Gratitude.Dto;
-using Thankifi.Core.Domain.Contract.Language.Dto;
 
 namespace Thankifi.Core.Application.Pipelines;
 

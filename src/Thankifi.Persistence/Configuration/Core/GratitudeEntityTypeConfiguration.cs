@@ -2,24 +2,23 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thankifi.Core.Entity;
 
-namespace Thankifi.Persistence.Configuration.Core
+namespace Thankifi.Persistence.Configuration.Core;
+
+public class GratitudeEntityTypeConfiguration : IEntityTypeConfiguration<Gratitude>
 {
-    public class GratitudeEntityTypeConfiguration : IEntityTypeConfiguration<Gratitude>
+    public void Configure(EntityTypeBuilder<Gratitude> builder)
     {
-        public void Configure(EntityTypeBuilder<Gratitude> builder)
-        {
-            builder.HasKey(e => e.Id);
+        builder.HasKey(e => e.Id);
 
-            builder.HasOne(e => e.Language)
-                .WithMany(e => e.Gratitudes)
-                .IsRequired();
+        builder.HasOne(e => e.Language)
+            .WithMany(e => e.Gratitudes)
+            .IsRequired();
             
-            builder.Property(e => e.Text)
-                .IsRequired();
+        builder.Property(e => e.Text)
+            .IsRequired();
 
-            builder.HasMany(e => e.Categories)
-                .WithMany(e => e.Gratitudes);
+        builder.HasMany(e => e.Categories)
+            .WithMany(e => e.Gratitudes);
 
-        }
     }
 }

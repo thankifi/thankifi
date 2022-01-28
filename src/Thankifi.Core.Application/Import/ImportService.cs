@@ -10,247 +10,246 @@ using Thankifi.Core.Application.Entity;
 using Thankifi.Core.Entity;
 using Thankifi.Persistence.Context;
 
-namespace Thankifi.Core.Application.Import
+namespace Thankifi.Core.Application.Import;
+
+public class ImportService
 {
-    public class ImportService
+    private readonly ILogger<ImportService> _logger;
+    private readonly IImporter _importer;
+    private readonly ThankifiDbContext _dbContext;
+
+    public ImportService(ILogger<ImportService> logger, IImporter importer, ThankifiDbContext dbContext)
     {
-        private readonly ILogger<ImportService> _logger;
-        private readonly IImporter _importer;
-        private readonly ThankifiDbContext _dbContext;
+        _logger = logger;
+        _importer = importer;
+        _dbContext = dbContext;
+    }
 
-        public ImportService(ILogger<ImportService> logger, IImporter importer, ThankifiDbContext dbContext)
+    public async Task TryImport(CancellationToken cancellationToken = default)
+    {
+        var applicationState = await _dbContext.ApplicationState.SingleOrDefaultAsync(cancellationToken);
+
+        if (applicationState is null)
         {
-            _logger = logger;
-            _importer = importer;
-            _dbContext = dbContext;
+            applicationState = new ApplicationState();
+
+            _logger.LogInformation("Generating new application state", applicationState);
+                
+            await _dbContext.ApplicationState.AddAsync(applicationState, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task TryImport(CancellationToken cancellationToken = default)
+        var datasetVersion = await _importer.GetVersion(cancellationToken);
+
+        if (datasetVersion is null)
         {
-            var applicationState = await _dbContext.ApplicationState.SingleOrDefaultAsync(cancellationToken);
+            _logger.LogWarning("Import attempt aborted because dataset version was null");
+            return;
+        }
 
-            if (applicationState is null)
-            {
-                applicationState = new ApplicationState();
-
-                _logger.LogInformation("Generating new application state", applicationState);
-                
-                await _dbContext.ApplicationState.AddAsync(applicationState, cancellationToken);
-                await _dbContext.SaveChangesAsync(cancellationToken);
-            }
-
-            var datasetVersion = await _importer.GetVersion(cancellationToken);
-
-            if (datasetVersion is null)
-            {
-                _logger.LogWarning("Import attempt aborted because dataset version was null");
-                return;
-            }
-
-            if (datasetVersion <= applicationState.DatasetVersion)
-            {
-                _logger.LogInformation("Import attempt aborted because fetched version is older or equal to local version");
-                return;
-            }
+        if (datasetVersion <= applicationState.DatasetVersion)
+        {
+            _logger.LogInformation("Import attempt aborted because fetched version is older or equal to local version");
+            return;
+        }
             
-            var dataset = await _importer.GetDataset(cancellationToken);
+        var dataset = await _importer.GetDataset(cancellationToken);
 
-            if (dataset is null)
-            {
-                _logger.LogWarning("Import attempt aborted because a newer version ({DatasetVersion}) was fetched but the dataset was empty", datasetVersion);
-                return;
-            }
+        if (dataset is null)
+        {
+            _logger.LogWarning("Import attempt aborted because a newer version ({DatasetVersion}) was fetched but the dataset was empty", datasetVersion);
+            return;
+        }
 
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-            try
-            {
-                _logger.LogInformation("Importing dataset within transaction with id {TransactionId}", transaction.TransactionId);
+        try
+        {
+            _logger.LogInformation("Importing dataset within transaction with id {TransactionId}", transaction.TransactionId);
 
-                await CleanTablesAsync(cancellationToken);
+            await CleanTablesAsync(cancellationToken);
 
-                await AddOrUpdateCategoriesAsync(dataset.Categories, cancellationToken);
-                _logger.LogInformation("Saving categories changes to database within transaction with id {TransactionId}", transaction.TransactionId);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+            await AddOrUpdateCategoriesAsync(dataset.Categories, cancellationToken);
+            _logger.LogInformation("Saving categories changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-                await AddOrUpdateLanguagesAsync(dataset.Languages, cancellationToken);
-                _logger.LogInformation("Saving language changes to database within transaction with id {TransactionId}", transaction.TransactionId);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+            await AddOrUpdateLanguagesAsync(dataset.Languages, cancellationToken);
+            _logger.LogInformation("Saving language changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+            await _dbContext.SaveChangesAsync(cancellationToken);
                 
-                await AddOrUpdateGratitudesAsync(dataset.Gratitudes, cancellationToken);
-                _logger.LogInformation("Saving gratitudes changes to database within transaction with id {TransactionId}", transaction.TransactionId);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+            await AddOrUpdateGratitudesAsync(dataset.Gratitudes, cancellationToken);
+            _logger.LogInformation("Saving gratitudes changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+            await _dbContext.SaveChangesAsync(cancellationToken);
                 
-                await UpdateApplicationStateAsync(datasetVersion, cancellationToken);
-                _logger.LogInformation("Saving application state changes to database within transaction with id {TransactionId}", transaction.TransactionId);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+            await UpdateApplicationStateAsync(datasetVersion, cancellationToken);
+            _logger.LogInformation("Saving application state changes to database within transaction with id {TransactionId}", transaction.TransactionId);
+            await _dbContext.SaveChangesAsync(cancellationToken);
                 
-                await transaction.CommitAsync(cancellationToken);
-                _logger.LogInformation("Imported newer dataset successfully at {ImportDate}", DateTime.UtcNow);
-            }
-            catch (Exception e)
+            await transaction.CommitAsync(cancellationToken);
+            _logger.LogInformation("Imported newer dataset successfully at {ImportDate}", DateTime.UtcNow);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unhandled error during import database transaction");
+            _logger.LogWarning("Rolling back database transaction with id {TransactionId} due to unhandled error during import", transaction.TransactionId);
+            await transaction.RollbackAsync(cancellationToken);
+        }
+    }
+
+    private async Task CleanTablesAsync(CancellationToken cancellationToken = default)
+    {
+        var tableNames = _dbContext.Model.GetEntityTypes()
+            .Where(type => type.ClrType == typeof(Category) || type.ClrType == typeof(Language) || type.ClrType == typeof(Gratitude))
+            .Select(type => type.GetTableName());
+
+        foreach (var tableName in tableNames)
+        {
+            _logger.LogInformation("Cleaning {TableName} table during transaction", tableName);
+            await _dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", cancellationToken);
+        }
+    }
+
+    private async Task AddOrUpdateCategoriesAsync(IEnumerable<Dataset.Category>? categories, CancellationToken cancellationToken = default)
+    {
+        foreach (var categoryToImport in categories ?? Array.Empty<Dataset.Category>())
+        {
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(e => e.Id == categoryToImport.Id, cancellationToken);
+
+            if (category is null)
             {
-                _logger.LogError(e, "Unhandled error during import database transaction");
-                _logger.LogWarning("Rolling back database transaction with id {TransactionId} due to unhandled error during import", transaction.TransactionId);
-                await transaction.RollbackAsync(cancellationToken);
+                category = new Category
+                {
+                    Id = categoryToImport.Id,
+                    Slug = categoryToImport.Slug
+                };
+
+                _logger.LogInformation("Adding new category {@Category}", category);
+                await _dbContext.AddAsync(category, cancellationToken);
+            }
+            else if (category.Slug == categoryToImport.Slug)
+            {
+                _logger.LogInformation("Updating category slug for category with id {CategoryId}", category.Id);
+                category.Slug = categoryToImport.Slug;
             }
         }
+    }
 
-        private async Task CleanTablesAsync(CancellationToken cancellationToken = default)
+    private async Task AddOrUpdateLanguagesAsync(IEnumerable<Dataset.Language>? languages, CancellationToken cancellationToken = default)
+    {
+        foreach (var languageToImport in languages ?? Array.Empty<Dataset.Language>())
         {
-            var tableNames = _dbContext.Model.GetEntityTypes()
-                .Where(type => type.ClrType == typeof(Category) || type.ClrType == typeof(Language) || type.ClrType == typeof(Gratitude))
-                .Select(type => type.GetTableName());
+            var language = await _dbContext.Languages.FirstOrDefaultAsync(e => e.Id == languageToImport.Id, cancellationToken);
 
-            foreach (var tableName in tableNames)
+            if (language is null)
             {
-                _logger.LogInformation("Cleaning {TableName} table during transaction", tableName);
-                await _dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"", cancellationToken);
+                language = new Language
+                {
+                    Id = languageToImport.Id,
+                    Code = languageToImport.Code
+                };
+
+                _logger.LogInformation("Adding new language {@Language}", language);
+                await _dbContext.AddAsync(language, cancellationToken);
+            }
+            else if (language.Code != languageToImport.Code)
+            {
+                _logger.LogInformation("Updating language code for language with id {LanguageId}", language.Id);
+                language.Code = languageToImport.Code;
             }
         }
+    }
 
-        private async Task AddOrUpdateCategoriesAsync(IEnumerable<Dataset.Category>? categories, CancellationToken cancellationToken = default)
+    private async Task AddOrUpdateGratitudesAsync(IEnumerable<Dataset.Gratitude>? gratitudes, CancellationToken cancellationToken = default)
+    {
+        foreach (var gratitudeToImport in gratitudes ?? Array.Empty<Dataset.Gratitude>())
         {
-            foreach (var categoryToImport in categories ?? Array.Empty<Dataset.Category>())
+            var gratitude = await _dbContext.Gratitudes.FirstOrDefaultAsync(e => e.Id == gratitudeToImport.Id, cancellationToken);
+
+            if (gratitude is null)
             {
-                var category = await _dbContext.Categories.FirstOrDefaultAsync(e => e.Id == categoryToImport.Id, cancellationToken);
+                var language =  await GetLanguageOrDefault(gratitudeToImport.Language);
+                var categories = await GetCategoriesOrDefault(gratitudeToImport.Categories);
 
-                if (category is null)
+                if (language is null || categories.Count != gratitudeToImport.Categories.Count)
                 {
-                    category = new Category
-                    {
-                        Id = categoryToImport.Id,
-                        Slug = categoryToImport.Slug
-                    };
+                    _logger.LogWarning("Skipping import of gratitude with id {GratitudeId} because of language or categories mismatch", gratitudeToImport.Id);
+                    continue;
+                }
 
-                    _logger.LogInformation("Adding new category {@Category}", category);
-                    await _dbContext.AddAsync(category, cancellationToken);
-                }
-                else if (category.Slug == categoryToImport.Slug)
-                {
-                    _logger.LogInformation("Updating category slug for category with id {CategoryId}", category.Id);
-                    category.Slug = categoryToImport.Slug;
-                }
+                _logger.LogInformation("Adding new gratitude {@Gratitude}", gratitudeToImport);
+                await AddGratitude(gratitudeToImport.Id, gratitudeToImport.Text, language, categories);
             }
-        }
-
-        private async Task AddOrUpdateLanguagesAsync(IEnumerable<Dataset.Language>? languages, CancellationToken cancellationToken = default)
-        {
-            foreach (var languageToImport in languages ?? Array.Empty<Dataset.Language>())
+            else
             {
-                var language = await _dbContext.Languages.FirstOrDefaultAsync(e => e.Id == languageToImport.Id, cancellationToken);
-
-                if (language is null)
+                if (gratitude.Text != gratitudeToImport.Text)
                 {
-                    language = new Language
-                    {
-                        Id = languageToImport.Id,
-                        Code = languageToImport.Code
-                    };
-
-                    _logger.LogInformation("Adding new language {@Language}", language);
-                    await _dbContext.AddAsync(language, cancellationToken);
+                    _logger.LogInformation("Updating text for gratitude with id {GratitudeId}", gratitude.Id);
+                    gratitude.Text = gratitudeToImport.Text;
                 }
-                else if (language.Code != languageToImport.Code)
-                {
-                    _logger.LogInformation("Updating language code for language with id {LanguageId}", language.Id);
-                    language.Code = languageToImport.Code;
-                }
-            }
-        }
-
-        private async Task AddOrUpdateGratitudesAsync(IEnumerable<Dataset.Gratitude>? gratitudes, CancellationToken cancellationToken = default)
-        {
-            foreach (var gratitudeToImport in gratitudes ?? Array.Empty<Dataset.Gratitude>())
-            {
-                var gratitude = await _dbContext.Gratitudes.FirstOrDefaultAsync(e => e.Id == gratitudeToImport.Id, cancellationToken);
-
-                if (gratitude is null)
+                    
+                if (gratitude.Language.Code != gratitudeToImport.Language)
                 {
                     var language =  await GetLanguageOrDefault(gratitudeToImport.Language);
-                    var categories = await GetCategoriesOrDefault(gratitudeToImport.Categories);
 
-                    if (language is null || categories.Count != gratitudeToImport.Categories.Count)
+                    if (language is null)
                     {
-                        _logger.LogWarning("Skipping import of gratitude with id {GratitudeId} because of language or categories mismatch", gratitudeToImport.Id);
+                        _logger.LogWarning("Skipping update of gratitude with id {GratitudeId} because of language mismatch", gratitudeToImport.Id);
                         continue;
                     }
 
-                    _logger.LogInformation("Adding new gratitude {@Gratitude}", gratitudeToImport);
-                    await AddGratitude(gratitudeToImport.Id, gratitudeToImport.Text, language, categories);
+                    _logger.LogInformation("Updating language for gratitude with id {GratitudeId}", gratitude.Id);
+                    _logger.LogInformation("New language for gratitude with id {GratitudeId}: {Language}", gratitude.Id, gratitudeToImport.Language);
+                    gratitude.Language = language;
                 }
-                else
+
+                if (!gratitude.Categories.Select(e => e.Slug).OrderBy(e => e).SequenceEqual(gratitudeToImport.Categories.OrderBy(e => e)))
                 {
-                    if (gratitude.Text != gratitudeToImport.Text)
-                    {
-                        _logger.LogInformation("Updating text for gratitude with id {GratitudeId}", gratitude.Id);
-                        gratitude.Text = gratitudeToImport.Text;
-                    }
-                    
-                    if (gratitude.Language.Code != gratitudeToImport.Language)
-                    {
-                        var language =  await GetLanguageOrDefault(gratitudeToImport.Language);
-
-                        if (language is null)
-                        {
-                            _logger.LogWarning("Skipping update of gratitude with id {GratitudeId} because of language mismatch", gratitudeToImport.Id);
-                            continue;
-                        }
-
-                        _logger.LogInformation("Updating language for gratitude with id {GratitudeId}", gratitude.Id);
-                        _logger.LogInformation("New language for gratitude with id {GratitudeId}: {Language}", gratitude.Id, gratitudeToImport.Language);
-                        gratitude.Language = language;
-                    }
-
-                    if (!gratitude.Categories.Select(e => e.Slug).OrderBy(e => e).SequenceEqual(gratitudeToImport.Categories.OrderBy(e => e)))
-                    {
-                        var categories = await GetCategoriesOrDefault(gratitudeToImport.Categories);
+                    var categories = await GetCategoriesOrDefault(gratitudeToImport.Categories);
                         
-                        if (categories.Count != gratitudeToImport.Categories.Count)
-                        {
-                            _logger.LogWarning("Skipping update of gratitude with id {GratitudeId} because of categories mismatch", gratitudeToImport.Id);
-                            continue;
-                        }
-
-                        _logger.LogInformation("Updating categories for gratitude with id {GratitudeId}", gratitude.Id);
-                        _logger.LogInformation("New categories for gratitude with id {GratitudeId}: {@Categories}", gratitude.Id, gratitudeToImport.Categories);
-                        gratitude.Categories = categories;
+                    if (categories.Count != gratitudeToImport.Categories.Count)
+                    {
+                        _logger.LogWarning("Skipping update of gratitude with id {GratitudeId} because of categories mismatch", gratitudeToImport.Id);
+                        continue;
                     }
+
+                    _logger.LogInformation("Updating categories for gratitude with id {GratitudeId}", gratitude.Id);
+                    _logger.LogInformation("New categories for gratitude with id {GratitudeId}: {@Categories}", gratitude.Id, gratitudeToImport.Categories);
+                    gratitude.Categories = categories;
                 }
             }
-
-            async Task<Language?> GetLanguageOrDefault(string code)
-            {
-                return await _dbContext.Languages.FirstOrDefaultAsync(e => e.Code == code, cancellationToken);
-            }
-            
-            async Task<List<Category>> GetCategoriesOrDefault(IEnumerable<string> slugs)
-            {
-                return await _dbContext.Categories.Where(e => slugs.Contains(e.Slug)).ToListAsync(cancellationToken);
-            }
-
-            async Task AddGratitude(Guid id, string text, Language? language, List<Category>? categories)
-            {
-                var gratitude = new Gratitude
-                {
-                    Id = id,
-                    Text = text,
-                    Language = language,
-                    Categories = categories
-                };
-
-                await _dbContext.AddAsync(gratitude, cancellationToken);
-            }
         }
-        
-        private async Task UpdateApplicationStateAsync(int? datasetVersion, CancellationToken cancellationToken = default)
+
+        async Task<Language?> GetLanguageOrDefault(string code)
         {
-            var applicationState = await _dbContext.ApplicationState.SingleOrDefaultAsync(cancellationToken);
-            
-            applicationState.DatasetVersion = datasetVersion ?? throw new ArgumentNullException(nameof(datasetVersion));
-            applicationState.LastUpdated = DateTime.UtcNow;
-            
-            _logger.LogInformation("Updating application dataset version to {DatasetVersion}", applicationState.DatasetVersion);
+            return await _dbContext.Languages.FirstOrDefaultAsync(e => e.Code == code, cancellationToken);
         }
+            
+        async Task<List<Category>> GetCategoriesOrDefault(IEnumerable<string> slugs)
+        {
+            return await _dbContext.Categories.Where(e => slugs.Contains(e.Slug)).ToListAsync(cancellationToken);
+        }
+
+        async Task AddGratitude(Guid id, string text, Language? language, List<Category>? categories)
+        {
+            var gratitude = new Gratitude
+            {
+                Id = id,
+                Text = text,
+                Language = language,
+                Categories = categories
+            };
+
+            await _dbContext.AddAsync(gratitude, cancellationToken);
+        }
+    }
+        
+    private async Task UpdateApplicationStateAsync(int? datasetVersion, CancellationToken cancellationToken = default)
+    {
+        var applicationState = await _dbContext.ApplicationState.SingleOrDefaultAsync(cancellationToken);
+            
+        applicationState.DatasetVersion = datasetVersion ?? throw new ArgumentNullException(nameof(datasetVersion));
+        applicationState.LastUpdated = DateTime.UtcNow;
+            
+        _logger.LogInformation("Updating application dataset version to {DatasetVersion}", applicationState.DatasetVersion);
     }
 }
