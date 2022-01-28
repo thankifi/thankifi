@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj"/>
+        <ProjectReference Include="..\Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Incremental.Common.Random" Version="1.1.2"/>
+        <PackageReference Include="Incremental.Common.Random" Version="1.2.0" />
     </ItemGroup>
 
 </Project>

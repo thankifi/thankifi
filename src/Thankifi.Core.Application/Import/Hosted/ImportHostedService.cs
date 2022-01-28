@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -14,8 +15,8 @@ namespace Thankifi.Core.Application.Import.Hosted
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private Timer? _timer;
 
-        private static readonly double FirstRunInterval = TimeSpan.FromSeconds(10).TotalMilliseconds;
-        private static readonly double DefaultInterval = TimeSpan.FromHours(1).TotalMilliseconds;
+        private static readonly TimeSpan FirstRunInterval = TimeSpan.FromSeconds(30);
+        private static readonly TimeSpan DefaultInterval = TimeSpan.FromHours(6);
 
         public ImportHostedService(ILogger<ImportHostedService> logger, IServiceScopeFactory serviceScopeFactory)
         {
@@ -37,31 +38,15 @@ namespace Thankifi.Core.Application.Import.Hosted
 
         private Task ScheduleImportTimer(CancellationToken cancellationToken)
         {
-            _timer = new Timer(FirstRunInterval)
+            _timer = new Timer(FirstRunInterval.TotalMilliseconds)
             {
                 AutoReset = true
             };
             
-            _logger.LogInformation("Scheduling import with an interval of {DefaultInterval} seconds", TimeSpan.FromMilliseconds(DefaultInterval).TotalSeconds);
-            _logger.LogInformation("First import to start in around {FirstRunInterval} seconds", TimeSpan.FromMilliseconds(FirstRunInterval).TotalSeconds);
+            _logger.LogInformation("Scheduling import with an interval of {DefaultInterval} hours", DefaultInterval.TotalHours);
+            _logger.LogInformation("First import to start in around {FirstRunInterval} seconds", FirstRunInterval.TotalSeconds);
 
-            _timer.Elapsed += async (_, _ ) =>
-            {
-                _timer.Stop();
-                
-                using var scope = _serviceScopeFactory.CreateScope();
-                
-                var importService = scope.ServiceProvider.GetRequiredService<ImportService>();
-
-                await importService.TryImport(cancellationToken);
-
-                if (_timer.Interval < DefaultInterval)
-                {
-                    _timer.Interval = DefaultInterval;
-                }
-                
-                _timer.Start();
-            };
+            _timer.Elapsed += OnElapsed!;
 
             _timer.Disposed += (_, _) =>
             {
@@ -70,10 +55,27 @@ namespace Thankifi.Core.Application.Import.Hosted
                 
             _timer.Start();
             
-
             _logger.LogInformation("Import scheduled");
             
             return Task.CompletedTask;
+            
+            async void OnElapsed(object o, ElapsedEventArgs elapsedEventArgs)
+            {
+                _timer.Stop();
+
+                using var scope = _serviceScopeFactory.CreateScope();
+
+                var importService = scope.ServiceProvider.GetRequiredService<ImportService>();
+
+                await importService.TryImport(cancellationToken);
+
+                if (TimeSpan.FromMilliseconds(_timer.Interval) == FirstRunInterval)
+                {
+                    _timer.Interval = DefaultInterval.TotalMilliseconds;
+                }
+
+                _timer.Start();
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Thankifi.Persistence.Context
         {
         }
 
-        public ThankifiDbContext(DbContextOptions options) : base(options)
+        public ThankifiDbContext(DbContextOptions<ThankifiDbContext> options) : base(options)
         {
         }
 
