@@ -70,33 +70,6 @@ public class Startup
 
         #endregion
 
-        #region Metrics
-
-        services.AddCommonMetrics();
-
-        var metricsCertificates = Configuration["METRICS_DB_CONNECTION_CERTIFICATE"]?
-            .Split("-----END CERTIFICATE----------BEGIN CERTIFICATE-----")
-            .Select(certificate => certificate
-                .Replace("-----BEGIN CERTIFICATE-----", "")
-                .Replace("-----END CERTIFICATE-----", ""))
-            .Select(certificate => new X509Certificate(Convert.FromBase64String(certificate)))
-            .ToArray() ?? Array.Empty<X509Certificate>();
-
-        services.ConfigureEntityFrameworkSink<MetricsDbContext>(builder =>
-        {
-            var connectionString = Configuration["METRICS_DB_CONNECTION_STRING"];
-            builder.UseNpgsql(connectionString, optionsBuilder =>
-            {
-                optionsBuilder.MigrationsAssembly("Thankifi.Persistence.Migrations");
-
-                optionsBuilder.ProvideClientCertificatesCallback(clientCerts => { clientCerts.AddRange(metricsCertificates); });
-            });
-        });
-
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MetricsPipeline<,>));
-
-        #endregion
-
         #region Sourcing
 
         services.AddSourcing(typeof(RetrieveById).Assembly, typeof(RetrieveByIdHandler).Assembly);
@@ -233,7 +206,6 @@ public class Startup
         using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
         {
             serviceScope?.ServiceProvider.GetRequiredService<ThankifiDbContext>().Database.Migrate();
-            serviceScope?.ServiceProvider.GetRequiredService<MetricsDbContext>().Database.Migrate();
         }
 
         app.UseSerilogRequestLogging();

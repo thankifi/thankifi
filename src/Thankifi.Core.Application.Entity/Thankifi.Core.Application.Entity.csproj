@@ -4,8 +4,4 @@
         <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Incremental.Common.Metrics" Version="0.2.1" />
-    </ItemGroup>
-
 </Project>
