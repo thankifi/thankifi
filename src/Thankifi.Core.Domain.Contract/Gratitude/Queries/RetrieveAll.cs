@@ -4,7 +4,7 @@ using Thankifi.Core.Domain.Contract.Gratitude.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Gratitude.Queries;
 
-public record RetrieveAll : IQuery<PaginatedList<GratitudeDto>>
+public record RetrieveAll : Query<PaginatedList<GratitudeDto>>
 {
     public int PageNumber { get; init; }
     public int PageSize { get; init; }

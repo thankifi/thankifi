@@ -4,7 +4,7 @@ using Thankifi.Core.Domain.Contract.Category.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Category.Queries;
 
-public record RetrieveById : IQuery<CategoryDetailDto?>
+public record RetrieveById : Query<CategoryDetailDto?>
 {
     public int PageNumber { get; init; }
     public int PageSize { get; init; }

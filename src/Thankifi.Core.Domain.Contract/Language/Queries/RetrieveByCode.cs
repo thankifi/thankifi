@@ -3,7 +3,7 @@ using Thankifi.Core.Domain.Contract.Language.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Language.Queries;
 
-public record RetrieveByCode : IQuery<LanguageDetailDto?>
+public record RetrieveByCode : Query<LanguageDetailDto?>
 {
     public int PageNumber { get; init; }
     public int PageSize { get; init; }

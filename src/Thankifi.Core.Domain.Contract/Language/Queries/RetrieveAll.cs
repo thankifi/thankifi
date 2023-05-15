@@ -4,7 +4,7 @@ using Thankifi.Core.Domain.Contract.Language.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Language.Queries;
 
-public record RetrieveAll : IQuery<PaginatedList<LanguageDto>>
+public record RetrieveAll : Query<PaginatedList<LanguageDto>>
 {
     public int PageNumber { get; init; }
     public int PageSize { get; init; }

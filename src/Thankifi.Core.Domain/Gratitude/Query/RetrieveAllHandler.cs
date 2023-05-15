@@ -12,7 +12,7 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Gratitude.Query;
 
-public class RetrieveAllHandler : IQueryHandler<RetrieveAll, PaginatedList<GratitudeDto>>
+public class RetrieveAllHandler : QueryHandler<RetrieveAll, PaginatedList<GratitudeDto>>
 {
     private readonly ThankifiDbContext _dbContext;
 
@@ -21,7 +21,7 @@ public class RetrieveAllHandler : IQueryHandler<RetrieveAll, PaginatedList<Grati
         _dbContext = dbContext;
     }
 
-    public async Task<PaginatedList<GratitudeDto>> Handle(RetrieveAll request, CancellationToken cancellationToken)
+    public override async Task<PaginatedList<GratitudeDto>> Handle(RetrieveAll request, CancellationToken cancellationToken)
     {
         var query = _dbContext.Gratitudes.AsNoTracking();
 

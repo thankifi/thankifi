@@ -10,7 +10,7 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Category.Query;
 
-public class RetrieveAllHandler : IQueryHandler<RetrieveAll, PaginatedList<CategoryDto>>
+public class RetrieveAllHandler : QueryHandler<RetrieveAll, PaginatedList<CategoryDto>>
 {
     private readonly ThankifiDbContext _dbContext;
 
@@ -19,7 +19,7 @@ public class RetrieveAllHandler : IQueryHandler<RetrieveAll, PaginatedList<Categ
         _dbContext = dbContext;
     }
 
-    public async Task<PaginatedList<CategoryDto>> Handle(RetrieveAll request, CancellationToken cancellationToken)
+    public override async Task<PaginatedList<CategoryDto>> Handle(RetrieveAll request, CancellationToken cancellationToken)
     {
         var query = _dbContext.Categories.AsNoTracking();
             

@@ -13,7 +13,7 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Gratitude.Query;
 
-public class RetrieveRandomBulkHandler : IQueryHandler<RetrieveRandomBulk, IEnumerable<GratitudeDto>>
+public class RetrieveRandomBulkHandler : QueryHandler<RetrieveRandomBulk, IEnumerable<GratitudeDto>>
 {
     private readonly ThankifiDbContext _dbContext;
 
@@ -22,7 +22,7 @@ public class RetrieveRandomBulkHandler : IQueryHandler<RetrieveRandomBulk, IEnum
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<GratitudeDto>> Handle(RetrieveRandomBulk request, CancellationToken cancellationToken)
+    public override async Task<IEnumerable<GratitudeDto>> Handle(RetrieveRandomBulk request, CancellationToken cancellationToken)
     {
         var query = _dbContext.Gratitudes.AsNoTracking();
 

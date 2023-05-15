@@ -4,7 +4,7 @@ using Thankifi.Core.Domain.Contract.Gratitude.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Gratitude.Queries;
 
-public record RetrieveRandomBulk : IQuery<IEnumerable<GratitudeDto>>
+public record RetrieveRandomBulk : Query<IEnumerable<GratitudeDto>>
 {
     public int Quantity { get; init; }
     public string? Subject { get; init; }

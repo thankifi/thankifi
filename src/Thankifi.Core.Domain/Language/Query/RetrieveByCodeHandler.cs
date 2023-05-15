@@ -12,7 +12,7 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Language.Query;
 
-public class RetrieveByCodeHandler : IQueryHandler<RetrieveByCode, LanguageDetailDto?>
+public class RetrieveByCodeHandler : QueryHandler<RetrieveByCode, LanguageDetailDto?>
 {
     private readonly ThankifiDbContext _dbContext;
 
@@ -21,7 +21,7 @@ public class RetrieveByCodeHandler : IQueryHandler<RetrieveByCode, LanguageDetai
         _dbContext = dbContext;
     }
 
-    public async Task<LanguageDetailDto?> Handle(RetrieveByCode request, CancellationToken cancellationToken)
+    public override async Task<LanguageDetailDto?> Handle(RetrieveByCode request, CancellationToken cancellationToken)
     {
         var language = await _dbContext.Languages.AsNoTracking()
             .Where(l => l.Code == request.Code)

@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Incremental.Common.Sourcing.Abstractions" Version="2.0.4" />
+      <PackageReference Include="Incremental.Common.Sourcing.Abstractions" Version="2.1.1" />
       <PackageReference Include="Incremental.Common.Pagination" Version="1.2.0" />
     </ItemGroup>
 
