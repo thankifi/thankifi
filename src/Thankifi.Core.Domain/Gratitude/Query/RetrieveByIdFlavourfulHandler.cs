@@ -11,7 +11,7 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Gratitude.Query;
 
-public class RetrieveByIdFlavourfulHandler : IQueryHandler<RetrieveByIdFlavourful, GratitudeFlavourfulDto?>
+public class RetrieveByIdFlavourfulHandler : QueryHandler<RetrieveByIdFlavourful, GratitudeFlavourfulDto?>
 {
     private readonly ThankifiDbContext _dbContext;
 
@@ -20,7 +20,7 @@ public class RetrieveByIdFlavourfulHandler : IQueryHandler<RetrieveByIdFlavourfu
         _dbContext = dbContext;
     }
 
-    public async Task<GratitudeFlavourfulDto?> Handle(RetrieveByIdFlavourful request, CancellationToken cancellationToken)
+    public override async Task<GratitudeFlavourfulDto?> Handle(RetrieveByIdFlavourful request, CancellationToken cancellationToken)
     {
         var gratitude = await _dbContext.Gratitudes.AsNoTracking()
             .Where(g => g.Id == request.Id)

@@ -3,7 +3,7 @@ using Thankifi.Core.Domain.Contract.Gratitude.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Gratitude.Queries;
 
-public record RetrieveRandom : IQuery<GratitudeDto>
+public record RetrieveRandom : Query<GratitudeDto>
 {
     public string? Subject { get; init; }
     public string? Signature { get; init; }

@@ -12,7 +12,7 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Category.Query;
 
-public class RetrieveByIdHandler : IQueryHandler<RetrieveById, CategoryDetailDto?>
+public class RetrieveByIdHandler : QueryHandler<RetrieveById, CategoryDetailDto?>
 {
     private readonly ThankifiDbContext _dbContext;
 
@@ -21,7 +21,7 @@ public class RetrieveByIdHandler : IQueryHandler<RetrieveById, CategoryDetailDto
         _dbContext = dbContext;
     }
 
-    public async Task<CategoryDetailDto?> Handle(RetrieveById request, CancellationToken cancellationToken)
+    public override async Task<CategoryDetailDto?> Handle(RetrieveById request, CancellationToken cancellationToken)
     {
         var category = await _dbContext.Categories.AsNoTracking()
             .Where(c => c.Id == request.Id)

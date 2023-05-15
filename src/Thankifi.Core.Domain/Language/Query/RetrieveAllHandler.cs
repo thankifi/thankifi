@@ -10,7 +10,7 @@ using Thankifi.Persistence.Context;
 
 namespace Thankifi.Core.Domain.Language.Query;
 
-public class RetrieveAllHandler : IQueryHandler<RetrieveAll, PaginatedList<LanguageDto>>
+public class RetrieveAllHandler : QueryHandler<RetrieveAll, PaginatedList<LanguageDto>>
 {
     private readonly ThankifiDbContext _dbContext;
 
@@ -19,7 +19,7 @@ public class RetrieveAllHandler : IQueryHandler<RetrieveAll, PaginatedList<Langu
         _dbContext = dbContext;
     }
 
-    public async Task<PaginatedList<LanguageDto>> Handle(RetrieveAll request, CancellationToken cancellationToken)
+    public override async Task<PaginatedList<LanguageDto>> Handle(RetrieveAll request, CancellationToken cancellationToken)
     {
         var query = _dbContext.Languages.AsNoTracking();
             

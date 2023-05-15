@@ -3,7 +3,7 @@ using Thankifi.Core.Domain.Contract.Category.Dto;
 
 namespace Thankifi.Core.Domain.Contract.Category.Queries;
 
-public record RetrieveBySlug : IQuery<CategoryDetailDto?>
+public record RetrieveBySlug : Query<CategoryDetailDto?>
 {
     public int PageNumber { get; init; }
     public int PageSize { get; init; }
