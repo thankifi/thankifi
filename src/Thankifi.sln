@@ -21,6 +21,7 @@ ProjectSection(SolutionItems) = preProject
 	Dockerfile = Dockerfile
 	.dockerignore = .dockerignore
 	nuget.config = nuget.config
+	..\.github\workflows\docker-publish.yml = ..\.github\workflows\docker-publish.yml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thankifi.Core.Domain.Contract", "Thankifi.Core.Domain.Contract\Thankifi.Core.Domain.Contract.csproj", "{7206CE0F-755B-4015-AC14-899FC31C5B63}"
